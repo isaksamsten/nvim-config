@@ -1,51 +1,58 @@
 return {
-
-  -- uncomment and add lsp servers with their config to servers below
   {
-    "neovim/nvim-lspconfig",
-    -- ---@class PluginLspOpts
-    -- opts = {
-    --   ---@type lspconfig.options
-    --   servers = {
-    --     jsonls = {},
-    --     sumneko_lua = {
-    --       settings = {
-    --         Lua = {
-    --           workspace = {
-    --             checkThirdParty = false,
-    --           },
-    --           completion = {
-    --             callSnippet = "Replace",
-    --           },
-    --         },
-    --       },
-    --     },
-    --   },
-    --   -- you can do any additional lsp server setup here
-    --   -- return true if you don't want this server to be setup with lspconfig
-    --   ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
-    --   setup = {
-    --     -- example to setup with typescript.nvim
-    --     -- tsserver = function(_, opts)
-    --     --   require("typescript").setup({ server = opts })
-    --     --   return true
-    --     -- end,
-    --     -- Specify * to use this function as a fallback for any server
-    --     -- ["*"] = function(server, opts) end,
-    --   },
-    -- },
+    event = "BufReadPre",
+    "jose-elias-alvarez/null-ls.nvim",
+    config = function(_, opts)
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.black,
+          null_ls.builtins.completion.spell,
+        },
+      })
+    end,
   },
 
-  -- uncomment and add tools to ensure_installed below
+  { "folke/neoconf.nvim", config = true },
+
   {
-    "williamboman/mason.nvim",
-    -- opts = {
-    --   ensure_installed = {
-    --     "stylua",
-    --     "shellcheck",
-    --     "shfmt",
-    --     "flake8",
-    --   },
-    -- },
+    "VonHeikemen/lsp-zero.nvim",
+    event = "BufReadPre",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/nvim-cmp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "L3MON4D3/LuaSnip",
+      "rafamadriz/friendly-snippets",
+    },
+    config = function(_, opts)
+      local lsp = require("lsp-zero")
+      lsp.preset("recommended")
+      lsp.set_preferences({
+        sign_icons = require("config.icons").diagnostics,
+      })
+      lsp.ensure_installed({
+        "pyright",
+      })
+      lsp.setup_nvim_cmp({
+        formatting = {
+          format = function(_, item)
+            local icons = require("config.icons").kinds
+            if icons[item.kind] then
+              item.kind = icons[item.kind] .. item.kind
+            end
+            return item
+          end,
+        },
+      })
+      lsp.setup()
+    end,
   },
 }

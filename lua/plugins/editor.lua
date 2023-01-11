@@ -5,25 +5,18 @@
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
 return {
-  -- change trouble config
-  -- {
-  --   "folke/trouble.nvim",
-  --   opts = { use_diagnostic_signs = true },
-  -- },
+  {
+    "stevearc/aerial.nvim",
+    config = {
+      backends = { "lsp", "treesitter", "markdown", "man" },
+      placement = "edge",
+    },
+    keys = {
+      { "<leader>o", "<cmd>AerialToggle!<CR>", desc = "Symbol outline" },
+    },
+  },
 
-  -- add symbols-outline
-  -- {
-  --   "simrat39/symbols-outline.nvim",
-  --   cmd = "SymbolsOutline",
-  --   keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
-  --   config = true,
-  -- },
+  { "kylechui/nvim-surround", event = "VeryLazy", config = true },
 
-  -- add zen-mode
-  -- {
-  --   "folke/zen-mode.nvim",
-  --   cmd = "ZenMode",
-  --   config = true,
-  --   keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } },
-  -- },
+ 
 }
