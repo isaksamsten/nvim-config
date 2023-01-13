@@ -207,12 +207,16 @@ return {
       wk.setup(opts)
       wk.register({
         mode = { "n", "v" },
-        ["g"] = { name = "+goto" },
-        ["]"] = { name = "+next" },
-        ["["] = { name = "+prev" },
-        ["<leader>b"] = { name = "+buffer" },
-        ["<leader>h"] = { name = "+git" },
-        ["<leader>s"] = { name = "+search" },
+        ["g"] = { name = "Go to" },
+        ["]"] = { name = "Next" },
+        ["["] = { name = "Previous" },
+        ["<leader>b"] = { name = "Buffers" },
+        ["<leader>h"] = { name = "Git" },
+        ["<leader>s"] = { name = "Search" },
+        ["<leader>d"] = { name = "Diagnostics" },
+        ["<leader>f"] = { name = "Files" },
+        ["<leader>t"] = { name = "Toggle" },
+
       })
     end,
   },
@@ -262,4 +266,6 @@ return {
       vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search diagnostics" })
     end,
   },
+
+  { "kevinhwang91/nvim-bqf", event = "BufReadPre", config = true },
 }
