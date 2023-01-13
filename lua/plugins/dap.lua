@@ -2,7 +2,7 @@ return {
 
   {
     "rcarriga/nvim-dap-ui",
-    event = "BufReadPre",
+    event = "BufReadPre *.py",
     dependencies = {
       {
         "mfussenegger/nvim-dap",

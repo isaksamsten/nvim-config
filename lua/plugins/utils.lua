@@ -1,11 +1,13 @@
 return {
-  { 
-    'TimUntersberger/neogit', dependencies = {'nvim-lua/plenary.nvim'},
-    event = "VeryLazy",
-    config = function (_, opts)
+  {
+    "TimUntersberger/neogit",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = function(_, keys)
       local neogit = require("neogit")
-      
-      vim.keymap.set({"v", "n"}, "<leader>hh", neogit.open, { desc = "Open neogit" })
-    end
-  }
+      return {
+        { "<leader>hh", neogit.open, desc = "Open neogit" },
+      }
+    end,
+    config = true,
+  },
 }

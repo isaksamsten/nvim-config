@@ -1,19 +1,4 @@
 return {
-  {
-    event = "BufReadPre",
-    "jose-elias-alvarez/null-ls.nvim",
-    config = function(_, opts)
-      local null_ls = require("null-ls")
-      null_ls.setup({
-        sources = {
-          null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.completion.spell,
-          null_ls.builtins.formatting.latexindent,
-        },
-      })
-    end,
-  },
 
   { "folke/neoconf.nvim", config = true },
 
@@ -32,6 +17,21 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
+      {
+        event = "BufReadPre",
+        "jose-elias-alvarez/null-ls.nvim",
+        config = function(_, opts)
+          local null_ls = require("null-ls")
+          null_ls.setup({
+            sources = {
+              null_ls.builtins.formatting.stylua,
+              null_ls.builtins.formatting.black,
+              null_ls.builtins.formatting.latexindent,
+              null_ls.builtins.completion.spell,
+            },
+          })
+        end,
+      },
     },
     config = function(_, opts)
       local lsp = require("lsp-zero")
@@ -73,6 +73,31 @@ return {
         map("n", "<leader>r", vim.lsp.buf.rename, "Rename symbol")
         map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
         map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
+
+        -- Enable format-on-save prefer null-ls for formatting
+        if client.supports_method("textDocument/formatting") then
+          local function format_fn()
+            local ft = vim.bo[bufnr].filetype
+            local have_nls = #require("null-ls.sources").get_available(ft, "NULL_LS_FORMATTING") > 0
+
+            vim.lsp.buf.format({
+              bufnr = bufnr,
+              filter = function(client)
+                if have_nls then
+                  return client.name == "null-ls"
+                end
+                return client.name ~= "null-ls"
+              end,
+            })
+          end
+
+          map("n", "<leader>F", format_fn, "Format buffer")
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
+            callback = format_fn,
+          })
+        end
 
         vim.api.nvim_create_autocmd("CursorHold", {
           buffer = bufnr,

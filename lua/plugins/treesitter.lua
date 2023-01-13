@@ -18,7 +18,7 @@ return {
         "markdown_inline",
         "python",
         "regex",
-        "vim",
+        "rst",
         "yaml",
       },
       highlight = { enable = true },

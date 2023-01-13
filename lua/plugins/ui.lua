@@ -10,7 +10,10 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     keys = {
-      { "<leader>e", "<cmd>Neotree toggle<CR>", desc = "NeoTree" },
+      { "<leader>e", "<cmd>Neotree <CR>", desc = "Toggle explorer" },
+      { "<leader>E", "<cmd>Neotree toggle filesystem<CR>", desc = "Focus explorer" },
+      { "<leader>B", "<cmd>Neotree toggle buffers right<CR>", desc = "Toggle buffers" },
+      { "<leader>H", "<cmd>Neotree toggle git_status<CR>", desc = "Toggle source control" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -26,8 +29,10 @@ return {
         follow_current_file = true,
         hijack_netrw_behavior = "open_current",
       },
-      source_selector = {
-        winbar = true,
+      window = {
+        mappings = {
+          ["<space>"] = "none",
+        },
       },
       git_status = {
         symbols = {
@@ -71,8 +76,7 @@ return {
       local bufferline = require("bufferline")
       bufferline.setup(opts)
 
-      vim.keymap.set("n", "<leader>bb", "<cmd>:e #<cr>", { desc = "Switch to Other Buffer" })
-      vim.keymap.set("n", "<leader>bd", close_command, { desc = "Delete current Buffer" })
+      vim.keymap.set("n", "<leader>q", close_command, { desc = "Delete current Buffer" })
     end,
   },
 
@@ -216,7 +220,6 @@ return {
         ["<leader>d"] = { name = "Diagnostics" },
         ["<leader>f"] = { name = "Files" },
         ["<leader>t"] = { name = "Toggle" },
-
       })
     end,
   },
@@ -240,7 +243,16 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     version = "0.1.*",
-    lazy = false,
+    keys = function(_, keys)
+      local builtin = require("telescope.builtin")
+      return {
+        { "<leader><space>", builtin.buffers, desc = "Find existing buffers" },
+        { "<leader>ff", builtin.find_files, desc = "Find files" },
+        { "<leader>fh", builtin.oldfiles, desc = "Recently opened files" },
+        { "<leader>sb", builtin.grep_string, desc = "Search buffer" },
+        { "<leader>sd", builtin.diagnostics, desc = "Search diagnostics" },
+      }
+    end,
     opts = {
       defaults = {
         mappings = {
@@ -256,14 +268,6 @@ return {
       local telescope = require("telescope")
       telescope.setup(opts)
       telescope.load_extension("fzf")
-
-      local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<leader><space>", builtin.buffers, { desc = "Find existing buffers" })
-      vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
-      vim.keymap.set("n", "<leader>fh", builtin.oldfiles, { desc = "Recently opened files" })
-
-      vim.keymap.set("n", "<leader>sb", builtin.grep_string, { desc = "Search buffer" })
-      vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search diagnostics" })
     end,
   },
 
