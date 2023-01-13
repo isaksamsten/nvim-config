@@ -36,9 +36,7 @@ return {
     config = function(_, opts)
       local lsp = require("lsp-zero")
       lsp.preset("recommended")
-      lsp.set_preferences({
-        sign_icons = require("config.icons").diagnostics,
-      })
+      lsp.set_preferences({ set_lsp_keymaps = false, sign_icons = require("config.icons").diagnostics })
       lsp.ensure_installed({
         "pyright",
         "ltex",
@@ -61,6 +59,7 @@ return {
           local opts = { remap = false, silent = true, buffer = bufnr, desc = desc }
           vim.keymap.set(m, lhs, rhs, opts)
         end
+
         map("n", "K", vim.lsp.buf.hover, "Show information")
         map("n", "gd", vim.lsp.buf.definition, "Go to definition")
         map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
@@ -71,9 +70,9 @@ return {
 
         map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
         map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
-        map("n", "<leader>R", vim.lsp.buf.rename, "Rename")
-        map("n", "L", vim.lsp.buf.code_action, "Action")
-        map("x", "L", vim.lsp.buf.range_code_action, "Action")
+        map("n", "<leader>r", vim.lsp.buf.rename, "Rename symbol")
+        map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
+        map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
 
         vim.api.nvim_create_autocmd("CursorHold", {
           buffer = bufnr,
