@@ -11,9 +11,8 @@ return {
     cmd = "Neotree",
     keys = {
       { "<leader>e", "<cmd>Neotree <CR>", desc = "Toggle explorer" },
-      { "<leader>E", "<cmd>Neotree toggle filesystem<CR>", desc = "Focus explorer" },
-      { "<leader>B", "<cmd>Neotree toggle buffers right<CR>", desc = "Toggle buffers" },
-      { "<leader>H", "<cmd>Neotree toggle git_status<CR>", desc = "Toggle source control" },
+      { "<leader>b", "<cmd>Neotree buffers right<CR>", desc = "Toggle buffers" },
+      { "<leader>H", "<cmd>Neotree float git_status<CR>", desc = "Toggle source control" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
