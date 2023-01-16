@@ -2,7 +2,7 @@ return {
 
   {
     "rcarriga/nvim-dap-ui",
-    event = "BufReadPre *.py",
+    event = "BufReadPre",
     dependencies = {
       {
         "mfussenegger/nvim-dap",
@@ -35,6 +35,10 @@ return {
           end, { desc = "Set breakpoint condition" })
           vim.keymap.set("n", "<leader>dr", dap.run_last, { desc = "Run last debug" })
           vim.keymap.set("n", "<leader>dR", dap.repl.open, { desc = "Open REPL" })
+          vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
+          vim.keymap.set("n", "<leader>ds", dap.step_over, { desc = "Step over" })
+          vim.keymap.set("n", "<leader>dS", dap.step_into, { desc = "Step into" })
+          vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step out" })
 
           vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "", linehl = "", numhl = "" })
           vim.fn.sign_define("DapBreakpointCondition", { text = " ", texthl = "", linehl = "", numhl = "" })

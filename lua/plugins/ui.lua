@@ -31,6 +31,7 @@ return {
       window = {
         mappings = {
           ["<space>"] = "none",
+          ["<tab>"] = "toggle_node",
         },
       },
       git_status = {
@@ -125,7 +126,7 @@ return {
     "windwp/nvim-spectre",
     keys = {
       {
-        "<leader>sr",
+        "<leader>R",
         function()
           require("spectre").open()
         end,
@@ -213,11 +214,8 @@ return {
         ["g"] = { name = "Go to" },
         ["]"] = { name = "Next" },
         ["["] = { name = "Previous" },
-        ["<leader>b"] = { name = "Buffers" },
         ["<leader>h"] = { name = "Git" },
-        ["<leader>s"] = { name = "Search" },
-        ["<leader>d"] = { name = "Diagnostics" },
-        ["<leader>f"] = { name = "Files" },
+        ["<leader>d"] = { name = "Debug" },
         ["<leader>t"] = { name = "Toggle" },
       })
     end,
@@ -244,12 +242,56 @@ return {
     version = "0.1.*",
     keys = function(_, keys)
       local builtin = require("telescope.builtin")
+      local function vertical(config)
+        return require("telescope.themes").get_dropdown(config)
+      end
+
+      local ivy = require("telescope.themes").get_ivy({ previewer = false })
+
       return {
-        { "<leader><space>", builtin.buffers, desc = "Find existing buffers" },
-        { "<leader>ff", builtin.find_files, desc = "Find files" },
-        { "<leader>fh", builtin.oldfiles, desc = "Recently opened files" },
-        { "<leader>sb", builtin.grep_string, desc = "Search buffer" },
-        { "<leader>sd", builtin.diagnostics, desc = "Search diagnostics" },
+        {
+          "<leader>p",
+          function()
+            builtin.find_files(ivy)
+          end,
+          desc = "Open file",
+        },
+        {
+          "<leader>P",
+          function()
+            builtin.commands(ivy)
+          end,
+          desc = "Commands",
+        },
+
+        {
+          "<leader>S",
+          function()
+            builtin.live_grep(vertical({ prompt_title = "Search", preview_title = "" }))
+          end,
+          desc = "Search",
+        },
+        {
+          "<leader>i",
+          function()
+            builtin.diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
+          end,
+          desc = "List diagnostics",
+        },
+        {
+          "<leader>O",
+          function()
+            builtin.lsp_document_symbols(vertical({ prompt_title = "Symbols", preview_title = "" }))
+          end,
+          desc = "Find symbol in buffer",
+        },
+        {
+          "<leader>T",
+          function()
+            builtin.lsp_workspace_symbols(vertical({ prompt_title = "Symbols", preview_title = "" }))
+          end,
+          desc = "Find symbol in workspace",
+        },
       }
     end,
     opts = {

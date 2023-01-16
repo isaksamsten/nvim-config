@@ -17,22 +17,9 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
-      {
-        event = "BufReadPre",
-        "jose-elias-alvarez/null-ls.nvim",
-        config = function(_, opts)
-          local null_ls = require("null-ls")
-          null_ls.setup({
-            sources = {
-              null_ls.builtins.formatting.stylua,
-              null_ls.builtins.formatting.black,
-              null_ls.builtins.formatting.latexindent,
-              null_ls.builtins.completion.spell,
-            },
-          })
-        end,
-      },
+      "jose-elias-alvarez/null-ls.nvim",
     },
+
     config = function(_, opts)
       local lsp = require("lsp-zero")
       lsp.preset("recommended")
@@ -41,7 +28,9 @@ return {
         "pyright",
         "ltex",
         "texlab",
+        "erlangls",
       })
+
       lsp.setup_nvim_cmp({
         formatting = {
           format = function(_, item)
@@ -61,60 +50,59 @@ return {
         end
 
         map("n", "K", vim.lsp.buf.hover, "Show information")
+        map("n", "<C-i>", function()
+          vim.diagnostic.open_float(nil, { scope = "line" })
+        end, "Show diagnostics")
         map("n", "gd", vim.lsp.buf.definition, "Go to definition")
         map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
         map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
         map("n", "go", vim.lsp.buf.type_definition, "Go to type definition")
         map("n", "gr", vim.lsp.buf.references, "Show references")
-        map("n", "<C-k>", vim.lsp.buf.signature_help, "Show signature help")
+        map("n", "<C-,>", vim.lsp.buf.signature_help, "Show signature help")
 
         map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
         map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
-        map("n", "<leader>r", vim.lsp.buf.rename, "Rename symbol")
+        map("n", "<C-CR>", vim.lsp.buf.rename, "Rename symbol")
         map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
         map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
+      end)
+      lsp.setup()
 
-        -- Enable format-on-save prefer null-ls for formatting
-        if client.supports_method("textDocument/formatting") then
-          local function format_fn()
-            local ft = vim.bo[bufnr].filetype
-            local have_nls = #require("null-ls.sources").get_available(ft, "NULL_LS_FORMATTING") > 0
+      local null_ls = require("null-ls")
+      local null_opts = lsp.build_options("null-ls", {})
 
+      null_ls.setup({
+        on_attach = function(client, bufnr) -- Enable format-on-save prefer null-ls for formatting
+          null_opts.on_attach(client, bufnr)
+
+          local function format_fn(async)
             vim.lsp.buf.format({
+              id = client.id,
               bufnr = bufnr,
-              filter = function(client)
-                if have_nls then
-                  return client.name == "null-ls"
-                end
-                return client.name ~= "null-ls"
-              end,
+              async = async,
+              timeout_ms = 5000,
             })
           end
 
-          map("n", "<leader>F", format_fn, "Format buffer")
+          vim.keymap.set("n", "<leader>F", function()
+            format_fn(true)
+          end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
+
           vim.api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
             group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-            callback = format_fn,
+            callback = function()
+              format_fn(false)
+            end,
           })
-        end
-
-        vim.api.nvim_create_autocmd("CursorHold", {
-          buffer = bufnr,
-          callback = function()
-            local opts = {
-              focusable = false,
-              close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-              border = "rounded",
-              source = "always",
-              prefix = " ",
-              scope = "cursor",
-            }
-            vim.diagnostic.open_float(nil, opts)
-          end,
-        })
-      end)
-      lsp.setup()
+        end,
+        sources = {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.black,
+          null_ls.builtins.formatting.latexindent,
+          null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
+        },
+      })
     end,
   },
 }

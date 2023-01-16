@@ -7,7 +7,7 @@
 return {
   {
     "stevearc/aerial.nvim",
-    config = {
+    opts = {
       backends = { "lsp", "treesitter", "markdown", "man" },
       placement = "edge",
     },
