@@ -1,3 +1,3 @@
 return {
-  { "akinsho/toggleterm.nvim", event = "VeryLazy", opts = { open_mapping = [[<c-\>]] } },
+  { "akinsho/toggleterm.nvim", version = false, event = "VeryLazy", opts = { open_mapping = [[<c-\>]] } },
 }
