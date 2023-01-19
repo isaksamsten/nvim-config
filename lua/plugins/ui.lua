@@ -62,6 +62,7 @@ return {
         right_mouse_command = close_command,
         diagnostics = "nvim_lsp",
         always_show_bufferline = false,
+        highlights = require("catppuccin.groups.integrations.bufferline").get(),
         offsets = {
           {
             filetype = "neo-tree",
@@ -249,6 +250,13 @@ return {
       local ivy = require("telescope.themes").get_ivy({ previewer = false })
 
       return {
+        {
+          "<leader><space>",
+          function()
+            builtin.buffers(vertical({ prompt_title = "Buffers", previewer = false }))
+          end,
+          desc = "List buffers",
+        },
         {
           "<leader>p",
           function()
