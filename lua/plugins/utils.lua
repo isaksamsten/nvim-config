@@ -21,7 +21,11 @@ return {
     "TimUntersberger/neogit",
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = function(_, keys)
-      local neogit = require("neogit")
+      local ok, neogit = pcall(require, "neogit")
+      if not ok then
+        return
+      end
+
       return {
         { "<leader>hh", neogit.open, desc = "Open neogit" },
       }

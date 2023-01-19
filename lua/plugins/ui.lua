@@ -242,7 +242,10 @@ return {
     "nvim-telescope/telescope.nvim",
     version = "0.1.*",
     keys = function(_, keys)
-      local builtin = require("telescope.builtin")
+      local ok, builtin = pcall(require, "telescope.builtin")
+      if not ok then
+        return
+      end
       local function vertical(config)
         return require("telescope.themes").get_dropdown(config)
       end

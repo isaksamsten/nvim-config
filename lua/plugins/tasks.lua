@@ -6,7 +6,13 @@ return {
     "nvim-telescope/telescope.nvim",
   },
   keys = function()
-    local tt = require("telescope").extensions.toggletasks
+    local ok, tt = pcall(function()
+      return require("telescope").extensions.toggletasks
+    end)
+
+    if not ok then
+      return
+    end
     local function vertical(config)
       return require("telescope.themes").get_dropdown(config)
     end
