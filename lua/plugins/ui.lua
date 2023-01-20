@@ -62,7 +62,7 @@ return {
         right_mouse_command = close_command,
         diagnostics = "nvim_lsp",
         always_show_bufferline = false,
-        highlights = require("catppuccin.groups.integrations.bufferline").get(),
+        -- highlights = require("catppuccin.groups.integrations.bufferline").get(),
         offsets = {
           {
             filetype = "neo-tree",
@@ -242,35 +242,31 @@ return {
     "nvim-telescope/telescope.nvim",
     version = "0.1.*",
     keys = function(_, keys)
-      local ok, builtin = pcall(require, "telescope.builtin")
-      if not ok then
-        return
-      end
       local function vertical(config)
         return require("telescope.themes").get_dropdown(config)
       end
-
-      local ivy = require("telescope.themes").get_ivy({ previewer = false })
-
+      local function ivy()
+        return require("telescope.themes").get_ivy({ previewer = false })
+      end
       return {
         {
           "<leader><space>",
           function()
-            builtin.buffers(vertical({ prompt_title = "Buffers", previewer = false }))
+            require("telescope.builtin").buffers(vertical({ prompt_title = "Buffers", previewer = false }))
           end,
           desc = "List buffers",
         },
         {
           "<leader>p",
           function()
-            builtin.find_files(ivy)
+            require("telescope.builtin").find_files(ivy())
           end,
           desc = "Open file",
         },
         {
           "<leader>P",
           function()
-            builtin.commands(ivy)
+            require("telescope.builtin").commands(ivy())
           end,
           desc = "Commands",
         },
@@ -278,28 +274,32 @@ return {
         {
           "<leader>S",
           function()
-            builtin.live_grep(vertical({ prompt_title = "Search", preview_title = "" }))
+            require("telescope.builtin").live_grep(vertical({ prompt_title = "Search", preview_title = "" }))
           end,
           desc = "Search",
         },
         {
           "<leader>i",
           function()
-            builtin.diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
+            require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
           end,
           desc = "List diagnostics",
         },
         {
           "<leader>O",
           function()
-            builtin.lsp_document_symbols(vertical({ prompt_title = "Symbols", preview_title = "" }))
+            require("telescope.builtin").lsp_document_symbols(
+              vertical({ prompt_title = "Symbols", preview_title = "" })
+            )
           end,
           desc = "Find symbol in buffer",
         },
         {
           "<leader>T",
           function()
-            builtin.lsp_workspace_symbols(vertical({ prompt_title = "Symbols", preview_title = "" }))
+            require("telescope.builtin").lsp_workspace_symbols(
+              vertical({ prompt_title = "Symbols", preview_title = "" })
+            )
           end,
           desc = "Find symbol in workspace",
         },
