@@ -111,10 +111,12 @@ return {
 
       lsp.on_attach(function(client, bufnr)
         require("lsp_signature").on_attach({
-          bind = true, -- This is mandatory, otherwise border config won't get registered.
+          bind = true,
           handler_opts = {
-            border = "rounded",
+            border = "single",
           },
+          hint_enabled = false,
+          doc_lines = 0,
         }, bufnr)
 
         local map = function(m, lhs, rhs, desc)
