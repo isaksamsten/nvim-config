@@ -176,6 +176,8 @@ return {
           null_ls.builtins.formatting.black,
           null_ls.builtins.formatting.latexindent,
           null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
+          null_ls.builtins.formatting.bibclean,
+          null_ls.builtins.formatting.prettier,
         },
       })
     end,
