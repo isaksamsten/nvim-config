@@ -109,7 +109,7 @@ return {
         mapping = cmp_mapping,
       })
 
-      lsp.on_attach(function(client, bufnr)
+      lsp.on_attach(function(_, bufnr)
         require("lsp_signature").on_attach({
           bind = true,
           handler_opts = {
@@ -124,11 +124,11 @@ return {
         end
 
         map("n", "K", vim.lsp.buf.hover, "Show information")
-        map("n", "<C-i>", function()
+        map("n", "<C-,>", function()
           vim.diagnostic.open_float(nil, { scope = "line" })
         end, "Show diagnostics")
-        map("n", "[i", vim.diagnostic.goto_prev, "Previous diagnostic")
-        map("n", "]i", vim.diagnostic.goto_next, "Next diagnostic")
+        map("n", "[,", vim.diagnostic.goto_prev, "Previous diagnostic")
+        map("n", "],", vim.diagnostic.goto_next, "Next diagnostic")
         map("n", "gd", vim.lsp.buf.definition, "Go to definition")
         map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
         map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
