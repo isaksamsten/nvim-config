@@ -56,6 +56,10 @@ return {
     dependencies = {
       { "famiu/bufdelete.nvim" },
     },
+    keys = {
+      { "]b", "<cmd>BufferLineCycleNext<CR>" },
+      { "[b", "<cmd>BufferLineCyclePrev<CR>" },
+    },
     opts = {
       options = {
         close_command = close_command,
@@ -109,17 +113,6 @@ return {
         },
       },
       extensions = { "nvim-tree" },
-    },
-  },
-
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufReadPre",
-    opts = {
-      char = "│",
-      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
-      show_trailing_blankline_indent = false,
-      show_current_context = false,
     },
   },
 
@@ -252,7 +245,9 @@ return {
         {
           "<leader><space>",
           function()
-            require("telescope.builtin").buffers(vertical({ prompt_title = "Buffers", previewer = false }))
+            require("telescope.builtin").buffers(
+              vertical({ prompt_title = "Buffers", previewer = false, sort_mru = true, ignore_current_buffer = true })
+            )
           end,
           desc = "List buffers",
         },
@@ -288,18 +283,42 @@ return {
         {
           "<leader>O",
           function()
-            require("telescope.builtin").lsp_document_symbols(
-              vertical({ prompt_title = "Symbols", preview_title = "" })
-            )
+            require("telescope.builtin").lsp_document_symbols(vertical({
+              prompt_title = "Symbols",
+              preview_title = "",
+              symbols = {
+                "Class",
+                "Function",
+                "Method",
+                "Constructor",
+                "Interface",
+                "Module",
+                "Struct",
+                "Trait",
+                "Field",
+                "Property",
+              },
+            }))
           end,
           desc = "Find symbol in buffer",
         },
         {
           "<leader>T",
           function()
-            require("telescope.builtin").lsp_workspace_symbols(
-              vertical({ prompt_title = "Symbols", preview_title = "" })
-            )
+            require("telescope.builtin").lsp_workspace_symbols(vertical({
+              prompt_title = "Symbols",
+              preview_title = "",
+              symbols = {
+                "Class",
+                "Function",
+                "Method",
+                "Interface",
+                "Module",
+                "Struct",
+                "Trait",
+                "Property",
+              },
+            }))
           end,
           desc = "Find symbol in workspace",
         },
@@ -324,4 +343,35 @@ return {
   },
 
   { "kevinhwang91/nvim-bqf", event = "BufReadPre", config = true },
+
+  -- active indent guide and indent text objects
+  {
+    "echasnovski/mini.indentscope",
+    version = false, -- wait till new 0.7.0 release to put it back on semver
+    event = "BufReadPre",
+    opts = {
+      symbol = "│",
+      options = { try_as_border = true },
+    },
+    config = function(_, opts)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason" },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+      require("mini.indentscope").setup(opts)
+    end,
+  },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "BufReadPre",
+    opts = {
+      char = "│",
+      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
+      show_trailing_blankline_indent = false,
+      show_current_context = false,
+    },
+  },
 }

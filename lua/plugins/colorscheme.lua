@@ -6,26 +6,17 @@ return {
 
   {
     "navarasu/onedark.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("onedark")
+      theme.setup(opts)
+      vim.cmd([[colorscheme onedark]])
+    end,
   },
 
   {
     "catppuccin/nvim",
-    lazy = false,
-    priority = 1000,
     name = "catppuccin",
-    opts = {
-      indent_blankline = {
-        enabled = true,
-        colored_indent_levels = false,
-      },
-      native_lsp = {
-        enabled = true,
-      },
-    },
-    config = function(_, opts)
-      local theme = require("catppuccin")
-      theme.setup(opts)
-      vim.cmd([[colorscheme catppuccin]])
-    end,
   },
 }

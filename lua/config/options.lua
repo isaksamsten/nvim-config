@@ -1,6 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
+vim.g.no_plugin_maps = true
 local opt = vim.opt
 
 opt.autowrite = true -- enable auto write
