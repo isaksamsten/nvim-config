@@ -15,6 +15,13 @@ return {
     name = "catppuccin",
     lazy = false,
     priority = 1000,
+    opts = {
+      dim_inactive = {
+        enabled = true,
+        shade = "dark",
+        percentage = 0.15,
+      },
+    },
     config = function(_, opts)
       local theme = require("catppuccin")
       theme.setup(opts)
