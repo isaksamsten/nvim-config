@@ -6,17 +6,19 @@ return {
 
   {
     "navarasu/onedark.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("onedark")
-      theme.setup(opts)
-      vim.cmd([[colorscheme onedark]])
-    end,
   },
+
+  { "EdenEast/nightfox.nvim" },
 
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("catppuccin")
+      theme.setup(opts)
+      vim.cmd([[colorscheme catppuccin]])
+    end,
   },
 }

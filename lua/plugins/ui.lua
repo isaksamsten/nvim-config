@@ -267,14 +267,14 @@ return {
         },
 
         {
-          "<leader>S",
+          "<leader>s",
           function()
             require("telescope.builtin").live_grep(vertical({ prompt_title = "Search", preview_title = "" }))
           end,
           desc = "Search",
         },
         {
-          "<leader>i",
+          "<leader>,",
           function()
             require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
           end,
@@ -301,26 +301,6 @@ return {
             }))
           end,
           desc = "Find symbol in buffer",
-        },
-        {
-          "<leader>T",
-          function()
-            require("telescope.builtin").lsp_workspace_symbols(vertical({
-              prompt_title = "Symbols",
-              preview_title = "",
-              symbols = {
-                "Class",
-                "Function",
-                "Method",
-                "Interface",
-                "Module",
-                "Struct",
-                "Trait",
-                "Property",
-              },
-            }))
-          end,
-          desc = "Find symbol in workspace",
         },
       }
     end,
