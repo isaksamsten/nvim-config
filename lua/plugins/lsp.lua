@@ -69,6 +69,7 @@ return {
 
       lsp.ensure_installed(ensure_installed)
 
+      local luasnip = require("luasnip")
       local cmp = require("cmp")
       local cmp_mapping = lsp.defaults.cmp_mappings({
         ["<C-p>"] = cmp.mapping.scroll_docs(-4),
