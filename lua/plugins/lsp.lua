@@ -43,7 +43,6 @@ return {
           },
         },
         texlab = {},
-        erlangls = {},
         ltex = {
           settings = {
             additionalRules = {

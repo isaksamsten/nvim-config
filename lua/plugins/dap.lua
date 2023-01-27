@@ -70,9 +70,7 @@ return {
       { "VonHeikemen/lsp-zero.nvim" },
     },
     opts = {
-      ensure_installed = {
-        "python",
-      },
+      ensure_installed = {},
     },
   },
 }
