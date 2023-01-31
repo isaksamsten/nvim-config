@@ -1,31 +1,22 @@
 return {
   {
-    "folke/tokyonight.nvim",
-    opts = { style = "moon" },
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      dimInactive = true,
+    },
+    config = function(_, opts)
+      local theme = require("kanagawa")
+      theme.setup(opts)
+      vim.cmd([[colorscheme kanagawa]])
+    end,
   },
 
   {
     "navarasu/onedark.nvim",
-  },
-
-  { "EdenEast/nightfox.nvim" },
-
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    lazy = false,
-    priority = 1000,
     opts = {
-      dim_inactive = {
-        enabled = true,
-        shade = "dark",
-        percentage = 0.15,
-      },
+      style = "darker",
     },
-    config = function(_, opts)
-      local theme = require("catppuccin")
-      theme.setup(opts)
-      vim.cmd([[colorscheme catppuccin]])
-    end,
   },
 }

@@ -1,5 +1,5 @@
 local function close_command(bufnr)
-  require("bufdelete").bufdelete(bufnr, true)
+  require("bufdelete").bufdelete(bufnr, false)
 end
 
 return {
@@ -10,9 +10,8 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     keys = {
-      { "<leader>e", "<cmd>Neotree <CR>", desc = "Toggle explorer" },
-      { "<leader>b", "<cmd>Neotree buffers right<CR>", desc = "Toggle buffers" },
-      { "<leader>H", "<cmd>Neotree float git_status<CR>", desc = "Toggle source control" },
+      { "<leader>e", "<cmd>Neotree <CR>", desc = "Focus explorer" },
+      { "<leader>E", "<cmd>Neotree close<CR>", desc = "Close explorer" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -57,8 +56,8 @@ return {
       { "famiu/bufdelete.nvim" },
     },
     keys = {
-      { "]b", "<cmd>BufferLineCycleNext<CR>" },
-      { "[b", "<cmd>BufferLineCyclePrev<CR>" },
+      { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
+      { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
     },
     opts = {
       options = {
@@ -150,9 +149,9 @@ return {
           vim.keymap.set(mode, l, r, opts)
         end
 
-        map("n", "]c", function()
+        map("n", "]h", function()
           if vim.wo.diff then
-            return "]c"
+            return "]h"
           end
           vim.schedule(function()
             gs.next_hunk()
@@ -160,9 +159,9 @@ return {
           return "<Ignore>"
         end, { expr = true, desc = "Next hunk" })
 
-        map("n", "[c", function()
+        map("n", "[h", function()
           if vim.wo.diff then
-            return "[c"
+            return "[h"
           end
           vim.schedule(function()
             gs.prev_hunk()
@@ -252,7 +251,7 @@ return {
           desc = "List buffers",
         },
         {
-          "<leader>p",
+          "<C-p>",
           function()
             require("telescope.builtin").find_files(ivy())
           end,
@@ -340,7 +339,9 @@ return {
           vim.b.miniindentscope_disable = true
         end,
       })
-      require("mini.indentscope").setup(opts)
+      require("mini.indentscope").setup(
+        vim.tbl_extend("keep", opts, { draw = { animation = require("mini.indentscope").gen_animation.none() } })
+      )
     end,
   },
 

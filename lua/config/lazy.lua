@@ -14,7 +14,7 @@ require("lazy").setup({
     lazy = true, -- every plugin is lazy-loaded by default
     version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "onedark", "habamax" } },
+  install = { colorscheme = { "kanagawa", "onedark" } },
   -- checker = { enabled = true }, -- automatically check for plugin updates
   performance = {
     rtp = {
