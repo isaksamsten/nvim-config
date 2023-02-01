@@ -1,11 +1,18 @@
-local function close_command(bufnr)
-  require("bufdelete").bufdelete(bufnr, false)
-end
-
 return {
   "nvim-tree/nvim-web-devicons",
   "MunifTanjim/nui.nvim",
-
+  {
+    "famiu/bufdelete.nvim",
+    keys = {
+      {
+        "<leader>q",
+        function()
+          require("bufdelete").bufdelete(0, false)
+        end,
+        desc = "Delete current Buffer",
+      },
+    },
+  },
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
@@ -47,41 +54,6 @@ return {
         },
       },
     },
-  },
-
-  {
-    "akinsho/bufferline.nvim",
-    event = "BufAdd",
-    dependencies = {
-      { "famiu/bufdelete.nvim" },
-    },
-    keys = {
-      { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
-      { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Previous buffer" },
-    },
-    opts = {
-      options = {
-        close_command = close_command,
-        right_mouse_command = close_command,
-        diagnostics = "nvim_lsp",
-        always_show_bufferline = false,
-        -- highlights = require("catppuccin.groups.integrations.bufferline").get(),
-        offsets = {
-          {
-            filetype = "neo-tree",
-            text = "Neo-tree",
-            highlight = "Directory",
-            text_align = "left",
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      local bufferline = require("bufferline")
-      bufferline.setup(opts)
-
-      vim.keymap.set("n", "<leader>q", close_command, { desc = "Delete current Buffer" })
-    end,
   },
 
   {
@@ -257,13 +229,6 @@ return {
           end,
           desc = "Open file",
         },
-        {
-          "<leader>P",
-          function()
-            require("telescope.builtin").commands(ivy())
-          end,
-          desc = "Commands",
-        },
 
         {
           "<leader>s",
@@ -326,11 +291,10 @@ return {
   -- active indent guide and indent text objects
   {
     "echasnovski/mini.indentscope",
-    version = false, -- wait till new 0.7.0 release to put it back on semver
     event = "BufReadPre",
+    version = false, -- wait till new 0.7.0 release to put it back on semver
     opts = {
       symbol = "│",
-      options = { try_as_border = true },
     },
     config = function(_, opts)
       vim.api.nvim_create_autocmd("FileType", {
@@ -345,14 +309,14 @@ return {
     end,
   },
 
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufReadPre",
-    opts = {
-      char = "│",
-      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
-      show_trailing_blankline_indent = false,
-      show_current_context = false,
-    },
-  },
+  -- {
+  --   "lukas-reineke/indent-blankline.nvim",
+  --   event = "BufReadPre",
+  --   opts = {
+  --     char = "│",
+  --     filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
+  --     show_trailing_blankline_indent = false,
+  --     show_current_context = false,
+  --   },
+  -- },
 }
