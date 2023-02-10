@@ -18,7 +18,7 @@ return {
     cmd = "Neotree",
     keys = {
       { "<leader>e", "<cmd>Neotree <CR>", desc = "Focus explorer" },
-      { "<leader>E", "<cmd>Neotree close<CR>", desc = "Close explorer" },
+      { "<leader>b", "<cmd>Neotree toggle<CR>", desc = "Toggle explorer" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -209,21 +209,22 @@ return {
       local function vertical(config)
         return require("telescope.themes").get_dropdown(config)
       end
-      local function ivy()
-        return require("telescope.themes").get_ivy({ previewer = false })
+      local function ivy(config)
+        local config = config or {}
+        return require("telescope.themes").get_ivy(vim.tbl_extend("keep", { previewer = false }, config))
       end
       return {
         {
           "<leader><space>",
           function()
             require("telescope.builtin").buffers(
-              vertical({ prompt_title = "Buffers", previewer = false, sort_mru = true, ignore_current_buffer = true })
+              ivy({ prompt_title = "Buffers", previewer = false, sort_mru = true, ignore_current_buffer = true })
             )
           end,
           desc = "List buffers",
         },
         {
-          "<C-p>",
+          "<leader>f",
           function()
             require("telescope.builtin").find_files(ivy())
           end,
