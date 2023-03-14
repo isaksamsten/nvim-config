@@ -1,11 +1,9 @@
 return {
-
   {
     "VonHeikemen/lsp-zero.nvim",
-    event = "BufReadPre",
-    version = "1.*",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "neovim/nvim-lspconfig",
+      { "neovim/nvim-lspconfig", version = false },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/nvim-cmp",
@@ -21,7 +19,14 @@ return {
     },
 
     opts = {
-      preset = "recommended",
+      preset = {
+        name = "minimal",
+        set_lsp_keymaps = false,
+        manage_nvim_cmp = true,
+        suggest_lsp_servers = true,
+        sign_icons = require("config.icons").diagnostics,
+      },
+
       diagnostic = {
         underline = true,
         update_in_insert = true,
@@ -55,12 +60,21 @@ return {
           },
         },
       },
+      sources = function(null_ls)
+        return {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.black,
+          null_ls.builtins.formatting.latexindent,
+          null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
+          null_ls.builtins.formatting.bibclean,
+          null_ls.builtins.formatting.prettier,
+        }
+      end,
     },
 
     config = function(_, opts)
       local lsp = require("lsp-zero")
       lsp.preset(opts.preset)
-      lsp.set_preferences({ set_lsp_keymaps = false, sign_icons = require("config.icons").diagnostics })
 
       local ensure_installed = {}
       for server, _ in pairs(opts.servers) do
@@ -72,6 +86,7 @@ return {
       local luasnip = require("luasnip")
       local cmp = require("cmp")
       local cmp_mapping = lsp.defaults.cmp_mappings({
+        ["<Esc>"] = cmp.mapping.abort(),
         ["<C-p>"] = cmp.mapping.scroll_docs(-4),
         ["<C-n>"] = cmp.mapping.scroll_docs(4),
         ["<C-f>"] = cmp.mapping(function(fallback)
@@ -109,14 +124,11 @@ return {
         mapping = cmp_mapping,
       })
 
-      lsp.on_attach(function(_, bufnr)
+      lsp.on_attach(function(client, bufnr)
         require("lsp_signature").on_attach({
           bind = true,
-          handler_opts = {
-            border = "single",
-          },
-          hint_enabled = false,
-          doc_lines = 0,
+          hint_enable = false,
+          doc_lines = 3,
         }, bufnr)
 
         local map = function(m, lhs, rhs, desc)
@@ -138,10 +150,31 @@ return {
         map("n", "<C-CR>", vim.lsp.buf.rename, "Rename symbol")
         map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
         map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
+
+        -- Setup LSP Highlight if availiable
+        if client.server_capabilities.documentHighlightProvider then
+          vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+          vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
+          vim.api.nvim_create_autocmd("CursorHold", {
+            callback = vim.lsp.buf.document_highlight,
+            buffer = bufnr,
+            group = "lsp_document_highlight",
+            desc = "Document Highlight",
+          })
+          vim.api.nvim_create_autocmd("CursorMoved", {
+            callback = vim.lsp.buf.clear_references,
+            buffer = bufnr,
+            group = "lsp_document_highlight",
+            desc = "Clear All the References",
+          })
+        end
       end)
       lsp.setup()
 
+      -- Setup diagnostics
       vim.diagnostic.config(opts.diagnostic)
+
+      -- Setup null-ls. We only use null-ls for formatting
       local null_ls = require("null-ls")
       local null_opts = lsp.build_options("null-ls", {})
 
@@ -149,36 +182,31 @@ return {
         on_attach = function(client, bufnr) -- Enable format-on-save prefer null-ls for formatting
           null_opts.on_attach(client, bufnr)
 
-          local function format_fn(async)
-            vim.lsp.buf.format({
-              id = client.id,
-              bufnr = bufnr,
-              async = async,
-              timeout_ms = 5000,
+          if client.supports_method("textDocument/formatting") then
+            local function format_fn(async)
+              vim.lsp.buf.format({
+                id = client.id,
+                bufnr = bufnr,
+                async = async,
+                timeout_ms = 5000,
+              })
+            end
+
+            vim.keymap.set("n", "<leader>F", function()
+              format_fn(true)
+            end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
+
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = bufnr,
+              group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
+              callback = function()
+                format_fn(false)
+              end,
             })
           end
-
-          vim.keymap.set("n", "<leader>F", function()
-            format_fn(true)
-          end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
-
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-            callback = function()
-              format_fn(false)
-            end,
-          })
         end,
 
-        sources = {
-          null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.formatting.latexindent,
-          null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
-          null_ls.builtins.formatting.bibclean,
-          null_ls.builtins.formatting.prettier,
-        },
+        sources = opts.sources(null_ls),
       })
     end,
   },

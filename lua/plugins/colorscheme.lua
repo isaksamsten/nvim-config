@@ -44,19 +44,23 @@ return {
         },
       },
     },
-
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("catppuccin")
-      theme.setup(opts)
-      vim.cmd([[colorscheme catppuccin]])
-    end,
   },
+
   {
     "navarasu/onedark.nvim",
     opts = {
-      style = "dark",
+      diagnostics = {
+        darker = true,
+        undercurl = true,
+        background = true,
+      },
     },
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("onedark")
+      theme.setup(opts)
+      vim.cmd([[colorscheme onedark]])
+    end,
   },
 }
