@@ -12,6 +12,9 @@ return {
         opts = {},
         config = function(_, opts)
           local python_path = vim.fn.exepath("python")
+          if python_path == nil or python_path == "" then
+            python_path = ".venv/bin/python"
+          end
           local dap = require("dap")
           dap.adapters.python = {
             type = "executable",

@@ -1,8 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.no_plugin_maps = true
-local opt = vim.opt
 
+local opt = vim.opt
+opt.title = true
 opt.autowrite = true -- enable auto write
 opt.clipboard = "unnamedplus" -- sync with system clipboard
 opt.cmdheight = 1

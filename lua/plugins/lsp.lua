@@ -16,6 +16,15 @@ return {
       "rafamadriz/friendly-snippets",
       "jose-elias-alvarez/null-ls.nvim",
       "ray-x/lsp_signature.nvim",
+      {
+        "SmiteshP/nvim-navic",
+        opts = {
+          separator = " ",
+          highlight = true,
+          depth_limit = 5,
+          icons = require("config.icons").kinds,
+        },
+      },
     },
 
     opts = {
@@ -40,7 +49,6 @@ return {
             python = {
               analysis = {
                 autoSearchPaths = true,
-                diagnosticMode = "openFilesOnly",
                 useLibraryCodeForTypes = true,
                 typeCheckingMode = "off",
               },
@@ -68,6 +76,8 @@ return {
           null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
           null_ls.builtins.formatting.bibclean,
           null_ls.builtins.formatting.prettier,
+          null_ls.builtins.diagnostics.pydocstyle,
+          null_ls.builtins.formatting.isort,
         }
       end,
     },
@@ -130,6 +140,10 @@ return {
           hint_enable = false,
           doc_lines = 3,
         }, bufnr)
+
+        if client.server_capabilities.documentSymbolProvider then
+          require("nvim-navic").attach(client, bufnr)
+        end
 
         local map = function(m, lhs, rhs, desc)
           vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })

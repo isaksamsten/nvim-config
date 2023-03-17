@@ -1,5 +1,30 @@
 return {
+  {
+    "ahmedkhalf/project.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    opts = {
+      ignore_lsp = { "null-ls" },
+    },
+    keys = {
+      {
+        "<leader>p",
+        function()
+          require("telescope").extensions.projects.projects({})
+        end,
+        desc = "Recent projects",
+      },
+    },
+    config = function(opts)
+      require("project_nvim").setup(opts)
+      require("telescope").load_extension("projects")
+    end,
+  },
+
   "nvim-tree/nvim-web-devicons",
+
   "MunifTanjim/nui.nvim",
   {
     "famiu/bufdelete.nvim",
@@ -13,6 +38,13 @@ return {
       },
     },
   },
+
+  {
+    "j-hui/fidget.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {},
+  },
+
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
@@ -75,12 +107,20 @@ return {
           },
           { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
           { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+          {
+            function()
+              return require("nvim-navic").get_location()
+            end,
+            cond = function()
+              return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+            end,
+          },
         },
         lualine_x = {
           "diff",
         },
         lualine_y = {
-          { "progress", separator = "", padding = { left = 1, right = 0 } },
+          { "progress", separator = " ", padding = { left = 1, right = 0 } },
         },
       },
       extensions = { "nvim-tree" },
@@ -151,12 +191,12 @@ return {
         map("n", "<leader>hb", function()
           gs.blame_line({ full = true })
         end, { desc = "Blame line" })
-        map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle blame" })
+        map("n", "<leader>hb", gs.toggle_current_line_blame, { desc = "Toggle blame" })
         map("n", "<leader>hd", gs.diffthis, { desc = "Show diff" })
         map("n", "<leader>hD", function()
           gs.diffthis("~")
         end, { desc = "Show diff (last commit)" })
-        map("n", "<leader>td", gs.toggle_deleted, { desc = "Toggle deleted" })
+        map("n", "<leader>hd", gs.toggle_deleted, { desc = "Toggle deleted" })
 
         -- Text object
         map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
@@ -181,7 +221,7 @@ return {
         ["["] = { name = "Previous" },
         ["<leader>h"] = { name = "Git" },
         ["<leader>d"] = { name = "Debug" },
-        ["<leader>t"] = { name = "Toggle" },
+        ["<leader>t"] = { name = "Test" },
       })
     end,
   },
@@ -246,7 +286,7 @@ return {
           desc = "List diagnostics",
         },
         {
-          "<leader>O",
+          "<leader>o",
           function()
             require("telescope.builtin").lsp_document_symbols(vertical({
               prompt_title = "Symbols",
