@@ -6,7 +6,35 @@
 -- * override the configuration of LazyVim plugins
 return {
 
-  { "kylechui/nvim-surround", event = "VeryLazy", config = true },
+  {
+    "echasnovski/mini.surround",
+    event = "VeryLazy",
+    version = false,
+    opts = {},
+    config = function(_, opts)
+      require("mini.surround").setup(opts)
+    end,
+  },
+
+  {
+    "echasnovski/mini.move",
+    event = "VeryLazy",
+    version = false,
+    opts = {},
+    config = function(_, opts)
+      require("mini.move").setup(opts)
+    end,
+  },
+
+  {
+    "echasnovski/mini.ai",
+    event = "VeryLazy",
+    version = false,
+    opts = {},
+    config = function(_, opts)
+      require("mini.ai").setup(opts)
+    end,
+  },
 
   {
     "folke/trouble.nvim",

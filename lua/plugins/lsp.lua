@@ -37,7 +37,7 @@ return {
       },
 
       diagnostic = {
-        underline = true,
+        underline = { severity = { min = vim.diagnostic.severity.WARN } },
         update_in_insert = true,
         virtual_text = false, --[[ { spacing = 4, prefix = "●" }, ]]
         severity_sort = true,
@@ -163,7 +163,7 @@ return {
 
         map("n", "<C-CR>", vim.lsp.buf.rename, "Rename symbol")
         map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
-        map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
+        -- map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
 
         -- Setup LSP Highlight if availiable
         if client.server_capabilities.documentHighlightProvider then

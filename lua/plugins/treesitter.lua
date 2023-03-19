@@ -21,7 +21,8 @@ return {
         "rst",
         "yaml",
       },
-      highlight = { enable = true },
+      additional_vim_regex_highlighting = false,
+      highlight = { enable = true, disable = { "latex" } },
       indent = { enable = true, disable = { "python" } },
       incremental_selection = {
         enable = true,

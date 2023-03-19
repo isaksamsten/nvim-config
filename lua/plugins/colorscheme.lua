@@ -2,8 +2,22 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("catppuccin")
+      theme.setup(opts)
+      vim.cmd([[colorscheme catppuccin]])
+    end,
     opts = {
-
+      highlight_overrides = {
+        all = function(colors)
+          return {
+            IndentBlanklineContextChar = { fg = colors.surface2 },
+          }
+        end,
+      },
+      flavour = "frappe",
       dim_inactive = {
         enabled = true,
         shade = "dark",
@@ -14,6 +28,7 @@ return {
         cmp = true,
         gitsigns = true,
         markdown = true,
+        fidget = true,
         mason = true,
         mini = true,
         neogit = true,
@@ -23,6 +38,10 @@ return {
         treesitter_context = false,
         ts_rainbow = false,
         which_key = true,
+        navic = {
+          enabled = false,
+          custom_bg = "NONE",
+        },
         dap = {
           enabled = true,
           enable_ui = true,
@@ -55,12 +74,5 @@ return {
         background = true,
       },
     },
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("onedark")
-      theme.setup(opts)
-      vim.cmd([[colorscheme onedark]])
-    end,
   },
 }

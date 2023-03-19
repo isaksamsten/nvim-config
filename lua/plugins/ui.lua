@@ -1,5 +1,9 @@
 return {
-
+  {
+    "luukvbaal/statuscol.nvim",
+    opts = {},
+    event = "VeryLazy",
+  },
   {
     "sindrets/diffview.nvim",
     dependencies = {
@@ -64,7 +68,19 @@ return {
   {
     "j-hui/fidget.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    opts = {},
+    opts = {
+      text = {
+        spinner = "pipe", -- animation shown when tasks are ongoing
+        done = "✔", -- character shown when all tasks are complete
+        commenced = "", -- message shown when task starts
+        completed = "", -- message shown when task completes
+      },
+      fmt = {
+        task = function(task_name, message, percentage)
+          return false
+        end,
+      },
+    },
   },
 
   {
@@ -94,17 +110,56 @@ return {
           ["<tab>"] = "toggle_node",
         },
       },
-      git_status = {
-        symbols = {
-          added = "",
-          modified = "",
-          deleted = "✖",
-          renamed = "",
-          untracked = "",
-          ignored = "",
-          unstaged = "",
-          staged = "",
-          conflict = "",
+      default_component_configs = {
+        container = {
+          enable_character_fade = true,
+        },
+        indent = {
+          indent_size = 2,
+          padding = 1, -- extra padding on left hand side
+          -- indent guides
+          with_markers = true,
+          indent_marker = "│",
+          last_indent_marker = "└",
+          highlight = "NeoTreeIndentMarker",
+          -- expander config, needed for nesting files
+          with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+          expander_collapsed = "",
+          expander_expanded = "",
+          expander_highlight = "NeoTreeExpander",
+        },
+        icon = {
+          folder_closed = "",
+          folder_open = "",
+          folder_empty = "ﰊ",
+          -- The next two settings are only a fallback, if you use nvim-web-devicons and configure default icons there
+          -- then these will never be used.
+          default = "*",
+          highlight = "NeoTreeFileIcon",
+        },
+        modified = {
+          symbol = "[+]",
+          highlight = "NeoTreeModified",
+        },
+        name = {
+          trailing_slash = false,
+          use_git_status_colors = true,
+          highlight = "NeoTreeFileName",
+        },
+        git_status = {
+          symbols = {
+            -- Change type
+            added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
+            modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
+            deleted = "✖", -- this can only be used in the git_status source
+            renamed = "", -- this can only be used in the git_status source
+            -- Status type
+            untracked = "",
+            ignored = "I",
+            unstaged = "U",
+            staged = "S",
+            conflict = "C",
+          },
         },
       },
     },
@@ -164,15 +219,22 @@ return {
 
   {
     "lewis6991/gitsigns.nvim",
-    event = "BufReadPre",
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
       signs = {
         add = { text = "▎" },
         change = { text = "▎" },
-        delete = { text = "契" },
-        topdelete = { text = "契" },
+        delete = { text = "" },
+        topdelete = { text = "" },
         changedelete = { text = "▎" },
         untracked = { text = "▎" },
+      },
+      preview_config = {
+        border = "rounded",
+        style = "minimal",
+        relative = "cursor",
+        row = 0,
+        col = 1,
       },
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
@@ -272,23 +334,26 @@ return {
         return require("telescope.themes").get_dropdown(config)
       end
       local function ivy(config)
-        local config = config or {}
+        config = config or {}
         return require("telescope.themes").get_ivy(vim.tbl_extend("keep", { previewer = false }, config))
       end
       return {
         {
           "<leader><space>",
           function()
-            require("telescope.builtin").buffers(
-              ivy({ prompt_title = "Buffers", previewer = false, sort_mru = true, ignore_current_buffer = true })
-            )
+            require("telescope.builtin").buffers(ivy({
+              prompt_title = "Buffers",
+              previewer = false,
+              sort_mru = true,
+              ignore_current_buffer = true,
+            }))
           end,
           desc = "List buffers",
         },
         {
           "<leader>f",
           function()
-            require("telescope.builtin").find_files(ivy())
+            require("telescope.builtin").find_files(ivy({}))
           end,
           desc = "Open file",
         },
@@ -296,7 +361,9 @@ return {
         {
           "<leader>s",
           function()
-            require("telescope.builtin").live_grep(vertical({ prompt_title = "Search", preview_title = "" }))
+            require("telescope").extensions.live_grep_args.live_grep_args(
+              vertical({ prompt_title = "Search", preview_title = "" })
+            )
           end,
           desc = "Search",
         },
@@ -339,47 +406,55 @@ return {
             ["<C-d>"] = false,
           },
         },
+        selection_caret = "   ",
+        multi_icon = "   ",
+        prompt_prefix = "   ",
+        entry_prefix = "    ",
       },
     },
-    dependencies = { { "nvim-telescope/telescope-fzf-native.nvim", build = "make" } },
+    dependencies = {
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "nvim-telescope/telescope-live-grep-args.nvim",
+    },
     config = function(_, opts)
       local telescope = require("telescope")
-      telescope.setup(opts)
       telescope.load_extension("fzf")
+      telescope.load_extension("live_grep_args")
+      telescope.setup(opts)
     end,
   },
 
   { "kevinhwang91/nvim-bqf", event = "BufReadPre", config = true },
 
   -- active indent guide and indent text objects
-  {
-    "echasnovski/mini.indentscope",
-    event = "BufReadPre",
-    version = false, -- wait till new 0.7.0 release to put it back on semver
-    opts = {
-      symbol = "│",
-    },
-    config = function(_, opts)
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason" },
-        callback = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-      require("mini.indentscope").setup(
-        vim.tbl_extend("keep", opts, { draw = { animation = require("mini.indentscope").gen_animation.none() } })
-      )
-    end,
-  },
-
   -- {
-  --   "lukas-reineke/indent-blankline.nvim",
+  --   "echasnovski/mini.indentscope",
   --   event = "BufReadPre",
+  --   version = false, -- wait till new 0.7.0 release to put it back on semver
   --   opts = {
-  --     char = "│",
-  --     filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
-  --     show_trailing_blankline_indent = false,
-  --     show_current_context = false,
+  --     symbol = "│",
   --   },
+  --   config = function(_, opts)
+  --     vim.api.nvim_create_autocmd("FileType", {
+  --       pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason" },
+  --       callback = function()
+  --         vim.b.miniindentscope_disable = true
+  --       end,
+  --     })
+  --     require("mini.indentscope").setup(
+  --       vim.tbl_extend("keep", opts, { draw = { animation = require("mini.indentscope").gen_animation.none() } })
+  --     )
+  --   end,
   -- },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      char = "│",
+      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
+      show_trailing_blankline_indent = false,
+      show_current_context = true,
+    },
+  },
 }

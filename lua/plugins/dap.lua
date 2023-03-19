@@ -2,9 +2,10 @@ return {
 
   {
     "rcarriga/nvim-dap-ui",
-    event = "BufReadPre",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       {
+        -- "MunifTanjim/nui.nvim",
         "mfussenegger/nvim-dap",
         dependencies = {
           { "jayp0521/mason-nvim-dap.nvim" },
@@ -34,8 +35,40 @@ return {
 
           vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
           vim.keymap.set("n", "<leader>dB", function()
-            dap.set_breakpoint(vim.fn.input("Condition: "))
-          end, { desc = "Set breakpoint condition" })
+            local Input = require("nui.input")
+            local event = require("nui.utils.autocmd").event
+            local popup_options = {
+              relative = "cursor",
+              position = {
+                row = -2,
+                col = 1,
+              },
+              size = 50,
+              border = {
+                style = "single",
+                text = {
+                  top = "Condition: ",
+                  top_align = "left",
+                },
+              },
+              win_options = {
+                winhighlight = "Normal:Normal",
+              },
+            }
+
+            local input = Input(popup_options, {
+              on_submit = function(value)
+                dap.set_breakpoint(value)
+              end,
+            })
+            input:map("n", "<Esc>", function()
+              input:unmount()
+            end, { noremap = true })
+            input:on(event.BufLeave, function()
+              input:unmount()
+            end)
+            input:mount()
+          end, { desc = "Set conditional breakpoint" })
           vim.keymap.set("n", "<leader>dr", dap.run_last, { desc = "Run last debug" })
           vim.keymap.set("n", "<leader>dR", dap.repl.open, { desc = "Open REPL" })
           vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
@@ -43,10 +76,17 @@ return {
           vim.keymap.set("n", "<leader>dS", dap.step_into, { desc = "Step into" })
           vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step out" })
 
-          vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "", linehl = "", numhl = "" })
-          vim.fn.sign_define("DapBreakpointCondition", { text = " ", texthl = "", linehl = "", numhl = "" })
-          vim.fn.sign_define("DapStopped", { text = " ", texthl = "", linehl = "", numhl = "" })
-          vim.fn.sign_define("DapBreakpointRejected", { text = " ", texthl = "", linehl = "", numhl = "" })
+          vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+          vim.fn.sign_define(
+            "DapBreakpointCondition",
+            { text = " ", texthl = "DapBreakpointCondition", linehl = "", numhl = "" }
+          )
+          vim.fn.sign_define("DapStopped", { text = " ", texthl = "", linehl = "DapStopped", numhl = "" })
+          vim.fn.sign_define(
+            "DapBreakpointRejected",
+            { text = " ", texthl = "DapBreakpointRejected", linehl = "", numhl = "" }
+          )
+          vim.fn.sign_define("DapLogPoint", { text = "󰰍 ", texthl = "DapLogPoint", linehl = "", numhl = "" })
         end,
       },
     },
