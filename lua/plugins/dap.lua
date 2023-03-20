@@ -76,17 +76,17 @@ return {
           vim.keymap.set("n", "<leader>dS", dap.step_into, { desc = "Step into" })
           vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step out" })
 
-          vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+          vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapBreakpoint", linehl = "", numhl = "" })
           vim.fn.sign_define(
             "DapBreakpointCondition",
-            { text = " ", texthl = "DapBreakpointCondition", linehl = "", numhl = "" }
+            { text = "", texthl = "DapBreakpointCondition", linehl = "", numhl = "" }
           )
-          vim.fn.sign_define("DapStopped", { text = " ", texthl = "", linehl = "DapStopped", numhl = "" })
+          vim.fn.sign_define("DapStopped", { text = "", texthl = "", linehl = "DapStopped", numhl = "" })
           vim.fn.sign_define(
             "DapBreakpointRejected",
-            { text = " ", texthl = "DapBreakpointRejected", linehl = "", numhl = "" }
+            { text = "", texthl = "DapBreakpointRejected", linehl = "", numhl = "" }
           )
-          vim.fn.sign_define("DapLogPoint", { text = "󰰍 ", texthl = "DapLogPoint", linehl = "", numhl = "" })
+          vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DapLogPoint", linehl = "", numhl = "" })
         end,
       },
     },

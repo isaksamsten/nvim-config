@@ -13,7 +13,7 @@ return {
       highlight_overrides = {
         all = function(colors)
           return {
-            IndentBlanklineContextChar = { fg = colors.surface2 },
+            IndentBlanklineContextChar = { fg = colors.surface1 },
           }
         end,
       },
@@ -71,7 +71,7 @@ return {
       diagnostics = {
         darker = true,
         undercurl = true,
-        background = true,
+        background = false,
       },
     },
   },

@@ -1,9 +1,45 @@
 return {
   {
     "luukvbaal/statuscol.nvim",
-    opts = {},
     event = "VeryLazy",
+    opts = function()
+      local builtin = require("statuscol.builtin")
+      local icons = require("config.icons")
+      return {
+        setopt = true,
+        segments = {
+          {
+            sign = { name = { "Diagnostic", "Dap" }, maxwidth = 1, colwidth = 2, auto = false },
+            click = "v:lua.ScSa",
+          },
+          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+          {
+            sign = {
+              name = { "GitSigns" },
+              maxwidth = 1,
+              colwidth = 2,
+              auto = false,
+            },
+            click = "v:lua.ScSa",
+          },
+        },
+        ft_ignore = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "toggleterm" },
+      }
+    end,
+    config = function(_, opts)
+      ft_ignore = opts.ft_ignore
+      opts.ft_ignore = nil
+      require("statuscol").setup(opts)
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufNew" }, {
+        callback = function(ev)
+          if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
+            vim.cmd("setlocal statuscolumn=")
+          end
+        end,
+      })
+    end,
   },
+
   {
     "sindrets/diffview.nvim",
     dependencies = {
@@ -98,110 +134,147 @@ return {
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
     },
-    opts = {
-      close_if_last_window = true,
-      filesystem = {
-        follow_current_file = true,
-        hijack_netrw_behavior = "open_current",
-      },
-      window = {
-        mappings = {
-          ["<space>"] = "none",
-          ["<tab>"] = "toggle_node",
+    opts = function()
+      icons = require("config.icons")
+
+      return {
+        close_if_last_window = true,
+        filesystem = {
+          follow_current_file = true,
+          hijack_netrw_behavior = "open_current",
         },
-      },
-      default_component_configs = {
-        container = {
-          enable_character_fade = true,
-        },
-        indent = {
-          indent_size = 2,
-          padding = 1, -- extra padding on left hand side
-          -- indent guides
-          with_markers = true,
-          indent_marker = "│",
-          last_indent_marker = "└",
-          highlight = "NeoTreeIndentMarker",
-          -- expander config, needed for nesting files
-          with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-          expander_collapsed = "",
-          expander_expanded = "",
-          expander_highlight = "NeoTreeExpander",
-        },
-        icon = {
-          folder_closed = "",
-          folder_open = "",
-          folder_empty = "ﰊ",
-          -- The next two settings are only a fallback, if you use nvim-web-devicons and configure default icons there
-          -- then these will never be used.
-          default = "*",
-          highlight = "NeoTreeFileIcon",
-        },
-        modified = {
-          symbol = "[+]",
-          highlight = "NeoTreeModified",
-        },
-        name = {
-          trailing_slash = false,
-          use_git_status_colors = true,
-          highlight = "NeoTreeFileName",
-        },
-        git_status = {
-          symbols = {
-            -- Change type
-            added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
-            modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
-            deleted = "✖", -- this can only be used in the git_status source
-            renamed = "", -- this can only be used in the git_status source
-            -- Status type
-            untracked = "",
-            ignored = "I",
-            unstaged = "U",
-            staged = "S",
-            conflict = "C",
+        window = {
+          mappings = {
+            ["<space>"] = "none",
+            ["<tab>"] = "toggle_node",
           },
         },
-      },
-    },
+        default_component_configs = {
+          container = {
+            enable_character_fade = true,
+          },
+          indent = {
+            indent_size = 2,
+            padding = 1, -- extra padding on left hand side
+            -- indent guides
+            with_markers = true,
+            indent_marker = icons.indent.marker,
+            last_indent_marker = icons.indent.last,
+            highlight = "NeoTreeIndentMarker",
+            -- expander config, needed for nesting files
+            with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+            expander_collapsed = icons.folder.collapsed,
+            expander_expanded = icons.folder.expanded,
+            expander_highlight = "NeoTreeExpander",
+          },
+          icon = {
+            folder_closed = icons.folder.closed,
+            folder_open = icons.folder.open,
+            folder_empty = icons.folder.empty,
+            default = "*",
+            highlight = "NeoTreeFileIcon",
+          },
+          modified = {
+            symbol = icons.file.modified,
+            highlight = "NeoTreeModified",
+          },
+          name = {
+            trailing_slash = false,
+            use_git_status_colors = true,
+            highlight = "NeoTreeFileName",
+          },
+          git_status = {
+            symbols = {
+              -- Change type
+              added = icons.git.add,
+              modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
+              deleted = icons.git.delete, -- this can only be used in the git_status source
+              renamed = icons.git.renamed, -- this can only be used in the git_status source
+              -- Status type
+              untracked = icons.git.untracked,
+              ignored = icons.git.ignored,
+              unstaged = icons.git.unstaged,
+              staged = icons.git.staged,
+              conflict = icons.git.conflict,
+            },
+          },
+        },
+      }
+    end,
   },
 
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    opts = {
-      options = {
-        theme = "auto",
-        globalstatus = true,
-        disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
-      },
-      sections = {
-        lualine_a = { "mode" },
-        lualine_b = { "branch" },
-        lualine_c = {
-          {
-            "diagnostics",
-            symbols = require("config.icons").diagnostics,
+    opts = function()
+      local icons = require("config.icons")
+      return {
+        options = {
+          theme = "auto",
+          globalstatus = true,
+          disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
+          component_separators = { left = "│", right = "│" },
+          section_separators = { left = "", right = "" },
+        },
+        sections = {
+          lualine_a = {
+            {
+              "mode",
+              fmt = function(mode, ctx)
+                return string.sub(mode, 0, 6)
+              end,
+            },
           },
-          { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-          { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
-          {
-            function()
-              return require("nvim-navic").get_location()
-            end,
-            cond = function()
-              return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-            end,
+          lualine_b = { { "branch", icon = icons.git.branch .. " " } },
+          lualine_c = {
+            {
+              "diff",
+              symbols = {
+                added = icons.git.add .. " ",
+                modified = icons.git.change .. " ",
+                removed = icons.git.delete .. " ",
+              },
+            },
+            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+            {
+              "filename",
+              path = 1,
+              symbols = {
+                modified = " " .. icons.file.modified .. " ",
+                readonly = " " .. icons.file.readonly .. " ",
+                unnamed = "",
+                newfile = " " .. icons.file.new .. " ",
+              },
+            },
+            -- {
+            --   function()
+            --     return require("nvim-navic").get_location()
+            --   end,
+            --   cond = function()
+            --     return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+            --   end,
+            -- },
           },
+          lualine_x = {
+            {
+              "diagnostics",
+              always_visible = true,
+              symbols = {
+                error = icons.diagnostics.error .. " ",
+                warn = icons.diagnostics.warn .. " ",
+                info = icons.diagnostics.info .. " ",
+                hint = icons.diagnostics.hint .. " ",
+              },
+            },
+          },
+          lualine_y = {
+            -- -- { "progress", separator = " ", padding = { left = 1, right = 0 } },
+          },
+          lualine_z = { "location" },
         },
-        lualine_x = {
-          "diff",
-        },
-        lualine_y = {
-          { "progress", separator = " ", padding = { left = 1, right = 0 } },
-        },
-      },
-      extensions = { "nvim-tree" },
-    },
+        extensions = { "nvim-tree" },
+      }
+    end,
   },
 
   {
@@ -220,72 +293,75 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      signs = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "" },
-        topdelete = { text = "" },
-        changedelete = { text = "▎" },
-        untracked = { text = "▎" },
-      },
-      preview_config = {
-        border = "rounded",
-        style = "minimal",
-        relative = "cursor",
-        row = 0,
-        col = 1,
-      },
-      on_attach = function(bufnr)
-        local gs = package.loaded.gitsigns
+    opts = function()
+      local signs = require("config.icons").git.signs
+      return {
+        signs = {
+          add = { text = signs.add },
+          change = { text = signs.change },
+          delete = { text = signs.delete },
+          topdelete = { text = signs.topdelete },
+          changedelete = { text = signs.changedelete },
+          untracked = { text = signs.untracked },
+        },
+        preview_config = {
+          border = "rounded",
+          style = "minimal",
+          relative = "cursor",
+          row = 0,
+          col = 1,
+        },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
 
-        local function map(mode, l, r, opts)
-          opts = opts or {}
-          opts.buffer = bufnr
-          vim.keymap.set(mode, l, r, opts)
-        end
-
-        map("n", "]h", function()
-          if vim.wo.diff then
-            return "]h"
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
           end
-          vim.schedule(function()
-            gs.next_hunk()
-          end)
-          return "<Ignore>"
-        end, { expr = true, desc = "Next hunk" })
 
-        map("n", "[h", function()
-          if vim.wo.diff then
-            return "[h"
-          end
-          vim.schedule(function()
-            gs.prev_hunk()
-          end)
-          return "<Ignore>"
-        end, { expr = true, desc = "Previous hunk" })
+          map("n", "]h", function()
+            if vim.wo.diff then
+              return "]h"
+            end
+            vim.schedule(function()
+              gs.next_hunk()
+            end)
+            return "<Ignore>"
+          end, { expr = true, desc = "Next hunk" })
 
-        -- Actions
-        map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>", { desc = "Stage hunk" })
-        map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
-        map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
-        map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
-        map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer " })
-        map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk " })
-        map("n", "<leader>hb", function()
-          gs.blame_line({ full = true })
-        end, { desc = "Blame line" })
-        map("n", "<leader>hb", gs.toggle_current_line_blame, { desc = "Toggle blame" })
-        map("n", "<leader>hd", gs.diffthis, { desc = "Show diff" })
-        map("n", "<leader>hD", function()
-          gs.diffthis("~")
-        end, { desc = "Show diff (last commit)" })
-        map("n", "<leader>hd", gs.toggle_deleted, { desc = "Toggle deleted" })
+          map("n", "[h", function()
+            if vim.wo.diff then
+              return "[h"
+            end
+            vim.schedule(function()
+              gs.prev_hunk()
+            end)
+            return "<Ignore>"
+          end, { expr = true, desc = "Previous hunk" })
 
-        -- Text object
-        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
-      end,
-    },
+          -- Actions
+          map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>", { desc = "Stage hunk" })
+          map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
+          map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+          map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
+          map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer " })
+          map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk " })
+          map("n", "<leader>hb", function()
+            gs.blame_line({ full = true })
+          end, { desc = "Blame line" })
+          map("n", "<leader>hb", gs.toggle_current_line_blame, { desc = "Toggle blame" })
+          map("n", "<leader>hd", gs.diffthis, { desc = "Show diff" })
+          map("n", "<leader>hD", function()
+            gs.diffthis("~")
+          end, { desc = "Show diff (last commit)" })
+          map("n", "<leader>hd", gs.toggle_deleted, { desc = "Toggle deleted" })
+
+          -- Text object
+          map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+        end,
+      }
+    end,
   },
 
   {
