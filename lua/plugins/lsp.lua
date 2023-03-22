@@ -16,15 +16,6 @@ return {
       "rafamadriz/friendly-snippets",
       "jose-elias-alvarez/null-ls.nvim",
       "ray-x/lsp_signature.nvim",
-      -- {
-      --   "SmiteshP/nvim-navic",
-      --   opts = {
-      --     separator = " ",
-      --     highlight = true,
-      --     depth_limit = 5,
-      --     icons = require("config.icons").kinds,
-      --   },
-      -- },
     },
 
     opts = {
@@ -141,9 +132,8 @@ return {
           doc_lines = 3,
         }, bufnr)
 
-        -- if client.server_capabilities.documentSymbolProvider then
-        --   require("nvim-navic").attach(client, bufnr)
-        -- end
+        -- Set the tagfunc to use lsp-definition
+        vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 
         local map = function(m, lhs, rhs, desc)
           vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })

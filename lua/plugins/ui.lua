@@ -9,7 +9,7 @@ return {
         setopt = true,
         segments = {
           {
-            sign = { name = { "Diagnostic", "Dap" }, maxwidth = 1, colwidth = 2, auto = false },
+            sign = { name = { "neotest", "Dap" }, maxwidth = 1, colwidth = 2, auto = false },
             click = "v:lua.ScSa",
           },
           { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
@@ -17,13 +17,13 @@ return {
             sign = {
               name = { "GitSigns" },
               maxwidth = 1,
-              colwidth = 2,
+              colwidth = 1,
               auto = false,
             },
             click = "v:lua.ScSa",
           },
         },
-        ft_ignore = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "toggleterm" },
+        ft_ignore = { "help", "vim", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "toggleterm" },
       }
     end,
     config = function(_, opts)
@@ -228,11 +228,22 @@ return {
           lualine_b = { { "branch", icon = icons.git.branch .. " " } },
           lualine_c = {
             {
+              "macro-recording",
+              fmt = function()
+                local recording_register = vim.fn.reg_recording()
+                if recording_register == "" then
+                  return ""
+                else
+                  return "  " .. recording_register
+                end
+              end,
+            },
+            {
               "diff",
               symbols = {
-                added = icons.git.add .. " ",
-                modified = icons.git.change .. " ",
-                removed = icons.git.delete .. " ",
+                added = icons.git.add .. "  ",
+                modified = icons.git.change .. "  ",
+                removed = icons.git.delete .. "  ",
               },
             },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
@@ -270,10 +281,37 @@ return {
           lualine_y = {
             -- -- { "progress", separator = " ", padding = { left = 1, right = 0 } },
           },
-          lualine_z = { "location" },
+          lualine_z = {
+            { "location" },
+          },
         },
         extensions = { "nvim-tree" },
       }
+    end,
+    config = function(_, opts)
+      local lualine = require("lualine")
+      lualine.setup(opts)
+      vim.api.nvim_create_autocmd("RecordingEnter", {
+        callback = function()
+          lualine.refresh({
+            place = { "statusline" },
+          })
+        end,
+      })
+      vim.api.nvim_create_autocmd("RecordingLeave", {
+        callback = function()
+          local timer = vim.loop.new_timer()
+          timer:start(
+            50,
+            0,
+            vim.schedule_wrap(function()
+              lualine.refresh({
+                place = { "statusline" },
+              })
+            end)
+          )
+        end,
+      })
     end,
   },
 
