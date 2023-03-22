@@ -37,9 +37,9 @@ return {
         "§",
         function()
           if vim.v.count == 0 then
-            ui.nav_file(1)
+            require("harpoon.ui").nav_file(1)
           else
-            ui.nav_file(vim.v.count)
+            require("harpoon.ui").nav_file(vim.v.count)
           end
         end,
         desc = "Go to mark",
