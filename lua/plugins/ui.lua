@@ -225,7 +225,15 @@ return {
               end,
             },
           },
-          lualine_b = { { "branch", icon = icons.git.branch .. " " } },
+          lualine_b = {
+            { "branch", icon = icons.git.branch .. " " },
+            {
+              "hostname",
+              cond = function()
+                return os.getenv("SSH_CLIENT") ~= nil
+              end,
+            },
+          },
           lualine_c = {
             {
               "macro-recording",
