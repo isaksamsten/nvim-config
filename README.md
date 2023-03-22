@@ -7,3 +7,7 @@ Clone the repository
     https://github.com/isaksamsten/nvim-config.github
 
 Start Neovim and sync the plugins with `Lazy restore`.
+
+## Screenshot
+
+![alt text](./screenshot.png)
