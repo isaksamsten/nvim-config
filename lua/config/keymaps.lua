@@ -52,3 +52,7 @@ vim.keymap.set("x", "g/", "<esc>/\\%V", { silent = false, desc = "Search inside 
 -- Search visually selected text
 vim.keymap.set("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
 vim.keymap.set("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
+
+vim.keymap.set("n", "<leader>uf", function()
+  require("helper.format").toggle()
+end, { desc = "Toggle format on save" })

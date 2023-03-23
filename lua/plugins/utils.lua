@@ -10,28 +10,28 @@ return {
         function()
           require("harpoon.ui").toggle_quick_menu()
         end,
-        desc = "List marks",
+        desc = "Show file marks",
       },
       {
         "<leader>a",
         function()
           require("harpoon.mark").add_file()
         end,
-        desc = "Mark file",
+        desc = "Add file mark",
       },
       {
         "[§",
         function()
           require("harpoon.ui").nav_prev()
         end,
-        desc = "Previous mark",
+        desc = "Previous file mark",
       },
       {
         "]§",
         function()
           require("harpoon.ui").nav_next()
         end,
-        desc = "Next mark",
+        desc = "Next file mark",
       },
       {
         "§",
@@ -42,7 +42,7 @@ return {
             require("harpoon.ui").nav_file(vim.v.count)
           end
         end,
-        desc = "Go to mark",
+        desc = "Go to file mark",
       },
     },
   },

@@ -1,3 +1,5 @@
+Format = require("helpers.format")
+
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
@@ -187,24 +189,15 @@ return {
           null_opts.on_attach(client, bufnr)
 
           if client.supports_method("textDocument/formatting") then
-            local function format_fn(async)
-              vim.lsp.buf.format({
-                id = client.id,
-                bufnr = bufnr,
-                async = async,
-                timeout_ms = 5000,
-              })
-            end
-
             vim.keymap.set("n", "<leader>F", function()
-              format_fn(true)
+              Format.format(client.id, bufnr, true, false)
             end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
 
             vim.api.nvim_create_autocmd("BufWritePre", {
               buffer = bufnr,
               group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
               callback = function()
-                format_fn(false)
+                Format.format(client.id, bufnr, false, true)
               end,
             })
           end

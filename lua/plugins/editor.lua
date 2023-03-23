@@ -8,7 +8,7 @@ return {
 
   {
     "echasnovski/mini.surround",
-    event = "VeryLazy",
+    event = "BufReadPost",
     version = false,
     opts = {},
     config = function(_, opts)
@@ -18,7 +18,7 @@ return {
 
   {
     "echasnovski/mini.move",
-    event = "VeryLazy",
+    event = "BufReadPost",
     version = false,
     opts = {},
     config = function(_, opts)
@@ -28,7 +28,7 @@ return {
 
   {
     "echasnovski/mini.ai",
-    event = "VeryLazy",
+    event = "BufReadPost",
     version = false,
     opts = {},
     config = function(_, opts)
@@ -41,17 +41,23 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>m", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics" },
-      { "<leader>M", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
-      { "<leader>l", "<cmd>TroubleToggle loclist<cr>", desc = "Location List" },
-      { "<leader>u", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List" },
+      { "<leader>m", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Show document diagnostics" },
+      { "<leader>M", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Show workspace diagnostics" },
+      { "<leader>L", "<cmd>TroubleToggle loclist<cr>", desc = "Show location list" },
+      { "<leader>U", "<cmd>TroubleToggle quickfix<cr>", desc = "Show quickfix list" },
       {
         "[q",
         function()
           if require("trouble").is_open() then
             require("trouble").previous({ skip_groups = true, jump = true })
           else
-            vim.cmd.cprev()
+            local ok, result = pcall(vim.cmd, "cprev")
+            if not ok then
+              ok, result = pcall(vim.cmd, "clast")
+              if not ok then
+                print("No errors")
+              end
+            end
           end
         end,
         desc = "Previous trouble/quickfix item",
@@ -62,7 +68,13 @@ return {
           if require("trouble").is_open() then
             require("trouble").next({ skip_groups = true, jump = true })
           else
-            vim.cmd.cnext()
+            local ok, result = pcall(vim.cmd, "cnext")
+            if not ok then
+              ok, result = pcall(vim.cmd, "cfirst")
+              if not ok then
+                print("No errors")
+              end
+            end
           end
         end,
         desc = "Next trouble/quickfix item",

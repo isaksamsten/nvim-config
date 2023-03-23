@@ -26,18 +26,6 @@ return {
         ft_ignore = { "help", "vim", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "toggleterm" },
       }
     end,
-    config = function(_, opts)
-      ft_ignore = opts.ft_ignore
-      opts.ft_ignore = nil
-      require("statuscol").setup(opts)
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufNew" }, {
-        callback = function(ev)
-          if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
-            vim.cmd("setlocal statuscolumn=")
-          end
-        end,
-      })
-    end,
   },
 
   {
@@ -249,9 +237,9 @@ return {
             {
               "diff",
               symbols = {
-                added = icons.git.add .. "  ",
-                modified = icons.git.change .. "  ",
-                removed = icons.git.delete .. "  ",
+                added = icons.git.add .. " ",
+                modified = icons.git.change .. " ",
+                removed = icons.git.delete .. " ",
               },
             },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
@@ -265,19 +253,10 @@ return {
                 newfile = " " .. icons.file.new .. " ",
               },
             },
-            -- {
-            --   function()
-            --     return require("nvim-navic").get_location()
-            --   end,
-            --   cond = function()
-            --     return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-            --   end,
-            -- },
           },
           lualine_x = {
             {
               "diagnostics",
-              always_visible = true,
               symbols = {
                 error = icons.diagnostics.error .. " ",
                 warn = icons.diagnostics.warn .. " ",
@@ -287,7 +266,16 @@ return {
             },
           },
           lualine_y = {
-            -- -- { "progress", separator = " ", padding = { left = 1, right = 0 } },
+            {
+              "format-on-save",
+              fmt = function()
+                if vim.b.format_on_save ~= false and require("helpers.format").format_on_save then
+                  return " "
+                else
+                  return ""
+                end
+              end,
+            },
           },
           lualine_z = {
             { "location" },
@@ -331,7 +319,7 @@ return {
         function()
           require("spectre").open()
         end,
-        desc = "Replace in files (Spectre)",
+        desc = "Search and replace",
       },
     },
   },
@@ -470,14 +458,14 @@ return {
               ignore_current_buffer = true,
             }))
           end,
-          desc = "List buffers",
+          desc = "Search buffers",
         },
         {
           "<leader>f",
           function()
             require("telescope.builtin").find_files(ivy({}))
           end,
-          desc = "Open file",
+          desc = "Open files",
         },
 
         {
@@ -487,14 +475,14 @@ return {
               vertical({ prompt_title = "Search", preview_title = "" })
             )
           end,
-          desc = "Search",
+          desc = "Search files",
         },
         {
           "<leader>,",
           function()
             require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
           end,
-          desc = "List diagnostics",
+          desc = "Search diagnostics",
         },
         {
           "<leader>o",
@@ -516,7 +504,7 @@ return {
               },
             }))
           end,
-          desc = "Find symbol in buffer",
+          desc = "Search symbols",
         },
       }
     end,
