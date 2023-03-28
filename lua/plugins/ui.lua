@@ -255,6 +255,7 @@ return {
             },
           },
           lualine_x = {
+            { "searchcount" },
             {
               "diagnostics",
               symbols = {
@@ -263,6 +264,9 @@ return {
                 info = icons.diagnostics.info .. " ",
                 hint = icons.diagnostics.hint .. " ",
               },
+              cond = function()
+                return require("helpers.toggle").is_diagnostics_active
+              end,
             },
           },
           lualine_y = {
@@ -271,6 +275,16 @@ return {
               fmt = function()
                 if vim.b.format_on_save ~= false and require("helpers.format").format_on_save then
                   return " "
+                else
+                  return ""
+                end
+              end,
+            },
+            {
+              "conceal-active",
+              fmt = function()
+                if require("helpers.toggle").is_conceal_active then
+                  return " "
                 else
                   return ""
                 end
@@ -416,6 +430,7 @@ return {
         ["<leader>h"] = { name = "Git" },
         ["<leader>d"] = { name = "Debug" },
         ["<leader>t"] = { name = "Test" },
+        ["<leader>u"] = { name = "Toggle" },
       })
     end,
   },

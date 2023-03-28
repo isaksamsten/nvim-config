@@ -1,33 +1,47 @@
 return {
   {
     "EdenEast/nightfox.nvim",
-    opts = {
-      options = {
-        terminal_colors = true,
-        dim_inactive = true,
-        module_default = true,
-        styles = { -- Style to be applied to different syntax groups
-          comments = "italic", -- Value is any valid attr-list value `:help attr-list`
-          conditionals = "NONE",
-          constants = "NONE",
-          functions = "NONE",
-          keywords = "bold",
-          numbers = "NONE",
-          operators = "NONE",
-          strings = "NONE",
-          types = "bold",
-          variables = "NONE",
+    opts = function()
+      return {
+        options = {
+          terminal_colors = true,
+          dim_inactive = true,
+          module_default = true,
+          styles = { -- Style to be applied to different syntax groups
+            comments = "italic", -- Value is any valid attr-list value `:help attr-list`
+            conditionals = "NONE",
+            constants = "NONE",
+            functions = "NONE",
+            keywords = "bold",
+            numbers = "NONE",
+            operators = "NONE",
+            strings = "NONE",
+            types = "bold",
+            variables = "NONE",
+          },
+          inverse = { -- Inverse highlight for different types
+            match_paren = false,
+            visual = false,
+            search = false,
+          },
+          modules = {
+            diagnostic = {
+              background = true,
+            },
+          },
         },
-        inverse = { -- Inverse highlight for different types
-          match_paren = false,
-          visual = false,
-          search = false,
+        palettes = {},
+        groups = {
+          all = {
+            IndentBlanklineContextChar = { fg = "bg4" },
+            DiagnosticVirtualTextError = { style = "italic" },
+            DiagnosticVirtualTextWarn = { style = "italic" },
+            DiagnosticVirtualTextInfo = { style = "italic" },
+            DiagnosticVirtualTextHint = { style = "italic" },
+          },
         },
-      },
-      palettes = {},
-      specs = {},
-      groups = { all = { IndentBlanklineContextChar = { fg = "bg4" } } },
-    },
+      }
+    end,
     lazy = false,
     priority = 999,
     config = function(_, opts)
@@ -46,6 +60,10 @@ return {
         all = function(colors)
           return {
             IndentBlanklineContextChar = { fg = colors.surface1 },
+            -- DiagnosticVirtualTextError = { bg = "NONE" },
+            -- DiagnosticVirtualTextWarn = { bg = "NONE" },
+            -- DiagnosticVirtualTextInfo = { bg = "NONE" },
+            -- DiagnosticVirtualTextHint = { bg = "NONE" },
           }
         end,
       },
@@ -103,7 +121,7 @@ return {
       diagnostics = {
         darker = true,
         undercurl = true,
-        background = false,
+        background = true,
       },
     },
   },

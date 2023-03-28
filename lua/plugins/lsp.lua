@@ -32,7 +32,18 @@ return {
       diagnostic = {
         underline = { severity = { min = vim.diagnostic.severity.WARN } },
         update_in_insert = true,
-        virtual_text = false, --[[ { spacing = 4, prefix = "●" }, ]]
+        virtual_text = {
+          -- spacing = 4,
+          severity = { min = vim.diagnostic.severity.INFO },
+          prefix = "",
+          format = function(diagnostic)
+            local ellipsis = ""
+            if #diagnostic.message > 40 then
+              ellipsis = " "
+            end
+            return string.sub(diagnostic.message, 1, 40) .. ellipsis
+          end,
+        },
         severity_sort = true,
       },
 
@@ -69,27 +80,36 @@ return {
           null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
           null_ls.builtins.formatting.bibclean,
           null_ls.builtins.formatting.prettier,
-          null_ls.builtins.diagnostics.pydocstyle,
-          null_ls.builtins.formatting.isort,
+          null_ls.builtins.formatting.ruff,
+          null_ls.builtins.diagnostics.ruff,
+          -- null_ls.builtins.formatting.isort,
+          -- null_ls.builtins.diagnostics.pydocstyle,
         }
       end,
     },
 
     config = function(_, opts)
-      local lsp = require("lsp-zero")
-      lsp.preset(opts.preset)
+      local lsp_zero = require("lsp-zero")
+      lsp_zero.preset(opts.preset)
 
       local ensure_installed = {}
       for server, _ in pairs(opts.servers) do
         table.insert(ensure_installed, server)
       end
 
-      lsp.ensure_installed(ensure_installed)
+      lsp_zero.ensure_installed(ensure_installed)
 
       local luasnip = require("luasnip")
       local cmp = require("cmp")
-      local cmp_mapping = lsp.defaults.cmp_mappings({
-        ["<Esc>"] = cmp.mapping.abort(),
+      local cmp_mapping = lsp_zero.defaults.cmp_mappings({
+        ["<CR>"] = vim.NIL,
+        ["<S-Tab>"] = vim.NIL,
+        ["<C-d"] = vim.NIL,
+        ["<C-b"] = vim.NIL,
+        ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+        ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+        -- ["<Esc>"] = cmp.mapping.abort(),
+        ["<Tab>"] = cmp.mapping.confirm({ select = true }),
         ["<C-p>"] = cmp.mapping.scroll_docs(-4),
         ["<C-n>"] = cmp.mapping.scroll_docs(4),
         ["<C-f>"] = cmp.mapping(function(fallback)
@@ -111,10 +131,10 @@ return {
       })
 
       for server, config in pairs(opts.servers) do
-        lsp.configure(server, config)
+        lsp_zero.configure(server, config)
       end
 
-      lsp.setup_nvim_cmp({
+      lsp_zero.setup_nvim_cmp({
         formatting = {
           format = function(_, item)
             local icons = require("config.icons").kinds
@@ -127,7 +147,7 @@ return {
         mapping = cmp_mapping,
       })
 
-      lsp.on_attach(function(client, bufnr)
+      lsp_zero.on_attach(function(client, bufnr)
         require("lsp_signature").on_attach({
           bind = true,
           hint_enable = false,
@@ -175,14 +195,14 @@ return {
           })
         end
       end)
-      lsp.setup()
+      lsp_zero.setup()
 
       -- Setup diagnostics
       vim.diagnostic.config(opts.diagnostic)
 
       -- Setup null-ls. We only use null-ls for formatting
       local null_ls = require("null-ls")
-      local null_opts = lsp.build_options("null-ls", {})
+      local null_opts = lsp_zero.build_options("null-ls", {})
 
       null_ls.setup({
         on_attach = function(client, bufnr) -- Enable format-on-save prefer null-ls for formatting

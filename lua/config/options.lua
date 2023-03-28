@@ -25,9 +25,9 @@ opt.foldenable = false
 opt.list = true -- Show some invisible characters (tabs...
 opt.mouse = "a" -- enable mouse mode
 opt.number = true -- Print line number
+opt.relativenumber = true -- Relative line numbers
 opt.pumblend = 10 -- Popup blend
 opt.pumheight = 10 -- Maximum number of entries in a popup
-opt.relativenumber = true -- Relative line numbers
 opt.scrolloff = 8 -- Lines of context
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
 opt.shiftround = true -- Round indent
@@ -52,7 +52,7 @@ opt.wrap = false -- Disable line wrap
 
 if vim.fn.has("nvim-0.9.0") == 1 then
   opt.splitkeep = "screen"
-  opt.shortmess = "filnxtToOFWIcC"
+  opt.shortmess:append({ C = true })
 end
 
 -- fix markdown indentation settings

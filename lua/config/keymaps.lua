@@ -53,6 +53,9 @@ vim.keymap.set("x", "g/", "<esc>/\\%V", { silent = false, desc = "Search inside 
 vim.keymap.set("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
 vim.keymap.set("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
 
-vim.keymap.set("n", "<leader>uf", function()
-  require("helper.format").toggle()
-end, { desc = "Toggle format on save" })
+-- Toggle
+
+local Toggle = require("helpers.toggle")
+vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
+vim.keymap.set("n", "<leader>uc", Toggle.conceal, { desc = "Toggle conceal" })
+vim.keymap.set("n", "<leader>ud", Toggle.diagnostics, { desc = "Toggle diagnostics" })
