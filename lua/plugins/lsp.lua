@@ -30,11 +30,11 @@ return {
       },
 
       diagnostic = {
-        underline = { severity = { min = vim.diagnostic.severity.WARN } },
+        underline = true,
         update_in_insert = true,
         virtual_text = {
           -- spacing = 4,
-          severity = { min = vim.diagnostic.severity.INFO },
+          severity = { min = vim.diagnostic.severity.WARN },
           prefix = "",
           format = function(diagnostic)
             local ellipsis = ""
