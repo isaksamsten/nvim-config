@@ -17,7 +17,14 @@ return {
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
       "jose-elias-alvarez/null-ls.nvim",
-      "ray-x/lsp_signature.nvim",
+      {
+        "ray-x/lsp_signature.nvim",
+        opts = {
+          bind = true,
+          hint_enable = false,
+          doc_lines = 3,
+        },
+      },
     },
 
     opts = {
@@ -35,26 +42,14 @@ return {
         virtual_text = {
           spacing = 4,
           severity = { min = vim.diagnostic.severity.WARN },
-          prefix = "",
+          prefix = "",
           format = function(diagnostic)
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
             local message = diagnostic.message
             if #diagnostic.message > max_width + 1 then
               message = string.sub(diagnostic.message, 1, max_width) .. "…"
             end
-
-            local icons = require("config.icons").diagnostics
-            local icon = ""
-            if diagnostic.severity == vim.diagnostic.severity.ERROR then
-              icon = icons.error
-            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-              icon = icons.warn
-            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-              icon = icons.info
-            else
-              icon = icons.hint
-            end
-            return icon .. " " .. message
+            return message
           end,
         },
         severity_sort = true,
@@ -62,42 +57,50 @@ return {
 
       servers = {
         pyright = {
-          settings = {
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = "openFilesOnly",
-                useLibraryCodeForTypes = true,
-                typeCheckingMode = "off",
+          setup = {
+            settings = {
+              python = {
+                analysis = {
+                  autoSearchPaths = true,
+                  diagnosticMode = "openFilesOnly",
+                  useLibraryCodeForTypes = true,
+                  typeCheckingMode = "off",
+                },
               },
             },
           },
         },
         texlab = {},
         ltex = {
-          settings = {
-            additionalRules = {
-              motherTongeu = "sv",
-            },
+          setup = {
+            settings = {
+              additionalRules = {
+                motherTongeu = "sv",
+              },
 
-            dictionary = {
-              ["en-US"] = { ":en-US-personal-dictionary" },
+              dictionary = {
+                ["en-US"] = { ":en-US-personal-dictionary" },
+              },
             },
           },
         },
+        ruff_lsp = {
+          name = "ruff-lsp",
+          on_attach = function(client, bufnr)
+            client.server_capabilities.Hover = false
+          end,
+        },
       },
       sources = function(null_ls)
+        -- NOTE: formatters are run in the order in which the are defined here.
         return {
           null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.black,
           null_ls.builtins.formatting.latexindent,
           null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
           null_ls.builtins.formatting.bibclean,
           null_ls.builtins.formatting.prettier,
-          null_ls.builtins.formatting.ruff,
-          null_ls.builtins.diagnostics.ruff,
-          -- null_ls.builtins.formatting.isort,
-          -- null_ls.builtins.diagnostics.pydocstyle,
+          null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
+          null_ls.builtins.formatting.black,
         }
       end,
     },
@@ -107,8 +110,9 @@ return {
       lsp_zero.preset(opts.preset)
 
       local ensure_installed = {}
-      for server, _ in pairs(opts.servers) do
-        table.insert(ensure_installed, server)
+      for server, config in pairs(opts.servers) do
+        local name = config.name or server
+        table.insert(ensure_installed, name)
       end
 
       lsp_zero.ensure_installed(ensure_installed)
@@ -122,7 +126,6 @@ return {
         ["<C-b"] = vim.NIL,
         ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
         ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-        -- ["<Esc>"] = cmp.mapping.abort(),
         ["<Tab>"] = cmp.mapping.confirm({ select = true }),
         ["<C-p>"] = cmp.mapping.scroll_docs(-4),
         ["<C-n>"] = cmp.mapping.scroll_docs(4),
@@ -145,7 +148,10 @@ return {
       })
 
       for server, config in pairs(opts.servers) do
-        lsp_zero.configure(server, config)
+        local setup = config.setup
+        if setup ~= false then
+          lsp_zero.configure(server, setup or {})
+        end
       end
 
       lsp_zero.setup_nvim_cmp({
@@ -162,11 +168,13 @@ return {
       })
 
       lsp_zero.on_attach(function(client, bufnr)
-        require("lsp_signature").on_attach({
-          bind = true,
-          hint_enable = false,
-          doc_lines = 3,
-        }, bufnr)
+        -- Run custom on_attach functions on per server basis
+        local config = opts.servers[client.name]
+        if config then
+          if config.on_attach then
+            config.on_attach(client, bufnr)
+          end
+        end
 
         -- Set the tagfunc to use lsp-definition
         vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")

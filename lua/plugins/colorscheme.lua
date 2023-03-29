@@ -13,7 +13,7 @@ return {
             constants = "NONE",
             functions = "NONE",
             keywords = "bold",
-            numbers = "NONE",
+            numbers = "bold",
             operators = "NONE",
             strings = "NONE",
             types = "bold",
@@ -65,14 +65,15 @@ return {
         all = function(colors)
           return {
             IndentBlanklineContextChar = { fg = colors.surface1 },
+            StatusLineNC = { fg = colors.fg1 },
           }
         end,
       },
       flavour = "mocha",
       dim_inactive = {
         enabled = true,
-        shade = "light",
-        percentage = 0.1,
+        shade = "dark",
+        percentage = 0.2,
       },
       styles = {
         comments = { "italic" },

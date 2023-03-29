@@ -99,10 +99,9 @@ return {
         commenced = "", -- message shown when task starts
         completed = "", -- message shown when task completes
       },
-      fmt = {
-        task = function(task_name, message, percentage)
-          return false
-        end,
+      sources = {
+        ltex = { ignore = true },
+        ["null-ls"] = { ignore = true },
       },
     },
   },
@@ -230,17 +229,9 @@ return {
                 if recording_register == "" then
                   return ""
                 else
-                  return "  " .. recording_register
+                  return " " .. recording_register
                 end
               end,
-            },
-            {
-              "diff",
-              symbols = {
-                added = icons.git.add .. " ",
-                modified = icons.git.change .. " ",
-                removed = icons.git.delete .. " ",
-              },
             },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
             {
@@ -267,6 +258,14 @@ return {
               cond = function()
                 return require("helpers.toggle").is_diagnostics_active
               end,
+            },
+            {
+              "diff",
+              symbols = {
+                added = icons.git.add .. " ",
+                modified = icons.git.change .. " ",
+                removed = icons.git.delete .. " ",
+              },
             },
           },
           lualine_y = {
@@ -335,6 +334,12 @@ return {
         end,
         desc = "Search and replace",
       },
+    },
+    opts = {
+      open_cmd = "60vnew",
+      line_sep_start = "┌─────────────────────────────────────────────────────────────",
+      result_padding = "│ ",
+      line_sep = "└─────────────────────────────────────────────────────────────",
     },
   },
 
