@@ -33,15 +33,28 @@ return {
         underline = true,
         update_in_insert = true,
         virtual_text = {
-          -- spacing = 4,
+          spacing = 4,
           severity = { min = vim.diagnostic.severity.WARN },
-          prefix = "",
+          prefix = "",
           format = function(diagnostic)
-            local ellipsis = ""
-            if #diagnostic.message > 40 then
-              ellipsis = " "
+            local max_width = vim.g.max_width_diagnostic_virtual_text or 40
+            local message = diagnostic.message
+            if #diagnostic.message > max_width + 1 then
+              message = string.sub(diagnostic.message, 1, max_width) .. "…"
             end
-            return string.sub(diagnostic.message, 1, 40) .. ellipsis
+
+            local icons = require("config.icons").diagnostics
+            local icon = ""
+            if diagnostic.severity == vim.diagnostic.severity.ERROR then
+              icon = icons.error
+            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+              icon = icons.warn
+            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
+              icon = icons.info
+            else
+              icon = icons.hint
+            end
+            return icon .. " " .. message
           end,
         },
         severity_sort = true,

@@ -1,6 +1,7 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.no_plugin_maps = true
+vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
 opt.title = true

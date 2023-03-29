@@ -42,36 +42,51 @@ return {
         },
       }
     end,
-    lazy = false,
-    priority = 999,
-    config = function(_, opts)
-      local theme = require("nightfox")
-      theme.setup(opts)
-      vim.cmd([[colorscheme duskfox]])
-    end,
+    -- lazy = false,
+    -- priority = 999,
+    -- config = function(_, opts)
+    --   local theme = require("nightfox")
+    --   theme.setup(opts)
+    --   vim.cmd([[colorscheme duskfox]])
+    -- end,
   },
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    -- lazy = false,
-    -- priority = 1000,
+    priority = 999,
+    lazy = false,
+    config = function(_, opts)
+      local theme = require("catppuccin")
+      theme.setup(opts)
+      vim.cmd([[colorscheme catppuccin]])
+    end,
     opts = {
       highlight_overrides = {
         all = function(colors)
           return {
             IndentBlanklineContextChar = { fg = colors.surface1 },
-            -- DiagnosticVirtualTextError = { bg = "NONE" },
-            -- DiagnosticVirtualTextWarn = { bg = "NONE" },
-            -- DiagnosticVirtualTextInfo = { bg = "NONE" },
-            -- DiagnosticVirtualTextHint = { bg = "NONE" },
           }
         end,
       },
-      flavour = "macchiato",
+      flavour = "mocha",
       dim_inactive = {
         enabled = true,
-        shade = "dark",
-        percentage = 0.15,
+        shade = "light",
+        percentage = 0.1,
+      },
+      styles = {
+        comments = { "italic" },
+        conditionals = {},
+        loops = {},
+        functions = {},
+        keywords = { "bold" },
+        strings = {},
+        variables = {},
+        numbers = { "bold" },
+        booleans = { "bold" },
+        properties = {},
+        types = { "bold" },
+        operators = {},
       },
       integrations = {
         aerial = true,
@@ -116,12 +131,32 @@ return {
   },
 
   {
-    "navarasu/onedark.nvim",
+    "olimorris/onedarkpro.nvim",
     opts = {
-      diagnostics = {
-        darker = true,
-        undercurl = true,
-        background = true,
+      styles = {
+        types = "NONE",
+        methods = "NONE",
+        numbers = "NONE",
+        strings = "NONE",
+        comments = "italic",
+        keywords = "bold",
+        constants = "NONE",
+        functions = "italic",
+        operators = "NONE",
+        variables = "NONE",
+        parameters = "NONE",
+        conditionals = "NONE",
+        virtual_text = "italic",
+      },
+      colors = {
+        fg_context_char = "require('onedarkpro.helpers').lighten('bg', 18, 'onedark')",
+      },
+      highlights = {
+        IndentBlanklineContextChar = { fg = "${fg_context_char}" },
+      },
+      options = {
+        cursorline = true,
+        highlight_inactive_windows = true,
       },
     },
   },

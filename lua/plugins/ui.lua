@@ -492,13 +492,13 @@ return {
           end,
           desc = "Search files",
         },
-        {
-          "<leader>,",
-          function()
-            require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
-          end,
-          desc = "Search diagnostics",
-        },
+        -- {
+        --   "<leader>,",
+        --   function()
+        --     require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
+        --   end,
+        --   desc = "Search diagnostics",
+        -- },
         {
           "<leader>o",
           function()

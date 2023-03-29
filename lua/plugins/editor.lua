@@ -41,8 +41,8 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>m", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Show document diagnostics" },
-      { "<leader>M", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Show workspace diagnostics" },
+      { "<leader>,", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Show document diagnostics" },
+      { "<leader><", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Show workspace diagnostics" },
       { "<leader>L", "<cmd>TroubleToggle loclist<cr>", desc = "Show location list" },
       { "<leader>U", "<cmd>TroubleToggle quickfix<cr>", desc = "Show quickfix list" },
       {
