@@ -7,7 +7,6 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 -- vim.keymap.set("n", "<tab>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
-vim.keymap.set("n", "<leader>r", "<cmd>noh<cr><cmd>redraw<cr><c-l>", { desc = "Redraw and clear hlsearch" })
 
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
 vim.keymap.set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })

@@ -85,7 +85,6 @@ return {
           },
         },
         ruff_lsp = {
-          name = "ruff-lsp",
           on_attach = function(client, bufnr)
             client.server_capabilities.Hover = false
           end,

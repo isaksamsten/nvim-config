@@ -289,6 +289,18 @@ return {
                 end
               end,
             },
+            {
+              function()
+                local python = require("helpers.python").python()
+                return string.format("%s [%s]", python.name, python.version)
+              end,
+              on_click = function()
+                require("helpers.python").select_conda()
+              end,
+              cond = function()
+                return vim.bo.ft == "python"
+              end,
+            },
           },
           lualine_z = {
             { "location" },
