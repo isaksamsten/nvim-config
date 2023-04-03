@@ -4,7 +4,6 @@ return {
     event = "VeryLazy",
     opts = function()
       local builtin = require("statuscol.builtin")
-      local icons = require("config.icons")
       return {
         setopt = true,
         segments = {
@@ -122,13 +121,24 @@ return {
       "MunifTanjim/nui.nvim",
     },
     opts = function()
-      icons = require("config.icons")
+      local icons = require("config.icons")
 
       return {
         close_if_last_window = true,
         filesystem = {
           follow_current_file = true,
           hijack_netrw_behavior = "open_current",
+        },
+        source_selector = {
+          winbar = true,
+          statusline = false, -- toggle to show selector on statusline
+          content_layout = "center",
+          tabs_layout = "equal",
+          tab_labels = {
+            filesystem = "",
+            buffers = "",
+            git_status = "",
+          },
         },
         window = {
           mappings = {
@@ -205,6 +215,12 @@ return {
         },
         sections = {
           lualine_a = {
+            -- {
+            --   "hostname",
+            --   cond = function()
+            --     return os.getenv("SSH_CLIENT") ~= nil
+            --   end,
+            -- },
             {
               "mode",
               fmt = function(mode, ctx)
@@ -213,26 +229,28 @@ return {
             },
           },
           lualine_b = {
-            { "branch", icon = icons.git.branch .. " " },
+            { "branch", icon = icons.git.branch, separator = "" },
             {
-              "hostname",
-              cond = function()
-                return os.getenv("SSH_CLIENT") ~= nil
-              end,
+              "diff",
+              symbols = {
+                added = icons.git.add .. " ",
+                modified = icons.git.change .. " ",
+                removed = icons.git.delete .. " ",
+              },
             },
           },
           lualine_c = {
-            {
-              "macro-recording",
-              fmt = function()
-                local recording_register = vim.fn.reg_recording()
-                if recording_register == "" then
-                  return ""
-                else
-                  return " " .. recording_register
-                end
-              end,
-            },
+            -- {
+            --   "macro-recording",
+            --   fmt = function()
+            --     local recording_register = vim.fn.reg_recording()
+            --     if recording_register == "" then
+            --       return ""
+            --     else
+            --       return " " .. recording_register
+            --     end
+            --   end,
+            -- },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
             {
               "filename",
@@ -246,34 +264,25 @@ return {
             },
           },
           lualine_x = {
-            { "searchcount" },
+            -- { "searchcount" },
+            { require("helpers.lualine").diagnostics_message, separator = "" },
             {
               "diagnostics",
               symbols = {
-                error = icons.diagnostics.error .. " ",
-                warn = icons.diagnostics.warn .. " ",
-                info = icons.diagnostics.info .. " ",
-                hint = icons.diagnostics.hint .. " ",
+                error = icons.diagnostics.error,
+                warn = icons.diagnostics.warn,
+                info = icons.diagnostics.info,
+                hint = icons.diagnostics.hint,
               },
               cond = function()
                 return require("helpers.toggle").is_diagnostics_active
               end,
             },
             {
-              "diff",
-              symbols = {
-                added = icons.git.add .. " ",
-                modified = icons.git.change .. " ",
-                removed = icons.git.delete .. " ",
-              },
-            },
-          },
-          lualine_y = {
-            {
               "format-on-save",
               fmt = function()
                 if vim.b.format_on_save ~= false and require("helpers.format").format_on_save then
-                  return " "
+                  return ""
                 else
                   return ""
                 end
@@ -283,22 +292,62 @@ return {
               "conceal-active",
               fmt = function()
                 if require("helpers.toggle").is_conceal_active then
-                  return " "
+                  return ""
                 else
                   return ""
                 end
               end,
             },
+          },
+          lualine_y = {
+            {
+              function()
+                local lsps = vim.lsp.get_active_clients({ bufnr = vim.fn.bufnr() })
+                local names = {}
+                if lsps and #lsps > 0 then
+                  for _, lsp in ipairs(lsps) do
+                    if lsp.name ~= "null-ls" then
+                      table.insert(names, lsp.name)
+                    end
+                  end
+                end
+                if #names > 0 then
+                  return string.format("%s", table.concat(names, ", "))
+                else
+                  return ""
+                end
+              end,
+              separator = "",
+              on_click = function()
+                vim.api.nvim_command("LspInfo")
+              end,
+              color = function()
+                local _, color = require("nvim-web-devicons").get_icon_cterm_color_by_filetype(
+                  vim.api.nvim_buf_get_option(0, "filetype")
+                )
+                return { fg = color }
+              end,
+            },
             {
               function()
                 local python = require("helpers.python").python()
-                return string.format("%s [%s]", python.name, python.version)
+                if python then
+                  return string.format("%s [%s]", python.name, python.version)
+                else
+                  return "[No interpreter]"
+                end
               end,
               on_click = function()
                 require("helpers.python").select_conda()
               end,
               cond = function()
                 return vim.bo.ft == "python"
+              end,
+              color = function()
+                local _, color = require("nvim-web-devicons").get_icon_cterm_color_by_filetype(
+                  vim.api.nvim_buf_get_option(0, "filetype")
+                )
+                return { fg = color }
               end,
             },
           },
@@ -312,27 +361,27 @@ return {
     config = function(_, opts)
       local lualine = require("lualine")
       lualine.setup(opts)
-      vim.api.nvim_create_autocmd("RecordingEnter", {
-        callback = function()
-          lualine.refresh({
-            place = { "statusline" },
-          })
-        end,
-      })
-      vim.api.nvim_create_autocmd("RecordingLeave", {
-        callback = function()
-          local timer = vim.loop.new_timer()
-          timer:start(
-            50,
-            0,
-            vim.schedule_wrap(function()
-              lualine.refresh({
-                place = { "statusline" },
-              })
-            end)
-          )
-        end,
-      })
+      -- vim.api.nvim_create_autocmd("RecordingEnter", {
+      --   callback = function()
+      --     lualine.refresh({
+      --       place = { "statusline" },
+      --     })
+      --   end,
+      -- })
+      -- vim.api.nvim_create_autocmd("RecordingLeave", {
+      --   callback = function()
+      --     local timer = vim.loop.new_timer()
+      --     timer:start(
+      --       50,
+      --       0,
+      --       vim.schedule_wrap(function()
+      --         lualine.refresh({
+      --           place = { "statusline" },
+      --         })
+      --       end)
+      --     )
+      --   end,
+      -- })
     end,
   },
 
@@ -566,7 +615,7 @@ return {
     end,
   },
 
-  { "kevinhwang91/nvim-bqf", event = "BufReadPre", config = true },
+  { "kevinhwang91/nvim-bqf", event = "VeryLazy", config = true },
 
   -- active indent guide and indent text objects
   -- {

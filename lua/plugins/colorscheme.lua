@@ -1,164 +1,119 @@
 return {
   {
-    "EdenEast/nightfox.nvim",
-    opts = function()
-      return {
-        options = {
-          terminal_colors = true,
-          dim_inactive = true,
-          module_default = true,
-          styles = { -- Style to be applied to different syntax groups
-            comments = "italic", -- Value is any valid attr-list value `:help attr-list`
-            conditionals = "NONE",
-            constants = "NONE",
-            functions = "NONE",
-            keywords = "bold",
-            numbers = "bold",
-            operators = "NONE",
-            strings = "NONE",
-            types = "bold",
-            variables = "NONE",
-          },
-          inverse = { -- Inverse highlight for different types
-            match_paren = false,
-            visual = false,
-            search = false,
-          },
-          modules = {
-            diagnostic = {
-              background = true,
-            },
-          },
-        },
-        palettes = {},
-        groups = {
-          all = {
-            IndentBlanklineContextChar = { fg = "bg4" },
-            DiagnosticVirtualTextError = { style = "italic" },
-            DiagnosticVirtualTextWarn = { style = "italic" },
-            DiagnosticVirtualTextInfo = { style = "italic" },
-            DiagnosticVirtualTextHint = { style = "italic" },
-          },
-        },
-      }
-    end,
-    -- lazy = false,
-    -- priority = 999,
-    -- config = function(_, opts)
-    --   local theme = require("nightfox")
-    --   theme.setup(opts)
-    --   vim.cmd([[colorscheme duskfox]])
-    -- end,
-  },
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 999,
-    lazy = false,
-    config = function(_, opts)
-      local theme = require("catppuccin")
-      theme.setup(opts)
-      vim.cmd([[colorscheme catppuccin]])
-    end,
-    opts = {
-      highlight_overrides = {
-        all = function(colors)
-          return {
-            IndentBlanklineContextChar = { fg = colors.surface1 },
-            StatusLineNC = { fg = colors.fg1 },
-          }
-        end,
-      },
-      flavour = "mocha",
-      dim_inactive = {
-        enabled = true,
-        shade = "dark",
-        percentage = 0.2,
-      },
-      styles = {
-        comments = { "italic" },
-        conditionals = {},
-        loops = {},
-        functions = {},
-        keywords = { "bold" },
-        strings = {},
-        variables = {},
-        numbers = { "bold" },
-        booleans = { "bold" },
-        properties = {},
-        types = { "bold" },
-        operators = {},
-      },
-      integrations = {
-        aerial = true,
-        cmp = true,
-        gitsigns = true,
-        markdown = true,
-        fidget = true,
-        mason = true,
-        mini = true,
-        neogit = true,
-        neotest = true,
-        telescope = true,
-        treesitter = true,
-        treesitter_context = false,
-        ts_rainbow = false,
-        which_key = true,
-        navic = {
-          enabled = false,
-          custom_bg = "NONE",
-        },
-        dap = {
-          enabled = true,
-          enable_ui = true,
-        },
-        native_lsp = {
-          enabled = true,
-          virtual_text = {
-            errors = { "italic" },
-            hints = { "italic" },
-            warnings = { "italic" },
-            information = { "italic" },
-          },
-          underlines = {
-            errors = { "undercurl" },
-            hints = { "undercurl" },
-            warnings = { "undercurl" },
-            information = { "undercurl" },
-          },
-        },
-      },
-    },
-  },
-
-  {
     "olimorris/onedarkpro.nvim",
     opts = {
       styles = {
-        types = "NONE",
-        methods = "NONE",
+        types = "bold",
+        methods = "bold",
         numbers = "NONE",
         strings = "NONE",
         comments = "italic",
         keywords = "bold",
         constants = "NONE",
-        functions = "italic",
+        functions = "NONE",
         operators = "NONE",
         variables = "NONE",
         parameters = "NONE",
         conditionals = "NONE",
         virtual_text = "italic",
       },
+      plugins = {
+        aerial = false,
+        barbar = false,
+        copilot = false,
+        dashboard = false,
+        hop = false,
+        leap = false,
+        lsp_saga = false,
+        marks = false,
+        nvim_hlslens = false,
+        nvim_navic = false,
+        nvim_notify = false,
+        nvim_tree = false,
+        nvim_ts_rainbow = false,
+        op_nvim = false,
+        packer = false,
+        polygot = false,
+        startify = false,
+        vim_ultest = false,
+      },
       colors = {
         fg_context_char = "require('onedarkpro.helpers').lighten('bg', 18, 'onedark')",
+        telescope_prompt = "require('onedarkpro.helpers').darken('bg', 3, 'onedark')",
+        telescope_results = "require('onedarkpro.helpers').darken('bg', 4, 'onedark')",
+        telescope_preview = "require('onedarkpro.helpers').darken('bg', 6, 'onedark')",
+        telescope_selection = "require('onedarkpro.helpers').darken('bg', 8, 'onedark')",
       },
       highlights = {
         IndentBlanklineContextChar = { fg = "${fg_context_char}" },
+        ["@include.python"] = { fg = "${purple}", style = "bold" },
+        ["@variable"] = { fg = "${fg}" },
+        ["@lsp.type.function"] = { link = "@function" },
+
+        TelescopeBorder = {
+          fg = "${telescope_results}",
+          bg = "${telescope_results}",
+        },
+        TelescopePromptBorder = {
+          fg = "${telescope_prompt}",
+          bg = "${telescope_prompt}",
+        },
+        TelescopePromptCounter = { fg = "${fg}" },
+        TelescopePromptNormal = { fg = "${fg}", bg = "${telescope_prompt}" },
+        TelescopePromptPrefix = {
+          fg = "${purple}",
+          bg = "${telescope_prompt}",
+        },
+        TelescopePromptTitle = {
+          fg = "${telescope_prompt}",
+          bg = "${purple}",
+        },
+        TelescopePreviewTitle = {
+          fg = "${telescope_results}",
+          bg = "${green}",
+        },
+        TelescopeResultsTitle = {
+          fg = "${telescope_results}",
+          bg = "${telescope_results}",
+        },
+        TelescopeMatching = { fg = "${blue}" },
+        TelescopeNormal = { bg = "${telescope_results}" },
+        TelescopeSelection = { bg = "${telescope_selection}" },
+        TelescopePreviewNormal = { bg = "${telescope_preview}" },
+        TelescopePreviewBorder = { fg = "${telescope_preview}", bg = "${telescope_preview}" },
+
+        -- Cmp
+        CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
+        CmpItemAbbrMatchFuzzy = { fg = "${blue}", style = "underline" },
+
+        -- Neotest
+        NeotestAdapterName = { fg = "${purple}", style = "bold" },
+        NeotestFocused = { style = "bold" },
+        NeotestNamespace = { fg = "${blue}", style = "bold" },
+
+        -- Neotree
+        NeoTreeRootName = { fg = "${purple}", style = "bold" },
+        NeoTreeFileNameOpened = { fg = "${purple}", style = "italic" },
+
+        -- DAP
+        DebugBreakpoint = { fg = "${red}", style = "bold" },
+        DebugHighlightLine = { fg = "${purple}", style = "italic" },
+        NvimDapVirtualText = { fg = "${cyan}", style = "italic" },
+
+        -- DAP UI
+        DapUIBreakpointsCurrentLine = { fg = "${yellow}", style = "bold" },
       },
       options = {
         cursorline = true,
         highlight_inactive_windows = true,
       },
     },
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("onedarkpro")
+      theme.setup(opts)
+      vim.cmd([[colorscheme onedark]])
+    end,
   },
 }

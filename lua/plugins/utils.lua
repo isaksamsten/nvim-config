@@ -2,6 +2,23 @@ return {
   { "tpope/vim-fugitive", event = "VeryLazy" },
 
   {
+    "ojroques/nvim-osc52",
+    event = "VeryLazy",
+    cond = function()
+      return os.getenv("SSH_CLIENT") ~= nil
+    end,
+    config = function(_, opts)
+      function copy()
+        if vim.v.event.operator == "y" and (vim.v.event.regname == "" or vim.v.event.regname == "+") then
+          require("osc52").copy_register("+")
+        end
+      end
+
+      vim.api.nvim_create_autocmd("TextYankPost", { callback = copy })
+    end,
+  },
+
+  {
     "ThePrimeagen/harpoon",
     event = "VeryLazy",
     keys = {

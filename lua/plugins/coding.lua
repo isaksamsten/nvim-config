@@ -1,4 +1,64 @@
 return {
+  -- Too buggy
+  -- {
+  --   "ThePrimeagen/refactoring.nvim",
+  --   dependencies = {
+  --     { "nvim-lua/plenary.nvim" },
+  --     { "nvim-treesitter/nvim-treesitter" },
+  --   },
+  --   keys = {
+  --     {
+  --       "<leader>rf",
+  --       function()
+  --         require("refactoring").refactor("Extract Function")
+  --       end,
+  --       mode = "v",
+  --       desc = "Extract function",
+  --       silent = true,
+  --       expr = false,
+  --     },
+  --     {
+  --       "<leader>rv",
+  --       function()
+  --         require("refactoring").refactor("Extract Variable")
+  --       end,
+  --       mode = "v",
+  --       desc = "Extract variable",
+  --       silent = true,
+  --       expr = false,
+  --     },
+  --     {
+  --       "<leader>ri",
+  --       function()
+  --         require("refactoring").refactor("Inline Variable")
+  --       end,
+  --       mode = { "v", "n" },
+  --       desc = "Inline variable",
+  --       silent = true,
+  --       expr = false,
+  --     },
+  --     {
+  --       "<leader>rb",
+  --       function()
+  --         require("refactoring").refactor("Extract Block")
+  --       end,
+  --       desc = "Extact block",
+  --       silent = true,
+  --       expr = false,
+  --     },
+  --     {
+  --       "<leader>rr",
+  --       function()
+  --         require("refactoring").select_refactor()
+  --       end,
+  --       mode = { "n", "v" },
+  --       desc = "Refactor",
+  --       silent = true,
+  --       expr = false,
+  --     },
+  --   },
+  -- },
+
   { "numToStr/Comment.nvim", event = "BufReadPost", config = true },
 
   {

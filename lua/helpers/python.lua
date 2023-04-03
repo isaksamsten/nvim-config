@@ -107,7 +107,6 @@ function M.select_conda()
   local conda = M.conda_list_envs()
   if conda then
     return vim.ui.select(conda.envs, { prompt = "Select conda environment" }, function(selected)
-      print(selected)
       if selected then
         local exe = vim.fn.simplify(selected .. "/bin/python")
         local name = vim.fs.basename(selected)

@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = "\\"
 vim.g.no_plugin_maps = true
 vim.g.max_width_diagnostic_virtual_text = 50
 
@@ -7,7 +7,7 @@ local opt = vim.opt
 opt.title = true
 opt.autowrite = true -- enable auto write
 opt.clipboard = "unnamedplus" -- sync with system clipboard
-opt.cmdheight = 0
+opt.cmdheight = 1
 opt.completeopt = "menu,menuone,noselect"
 -- opt.conceallevel = 3 -- Hide * markup for bold and italic
 opt.confirm = true -- confirm to save changes before exiting modified buffer
