@@ -49,4 +49,9 @@ function M.get_root(root_patterns)
   return root
 end
 
+function M.is_remote()
+  local wez = os.getenv("WEZTERM_EXECUTABLE")
+  return os.getenv("SSH_CLIENT") ~= nil or (wez ~= nil and string.match(wez, "wezterm%-mux%-server") ~= nil)
+end
+
 return M

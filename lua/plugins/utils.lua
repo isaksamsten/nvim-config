@@ -4,9 +4,7 @@ return {
   {
     "ojroques/nvim-osc52",
     event = "VeryLazy",
-    cond = function()
-      return os.getenv("SSH_CLIENT") ~= nil
-    end,
+    cond = require("helpers").is_remote,
     config = function(_, opts)
       function copy()
         if vim.v.event.operator == "y" and (vim.v.event.regname == "" or vim.v.event.regname == "+") then

@@ -1,7 +1,6 @@
 return {
   {
-    -- dir = "/home/isak/projects/overseer.nvim",
-    "isaksamsten/overseer.nvim",
+    "stevearc/overseer.nvim",
     opts = {
       strategy = {
         "toggleterm",

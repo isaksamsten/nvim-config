@@ -36,12 +36,17 @@ function M.venv()
       if config.venv and config.venvPath then
         path = vim.fn.simplify(config.venvPath .. "/" .. config.venv)
         local exe = vim.fn.simplify(path .. "/bin/python")
-
+        local conda_prefix = M.conda_list_envs().default_prefix
+        local is_conda = string.match(path, conda_prefix) ~= nil
+        local type = "venv"
+        if is_conda then
+          type = "conda"
+        end
         if vim.loop.fs_stat(exe) then
           return {
             exe = exe,
             path = path,
-            type = "venv",
+            type = type,
             name = config.venv,
             version = python_version(exe),
           }
@@ -174,10 +179,16 @@ end
 
 --- @return nil|string command to activate the python environment
 function M.activate_command()
-  local base_path = M.python()
+  local env = M.python()
 
-  if base_path and base_path.type ~= "native" then
-    return "source " .. vim.fn.simplify(base_path.path .. "/bin/activate")
+  if env then
+    if env.type == "venv" then
+      return "source " .. vim.fn.simplify(env.path .. "/bin/activate")
+    elseif env.type == "conda" then
+      return "conda activate " .. env.name
+    else
+      return nil
+    end
   end
 
   return nil

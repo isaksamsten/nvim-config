@@ -215,12 +215,6 @@ return {
         },
         sections = {
           lualine_a = {
-            -- {
-            --   "hostname",
-            --   cond = function()
-            --     return os.getenv("SSH_CLIENT") ~= nil
-            --   end,
-            -- },
             {
               "mode",
               fmt = function(mode, ctx)
@@ -297,6 +291,12 @@ return {
                   return ""
                 end
               end,
+            },
+            {
+              function()
+                return "SSH"
+              end,
+              cond = require("helpers").is_remote,
             },
           },
           lualine_y = {
