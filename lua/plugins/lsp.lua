@@ -38,7 +38,7 @@ return {
 
       diagnostic = {
         underline = true,
-        update_in_insert = true,
+        update_in_insert = false,
         virtual_text = false,
         -- virtual_text = {
         --   spacing = 4,
@@ -100,7 +100,7 @@ return {
           null_ls.builtins.formatting.bibclean,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
-          null_ls.builtins.formatting.black,
+          -- null_ls.builtins.formatting.black,
         }
       end,
     },

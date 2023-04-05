@@ -8,7 +8,7 @@ return {
         setopt = true,
         segments = {
           {
-            sign = { name = { "neotest", "Dap" }, maxwidth = 1, colwidth = 2, auto = false },
+            sign = { name = { "Dap", "neotest", "Diagnostic" }, maxwidth = 1, colwidth = 2, auto = false },
             click = "v:lua.ScSa",
           },
           { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
@@ -300,34 +300,34 @@ return {
             },
           },
           lualine_y = {
-            {
-              function()
-                local lsps = vim.lsp.get_active_clients({ bufnr = vim.fn.bufnr() })
-                local names = {}
-                if lsps and #lsps > 0 then
-                  for _, lsp in ipairs(lsps) do
-                    if lsp.name ~= "null-ls" then
-                      table.insert(names, lsp.name)
-                    end
-                  end
-                end
-                if #names > 0 then
-                  return string.format("%s", table.concat(names, ", "))
-                else
-                  return ""
-                end
-              end,
-              separator = "",
-              on_click = function()
-                vim.api.nvim_command("LspInfo")
-              end,
-              color = function()
-                local _, color = require("nvim-web-devicons").get_icon_cterm_color_by_filetype(
-                  vim.api.nvim_buf_get_option(0, "filetype")
-                )
-                return { fg = color }
-              end,
-            },
+            -- {
+            --   function()
+            --     local lsps = vim.lsp.get_active_clients({ bufnr = vim.fn.bufnr() })
+            --     local names = {}
+            --     if lsps and #lsps > 0 then
+            --       for _, lsp in ipairs(lsps) do
+            --         if lsp.name ~= "null-ls" then
+            --           table.insert(names, lsp.name)
+            --         end
+            --       end
+            --     end
+            --     if #names > 0 then
+            --       return string.format("%s", table.concat(names, ", "))
+            --     else
+            --       return ""
+            --     end
+            --   end,
+            --   separator = "",
+            --   on_click = function()
+            --     vim.api.nvim_command("LspInfo")
+            --   end,
+            --   color = function()
+            --     local _, color = require("nvim-web-devicons").get_icon_cterm_color_by_filetype(
+            --       vim.api.nvim_buf_get_option(0, "filetype")
+            --     )
+            --     return { fg = color }
+            --   end,
+            -- },
             {
               function()
                 local python = require("helpers.python").python()
