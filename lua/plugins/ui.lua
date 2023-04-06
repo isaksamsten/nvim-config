@@ -8,7 +8,15 @@ return {
         setopt = true,
         segments = {
           {
-            sign = { name = { "Dap", "neotest", "Diagnostic" }, maxwidth = 1, colwidth = 2, auto = false },
+            sign = {
+              name = {
+                "Dap",
+                "neotest", --[[ "Diagnostic" ]]
+              },
+              maxwidth = 1,
+              colwidth = 2,
+              auto = false,
+            },
             click = "v:lua.ScSa",
           },
           { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
@@ -224,6 +232,8 @@ return {
           },
           lualine_b = {
             { "branch", icon = icons.git.branch, separator = "" },
+          },
+          lualine_c = {
             {
               "diff",
               symbols = {
@@ -232,8 +242,6 @@ return {
                 removed = icons.git.delete .. " ",
               },
             },
-          },
-          lualine_c = {
             -- {
             --   "macro-recording",
             --   fmt = function()

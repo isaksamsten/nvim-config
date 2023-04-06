@@ -39,20 +39,20 @@ return {
       diagnostic = {
         underline = true,
         update_in_insert = false,
-        virtual_text = false,
-        -- virtual_text = {
-        --   spacing = 4,
-        --   severity = { min = vim.diagnostic.severity.ERROR },
-        --   prefix = "",
-        --   format = function(diagnostic)
-        --     local max_width = vim.g.max_width_diagnostic_virtual_text or 40
-        --     local message = diagnostic.message
-        --     if #diagnostic.message > max_width + 1 then
-        --       message = string.sub(diagnostic.message, 1, max_width) .. "…"
-        --     end
-        --     return message
-        --   end,
-        -- },
+        -- virtual_text = false,
+        virtual_text = {
+          spacing = 4,
+          severity = { min = vim.diagnostic.severity.ERROR },
+          prefix = " ",
+          format = function(diagnostic)
+            local max_width = vim.g.max_width_diagnostic_virtual_text or 40
+            local message = diagnostic.message
+            if #diagnostic.message > max_width + 1 then
+              message = string.sub(diagnostic.message, 1, max_width) .. "…"
+            end
+            return message
+          end,
+        },
         severity_sort = true,
       },
 
