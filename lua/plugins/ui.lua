@@ -345,9 +345,6 @@ return {
                   return "[No interpreter]"
                 end
               end,
-              on_click = function()
-                require("helpers.python").select_conda()
-              end,
               cond = function()
                 return vim.bo.ft == "python"
               end,

@@ -2,6 +2,7 @@ local M = {}
 local get_root = require("helpers").get_root
 
 M.current_conda_env = nil
+M.current_pyright = nil
 
 M.default_env = {
   PATH = vim.env.PATH,
@@ -33,22 +34,25 @@ end
 
 --- Detect the current virtual environment from pyrightconfig.json
 function M.pyright_venv()
-  if vim.b.pyrightconfig then
-    local cache_mtime = vim.b.pyrightconfig_mtime
+  -- Use the cached virtual environment if we already found it
+  if M.current_pyright then
+    local cache_mtime = M.current_pyright.mtime
     if cache_mtime then
       local root = get_root({ "pyrightconfig.json" })
       if root then
         local path = vim.fn.simplify(root .. "/" .. "pyrightconfig.json")
         if path then
+          -- Also, check if the pyrightconfig.json file have changed since last
           local actual_mtime = vim.loop.fs_stat(path).mtime
           if actual_mtime and actual_mtime.sec == cache_mtime.sec then
-            return vim.b.pyrightconfig
+            return M.current_pyright.env
           end
         end
       end
     end
   end
 
+  -- If not, we try to detect a virtual environment from a pyrightconfig
   local root = get_root({ "pyrightconfig.json" })
   if root then
     local path = vim.fn.simplify(root .. "/" .. "pyrightconfig.json")
@@ -56,36 +60,44 @@ function M.pyright_venv()
       local data = table.concat(vim.fn.readfile(path), "\n")
       local config = vim.json.decode(data)
       if config.venv and config.venvPath then
+        -- Crudly check if the specified virtual environment is a Conda environment
+        local conda_prefix = M.conda_envs().default_prefix
+        local is_conda = string.match(config.venvPath, conda_prefix) ~= nil
         local venv_path = vim.fn.simplify(config.venvPath .. "/" .. config.venv)
         local exe = vim.fn.simplify(venv_path .. "/bin/python")
-        local conda_prefix = M.conda_envs().default_prefix
-        local is_conda = string.match(venv_path, conda_prefix) ~= nil
         local type = "venv"
         if is_conda then
           type = "conda"
         end
-        local stat = vim.loop.fs_stat(path)
-        if stat then
-          vim.b.pyrightconfig_mtime = stat.mtime
-          vim.b.pyrightconfig = {
-            exe = exe,
-            path = venv_path,
-            type = type,
-            name = config.venv,
-            version = python_version(exe),
+
+        -- Check that the env has a python executable
+        local config_mtime = vim.loop.fs_stat(path).mtime
+        if vim.loop.fs_stat(exe) then
+          M.current_pyright = {
+            mtime = config_mtime,
+            env = {
+              exe = exe,
+              path = venv_path,
+              type = type,
+              name = config.venv,
+              version = python_version(exe),
+            },
           }
-          return vim.b.pyrightconfig
+          return M.current_pyright.env
+        else
+          vim.notify("Could not find the virtual environment specified in pyrightconfig")
+          M.current_pyright = { env = nil, mtime = config_mtime }
         end
       end
     end
   end
-  vim.b.pyrightconfig = false
+
+  -- We don't have a pyrightconfig, or it is incorrectly specified
   return nil
 end
 
-function M.write_pyrightconfig()
-  local python = M.current_conda_env
-  if python and python.type ~= "native" then
+function M.write_pyrightconfig(venv)
+  if venv and venv.type ~= "native" then
     local root = get_root({ "setup.py", "pyproject.toml" })
     local pyrightconfig = vim.fn.simplify(root .. "/" .. "pyrightconfig.json")
     if root then
@@ -93,13 +105,16 @@ function M.write_pyrightconfig()
       if vim.loop.fs_stat(pyrightconfig) then
         config = vim.json.decode(table.concat(vim.fn.readfile(pyrightconfig), "\n"))
       end
-      config.venvPath = vim.fs.dirname(python.path)
-      config.venv = python.name
+      config.venvPath = vim.fs.dirname(venv.path)
+      config.venv = venv.name
 
       config = vim.json.encode(config)
       vim.fn.writefile({ config }, pyrightconfig)
+      M.current_pyright = nil
+      return true
     end
   end
+  return false
 end
 
 function M.conda_envs()
@@ -111,14 +126,9 @@ function M.conda_envs()
   return nil
 end
 
-local function create_conda_env_from_env_path(env_path, conda_prefix)
+local function create_conda_env_from_env_path(env_path)
   local exe = vim.fn.simplify(env_path .. "/bin/python")
   local name = vim.fs.basename(env_path)
-  if env_path == conda_prefix then
-    name = "base"
-  elseif not string.find(env_path, conda_prefix) then
-    name = env_path
-  end
   return {
     exe = exe,
     path = env_path,
@@ -129,17 +139,29 @@ local function create_conda_env_from_env_path(env_path, conda_prefix)
 end
 
 --- Set the conda environment to the selected_conda_path variable
-function M.select_conda(callback)
+function M.select_conda(opts)
+  opts = opts or {}
   local conda = M.conda_envs()
   if conda then
-    if M.pyright_venv() then
+    local venv = M.pyright_venv()
+    if venv and not opts.force then
       vim.notify("Unable to select Conda. Virtual environment is configured in pyrightconfig.json")
+      if opts.callback then
+        opts.callback()
+      end
     else
-      vim.ui.select(conda.envs, { prompt = "Select conda environment" }, function(selected)
+      local envs = {}
+      for _, env in ipairs(conda.envs) do
+        if env ~= conda.conda_prefix and string.match(env, conda.conda_prefix) then
+          table.insert(envs, env)
+        end
+      end
+
+      vim.ui.select(envs, { prompt = "Select conda environment" }, function(selected)
         if selected then
-          M.current_conda_env = create_conda_env_from_env_path(selected, conda.conda_prefix)
-          if callback then
-            callback(M.current_conda_env)
+          M.current_conda_env = create_conda_env_from_env_path(selected)
+          if opts.callback then
+            opts.callback(M.current_conda_env)
           end
         else
           M.current_conda_env = nil
@@ -205,15 +227,13 @@ local function set_env(python)
 end
 
 --- Activate the virtual environment specified in pyrightconfig or conda if there is no pyrightconfig.json
+--- @return boolean - true if the LSP needs to be restarted; false otherwise
 function M.activate(env)
   local venv = M.pyright_venv()
   if venv then
-    if env then
-      vim.notify("Activating virtual environment specified in pyrightconfig.json")
-      return false
-    end
+    vim.notify("Activating virtual environment specified in pyrightconfig.json")
     set_env(venv)
-    return true
+    return false
   else
     if not env then
       if M.current_conda_env then
@@ -236,7 +256,7 @@ function M.deactivate()
   reset_env()
 end
 
---- @return nil|string command to activate the python environment
+--- @return nil|string - command to activate the python environment
 function M.activate_command()
   local env = M.python()
 

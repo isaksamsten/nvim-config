@@ -2,6 +2,24 @@ Format = require("helpers.format")
 
 return {
   {
+    "simrat39/rust-tools.nvim",
+    dependencies = { "VonHeikemen/lsp-zero.nvim" },
+    ft = "rust",
+    opts = {
+      server = {
+        on_attach = function(_, bufnr)
+          vim.keymap.set("n", "<leader>cc", function()
+            require("rust-tools").hover_actions.hover_actions()
+          end, { buffer = bufnr })
+          vim.keymap.set("n", "<Leader>ca", function()
+            require("rust-tools").code_action_group.code_action_group()
+          end, { buffer = bufnr })
+        end,
+      },
+    },
+  },
+
+  {
     "VonHeikemen/lsp-zero.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
@@ -39,11 +57,10 @@ return {
       diagnostic = {
         underline = true,
         update_in_insert = false,
-        -- virtual_text = false,
         virtual_text = {
           spacing = 4,
           severity = { min = vim.diagnostic.severity.ERROR },
-          prefix = " ",
+          prefix = "󱓻 ",
           format = function(diagnostic)
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
             local message = diagnostic.message
@@ -90,6 +107,9 @@ return {
             client.server_capabilities.Hover = false
           end,
         },
+        rust_analyzer = {
+          skip_setup = true,
+        },
       },
       sources = function(null_ls)
         -- NOTE: formatters are run in the order in which the are defined here.
@@ -100,7 +120,7 @@ return {
           null_ls.builtins.formatting.bibclean,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
-          -- null_ls.builtins.formatting.black,
+          null_ls.builtins.formatting.black,
         }
       end,
     },
@@ -110,12 +130,17 @@ return {
       lsp_zero.preset(opts.preset)
 
       local ensure_installed = {}
+      local skip_server_setup = {}
       for server, config in pairs(opts.servers) do
         local name = config.name or server
         table.insert(ensure_installed, name)
+        if config.skip_setup then
+          table.insert(skip_server_setup, name)
+        end
       end
 
       lsp_zero.ensure_installed(ensure_installed)
+      lsp_zero.skip_server_setup(skip_server_setup)
 
       local luasnip = require("luasnip")
       local cmp = require("cmp")
