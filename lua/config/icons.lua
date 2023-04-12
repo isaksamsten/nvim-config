@@ -1,4 +1,11 @@
 return {
+  debug = {
+    breakpoint = "",
+    condition = "",
+    stopped = "",
+    rejected = "",
+    log = "",
+  },
   file = {
     file = "",
     modified = "",

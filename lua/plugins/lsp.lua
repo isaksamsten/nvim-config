@@ -43,6 +43,22 @@ return {
           doc_lines = 3,
         },
       },
+
+      {
+        "isaksamsten/better-virtual-text.nvim",
+        opts = {
+          highlights = {
+            BetterVirtualTextError = { link = "NonText" },
+            BetterVirtualTextWarn = { link = "NonText" },
+            BetterVirtualTextInfo = { link = "NonText" },
+            BetterVirtualTextHint = { link = "NonText" },
+            BetterVirtualTextPrefixError = { link = "DiagnosticSignError" },
+            BetterVirtualTextPrefixWarn = { link = "DiagnosticSignWarn" },
+            BetterVirtualTextPrefixInfo = { link = "DiagnosticSignInfo" },
+            BetterVirtualTextPrefixHint = { link = "DiagnosticSignHint" },
+          },
+        },
+      },
     },
 
     opts = {
@@ -57,10 +73,23 @@ return {
       diagnostic = {
         underline = true,
         update_in_insert = false,
-        virtual_text = {
+        virtual_text = false,
+
+        better_virtual_text = {
           spacing = 4,
-          severity = { min = vim.diagnostic.severity.ERROR },
-          prefix = "󱓻 ",
+          -- severity = { min = vim.diagnostic.severity.ERROR },
+          prefix = function(diagnostic)
+            local icons = require("config.icons").diagnostics
+            if diagnostic.severity == vim.diagnostic.severity.ERROR then
+              return icons.error
+            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+              return icons.warn
+            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
+              return icons.info
+            else
+              return icons.hint
+            end
+          end,
           format = function(diagnostic)
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
             local message = diagnostic.message

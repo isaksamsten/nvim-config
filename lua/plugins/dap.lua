@@ -13,11 +13,12 @@ return {
         opts = {},
         config = function(_, opts)
           local executable = require("helpers.python").executable
+          local icons = require("config.icons").debug
           local dap = require("dap")
           dap.adapters.python = {
             type = "executable",
-            command = executable,
-            args = { "-m", "debugpy.adapter" },
+            command = "debugpy-adapter",
+            args = {},
           }
           dap.configurations.python = {
             {
@@ -69,21 +70,36 @@ return {
           vim.keymap.set("n", "<leader>dr", dap.run_last, { desc = "Run last debug" })
           vim.keymap.set("n", "<leader>dR", dap.repl.open, { desc = "Open REPL" })
           vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
-          vim.keymap.set("n", "<leader>ds", dap.step_over, { desc = "Step over" })
-          vim.keymap.set("n", "<leader>dS", dap.step_into, { desc = "Step into" })
-          vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step out" })
+          vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "Step over" })
+          vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step into" })
+          vim.keymap.set("n", "<leader>dO", dap.step_out, { desc = "Step out" })
 
-          vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+          vim.fn.sign_define("DapBreakpoint", {
+            text = icons.breakpoint,
+            texthl = "DebugBreakpoint",
+            linehl = "DebugBreakpoint",
+            numhl = "DebugBreakpoint",
+          })
+          vim.fn.sign_define("DapBreakpointCondition", {
+            text = icons.condition,
+            texthl = "DapBreakpointCondition",
+            linehl = "DapBreakpointCondition",
+            numhl = "DapBreakpointCondition",
+          })
           vim.fn.sign_define(
-            "DapBreakpointCondition",
-            { text = "", texthl = "DapBreakpointCondition", linehl = "", numhl = "" }
+            "DapStopped",
+            { text = icons.stopped, texthl = "DapStopped", linehl = "DapStopped", numhl = "DapStopped" }
           )
-          vim.fn.sign_define("DapStopped", { text = "", texthl = "", linehl = "DapStopped", numhl = "" })
+          vim.fn.sign_define("DapBreakpointRejected", {
+            text = icons.rejected,
+            texthl = "DapBreakpointRejected",
+            linehl = "DapBreakpointRejected",
+            numhl = "DapBreakpointRejected",
+          })
           vim.fn.sign_define(
-            "DapBreakpointRejected",
-            { text = "", texthl = "DapBreakpointRejected", linehl = "", numhl = "" }
+            "DapLogPoint",
+            { text = icons.log, texthl = "DapLogPoint", linehl = "DapLogPoint", numhl = "DapLogPoint" }
           )
-          vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DapLogPoint", linehl = "", numhl = "" })
         end,
       },
     },
