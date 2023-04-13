@@ -144,9 +144,10 @@ return {
         -- NOTE: formatters are run in the order in which the are defined here.
         return {
           null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.rustfmt,
           null_ls.builtins.formatting.latexindent,
           null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
-          null_ls.builtins.formatting.bibclean,
+          null_ls.builtins.formatting.bibclean, -- installed by system
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
           null_ls.builtins.formatting.black,
