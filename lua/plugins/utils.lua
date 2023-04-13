@@ -5,8 +5,12 @@ return {
     "ojroques/nvim-osc52",
     event = "VeryLazy",
     cond = require("helpers").is_remote,
+    opts = {
+      silent = true,
+    },
     config = function(_, opts)
-      function copy()
+      require("osc52").setup(opts)
+      local function copy()
         if vim.v.event.operator == "y" and (vim.v.event.regname == "" or vim.v.event.regname == "+") then
           require("osc52").copy_register("+")
         end
