@@ -267,7 +267,7 @@ return {
           },
           lualine_x = {
             -- { "searchcount" },
-            { require("helpers.lualine").diagnostics_message, separator = "" },
+            -- { require("helpers.lualine").diagnostics_message, separator = "" },
             {
               "diagnostics",
               symbols = {
