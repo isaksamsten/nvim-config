@@ -1,4 +1,13 @@
 return {
+  ui = {
+    cmd = "",
+    search_up = "",
+    search_down = "",
+    filter = "",
+    icons = "",
+    help = ":h",
+    git = "",
+  },
   debug = {
     breakpoint = "",
     condition = "",

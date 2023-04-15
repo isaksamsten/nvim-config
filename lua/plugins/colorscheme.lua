@@ -150,6 +150,9 @@ return {
         DiagnosticUnderlineWarn = { sp = "${yellow}", style = "undercurl" },
         DiagnosticUnderlineInfo = { sp = "${blue}", style = "undercurl" },
         DiagnosticUnderlineHint = { sp = "${cyan}", style = "undercurl" },
+        NoiceCmdline = { bg = "#23262c" },
+        NoiceMini = { link = "BetterVirtualTextInfo" },
+        NoiceVirtualText = { link = "BetterVirtualTextInfo" },
       },
       options = {
         cursorline = true,
