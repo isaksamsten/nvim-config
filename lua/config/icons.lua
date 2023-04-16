@@ -1,4 +1,4 @@
-return {
+local icons = {
   ui = {
     cmd = "",
     search_up = "",
@@ -97,3 +97,16 @@ return {
     Variable = " ",
   },
 }
+icons.diagnostics.by_severity = function(severity)
+  if severity == vim.diagnostic.severity.ERROR then
+    return icons.diagnostics.error
+  elseif severity == vim.diagnostic.severity.WARN then
+    return icons.diagnostics.warn
+  elseif severity == vim.diagnostic.severity.INFO then
+    return icons.diagnostics.info
+  else
+    return icons.diagnostics.hint
+  end
+end
+
+return icons

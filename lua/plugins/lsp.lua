@@ -1,15 +1,9 @@
 Format = require("helpers.format")
+local function br2lf(s)
+  return s:gsub("<br>", "\n")
+end
 
 local function on_attach(client, bufnr)
-  -- Run custom on_attach functions on per server basis
-  -- local config = opts.servers[client.name]
-  -- if config then
-  --   if config.on_attach then
-  --     config.on_attach(client, bufnr)
-  --   end
-  -- end
-
-  print("attaching")
   -- Set the tagfunc to use lsp-definition
   vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 
@@ -72,31 +66,25 @@ return {
   },
 
   {
-    -- "VonHeikemen/lsp-zero.nvim",
     "neovim/nvim-lspconfig",
     version = false,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      -- { "neovim/nvim-lspconfig", version = false },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
-      "L3MON4D3/LuaSnip",
-      "rafamadriz/friendly-snippets",
       "jose-elias-alvarez/null-ls.nvim",
-      -- {
-      --   "ray-x/lsp_signature.nvim",
-      --   opts = {
-      --     bind = true,
-      --     hint_enable = false,
-      --     doc_lines = 3,
-      --   },
-      -- },
+      "hrsh7th/cmp-nvim-lsp",
+      {
+        "ray-x/lsp_signature.nvim",
+        opts = {
+          bind = true,
+          hint_enable = false,
+          doc_lines = 3,
+          handler_opts = {
+            border = "solid",
+          },
+        },
+      },
 
       {
         "isaksamsten/better-virtual-text.nvim",
@@ -116,27 +104,31 @@ return {
     },
 
     opts = {
-
+      hover = {
+        border = "solid",
+      },
       diagnostic = {
         signs = false,
         underline = true,
         update_in_insert = false,
         virtual_text = false,
-
+        float = {
+          border = "solid",
+          header = {},
+          suffix = function(diag)
+            return (" %s (%s)"):format(diag.source, diag.code), "DiagnosticFloatSuffix"
+          end,
+          prefix = {},
+          format = function(diag)
+            local icon = require("config.icons").diagnostics.by_severity(diag.severity)
+            return ("%s %s"):format(icon, diag.message)
+          end,
+        },
         better_virtual_text = {
           spacing = 4,
           -- severity = { min = vim.diagnostic.severity.ERROR },
           prefix = function(diagnostic)
-            local icons = require("config.icons").diagnostics
-            if diagnostic.severity == vim.diagnostic.severity.ERROR then
-              return icons.error
-            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-              return icons.warn
-            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-              return icons.info
-            else
-              return icons.hint
-            end
+            return require("config.icons").diagnostics.by_severity(diagnostic.severity)
           end,
           format = function(diagnostic)
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
@@ -200,17 +192,15 @@ return {
 
     config = function(_, opts)
       -- Setup diagnostics
-      -- local sign_icons = require("config.icons").diagnostics
-      -- vim.fn.sign_define("DiagnosticSignError", { text = sign_icons.error, texthl = "DiagnosticSignError", numhl = "" })
-      -- vim.fn.sign_define("DiagnosticSignWarn", { text = sign_icons.warn, texthl = "DiagnosticSignWarn", numhl = "" })
-      -- vim.fn.sign_define("DiagnosticSignInfo", { text = sign_icons.info, texthl = "DiagnosticSignInfo", numhl = "" })
-      -- vim.fn.sign_define("DiagnosticSignHint", { text = sign_icons.hint, texthl = "DiagnosticSignHint", numhl = "" })
+      local sign_icons = require("config.icons").diagnostics
+      vim.fn.sign_define("DiagnosticSignError", { text = sign_icons.error, texthl = "DiagnosticSignError", numhl = "" })
+      vim.fn.sign_define("DiagnosticSignWarn", { text = sign_icons.warn, texthl = "DiagnosticSignWarn", numhl = "" })
+      vim.fn.sign_define("DiagnosticSignInfo", { text = sign_icons.info, texthl = "DiagnosticSignInfo", numhl = "" })
+      vim.fn.sign_define("DiagnosticSignHint", { text = sign_icons.hint, texthl = "DiagnosticSignHint", numhl = "" })
       vim.diagnostic.config(opts.diagnostic)
       local mason = require("mason")
       local mason_lspconfig = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
-      local luasnip = require("luasnip")
-      local cmp = require("cmp")
 
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local ensure_installed = {}
@@ -243,65 +233,31 @@ return {
         })
       end
 
-      cmp.setup({
-        completion = {
-          completeopt = "menu,menuone,noinsert",
-        },
-        experimental = {
-          ghost_text = {
-            hl_group = "NonText",
-          },
-        },
-        snippet = {
-          expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-          end,
-        },
-        window = {
-          -- completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
-        },
-        formatting = {
-          format = function(_, item)
-            local icons = require("config.icons").kinds
-            if icons[item.kind] then
-              item.kind = icons[item.kind] .. item.kind
+      local hover = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
+      vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
+        if result then
+          if type(result.contents) == "string" then
+            ---@cast result {contents: string}
+            result.contents = br2lf(result.contents)
+          elseif result.contents.value then
+            if result.contents.language or result.contents.kind == "markdown" then
+              result.contents.value = br2lf(result.contents.value)
             end
-            return item
-          end,
-        },
-        mapping = {
-          ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-          ["<C-p>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-n>"] = cmp.mapping.scroll_docs(4),
-          ["<C-f>"] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(1) then
-              luasnip.jump(1)
-            else
-              fallback()
+          elseif vim.tbl_islist(result.contents) then
+            ---@cast result {contents: MarkedString[]}
+            for i, v in ipairs(result.contents) do
+              if type(v) == "string" then
+                result.contents[i] = br2lf(v)
+              else
+                v.value = br2lf(v.value)
+              end
             end
-          end, { "i", "s" }),
-
-          -- go to previous placeholder in the snippet
-          ["<C-b>"] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-        },
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
-        }),
-      })
+          end
+        end
+        config = config or {}
+        config.max_width = 80
+        hover(err, result, ctx, config)
+      end
 
       -- Setup null-ls. We only use null-ls for formatting
       local null_ls = require("null-ls")

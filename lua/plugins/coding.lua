@@ -1,63 +1,107 @@
 return {
-  -- Too buggy
-  -- {
-  --   "ThePrimeagen/refactoring.nvim",
-  --   dependencies = {
-  --     { "nvim-lua/plenary.nvim" },
-  --     { "nvim-treesitter/nvim-treesitter" },
-  --   },
-  --   keys = {
-  --     {
-  --       "<leader>rf",
-  --       function()
-  --         require("refactoring").refactor("Extract Function")
-  --       end,
-  --       mode = "v",
-  --       desc = "Extract function",
-  --       silent = true,
-  --       expr = false,
-  --     },
-  --     {
-  --       "<leader>rv",
-  --       function()
-  --         require("refactoring").refactor("Extract Variable")
-  --       end,
-  --       mode = "v",
-  --       desc = "Extract variable",
-  --       silent = true,
-  --       expr = false,
-  --     },
-  --     {
-  --       "<leader>ri",
-  --       function()
-  --         require("refactoring").refactor("Inline Variable")
-  --       end,
-  --       mode = { "v", "n" },
-  --       desc = "Inline variable",
-  --       silent = true,
-  --       expr = false,
-  --     },
-  --     {
-  --       "<leader>rb",
-  --       function()
-  --         require("refactoring").refactor("Extract Block")
-  --       end,
-  --       desc = "Extact block",
-  --       silent = true,
-  --       expr = false,
-  --     },
-  --     {
-  --       "<leader>rr",
-  --       function()
-  --         require("refactoring").select_refactor()
-  --       end,
-  --       mode = { "n", "v" },
-  --       desc = "Refactor",
-  --       silent = true,
-  --       expr = false,
-  --     },
-  --   },
-  -- },
+  {
+    "hrsh7th/nvim-cmp",
+    version = false,
+    event = "InsertEnter",
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
+      {
+        "rafamadriz/friendly-snippets",
+        config = function()
+          require("luasnip.loaders.from_vscode").lazy_load()
+        end,
+      },
+    },
+    opts = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      return {
+        completion = {
+          completeopt = "menu,menuone,noinsert",
+        },
+        experimental = {
+          ghost_text = {
+            hl_group = "NonText",
+          },
+        },
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        window = {
+          -- completion = cmp.config.window.bordered(),
+          completion = {
+            scrollbar = false,
+          },
+          documentation = {
+            border = "solid",
+            max_width = 80,
+          },
+        },
+
+        mapping = {
+          ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+          ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+          ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+          ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+          ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-p>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-n>"] = cmp.mapping.scroll_docs(4),
+          ["<C-f>"] = cmp.mapping(function(fallback)
+            if luasnip.jumpable(1) then
+              luasnip.jump(1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+
+          -- go to previous placeholder in the snippet
+          ["<C-b>"] = cmp.mapping(function(fallback)
+            if luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        },
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+        }),
+      }
+    end,
+    config = function(_, opts)
+      local cmp = require("cmp")
+      cmp.setup(opts)
+      cmp.setup.cmdline({ "/", "?" }, {
+        sources = {
+          { name = "buffer" },
+        },
+      })
+
+      cmp.setup.cmdline(":", {
+        sources = {
+          { name = "cmdline" },
+          { name = "path" },
+        },
+      })
+
+      cmp.setup.cmdline("@", {
+        sources = {
+          { name = "buffer" },
+        },
+      })
+    end,
+  },
 
   { "numToStr/Comment.nvim", event = "BufReadPost", config = true },
 
