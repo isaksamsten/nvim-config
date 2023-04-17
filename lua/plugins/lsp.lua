@@ -1,50 +1,8 @@
-Format = require("helpers.format")
 local function br2lf(s)
   return s:gsub("<br>", "\n")
 end
 
-local function on_attach(client, bufnr)
-  -- Set the tagfunc to use lsp-definition
-  vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-
-  local map = function(m, lhs, rhs, desc)
-    vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
-  end
-
-  map("n", "K", vim.lsp.buf.hover, "Show information")
-  map("n", "<C-,>", function()
-    vim.diagnostic.open_float(nil, { scope = "line" })
-  end, "Show diagnostics")
-  map("n", "[,", vim.diagnostic.goto_prev, "Previous diagnostic")
-  map("n", "],", vim.diagnostic.goto_next, "Next diagnostic")
-  map("n", "gd", vim.lsp.buf.definition, "Go to definition")
-  map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-  map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
-  map("n", "go", vim.lsp.buf.type_definition, "Go to type definition")
-  map("n", "gr", vim.lsp.buf.references, "Show references")
-
-  map("n", "<C-CR>", vim.lsp.buf.rename, "Rename symbol")
-  map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
-  -- map("x", "<C-.>", vim.lsp.buf.range_code_action, "Code action")
-
-  -- Setup LSP Highlight if availiable
-  if client.server_capabilities.documentHighlightProvider then
-    vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-    vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
-    vim.api.nvim_create_autocmd("CursorHold", {
-      callback = vim.lsp.buf.document_highlight,
-      buffer = bufnr,
-      group = "lsp_document_highlight",
-      desc = "Document Highlight",
-    })
-    vim.api.nvim_create_autocmd("CursorMoved", {
-      callback = vim.lsp.buf.clear_references,
-      buffer = bufnr,
-      group = "lsp_document_highlight",
-      desc = "Clear All the References",
-    })
-  end
-end
+local function on_attach(client, bufnr) end
 
 return {
   {
@@ -80,6 +38,7 @@ return {
           bind = true,
           hint_enable = false,
           doc_lines = 3,
+          transparency = 10,
           handler_opts = {
             border = "solid",
           },
@@ -109,26 +68,35 @@ return {
       },
       diagnostic = {
         signs = false,
-        underline = true,
-        update_in_insert = false,
         virtual_text = false,
+        update_in_insert = false,
+        underline = true,
         float = {
           border = "solid",
+          severity_sort = true,
           header = {},
           suffix = function(diag)
-            return (" %s (%s)"):format(diag.source, diag.code), "DiagnosticFloatSuffix"
+            local message
+            if diag.code then
+              message = ("%s (%s)"):format(diag.source, diag.code)
+            else
+              message = diag.source
+            end
+            return " " .. message, "DiagnosticFloatingSuffix"
           end,
-          prefix = {},
+          prefix = function(diag)
+            local severity = vim.diagnostic.severity[diag.severity]
+            severity = string.sub(severity, 0, 1) .. string.sub(severity, 2, -1):lower()
+            return require("config.icons"):get_diagnostic(diag.severity), "DiagnosticSign" .. severity
+          end,
           format = function(diag)
-            local icon = require("config.icons").diagnostics.by_severity(diag.severity)
-            return ("%s %s"):format(icon, diag.message)
+            return diag.message
           end,
         },
         better_virtual_text = {
           spacing = 4,
-          -- severity = { min = vim.diagnostic.severity.ERROR },
           prefix = function(diagnostic)
-            return require("config.icons").diagnostics.by_severity(diagnostic.severity)
+            return require("config.icons"):get_diagnostic(diagnostic.severity)
           end,
           format = function(diagnostic)
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
@@ -191,13 +159,8 @@ return {
     },
 
     config = function(_, opts)
-      -- Setup diagnostics
-      local sign_icons = require("config.icons").diagnostics
-      vim.fn.sign_define("DiagnosticSignError", { text = sign_icons.error, texthl = "DiagnosticSignError", numhl = "" })
-      vim.fn.sign_define("DiagnosticSignWarn", { text = sign_icons.warn, texthl = "DiagnosticSignWarn", numhl = "" })
-      vim.fn.sign_define("DiagnosticSignInfo", { text = sign_icons.info, texthl = "DiagnosticSignInfo", numhl = "" })
-      vim.fn.sign_define("DiagnosticSignHint", { text = sign_icons.hint, texthl = "DiagnosticSignHint", numhl = "" })
       vim.diagnostic.config(opts.diagnostic)
+
       local mason = require("mason")
       local mason_lspconfig = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
@@ -218,61 +181,73 @@ return {
 
       for _, server in pairs(setup_servers) do
         local config = opts.servers[server]
-        local local_on_attach = on_attach
-        if config.on_attach then
-          local_on_attach = function(client, bufnr)
-            on_attach(client, bufnr)
-            config.on_attach(client, bufnr)
-          end
-        end
-
         lspconfig[server].setup({
-          on_attach = local_on_attach,
+          on_attach = function(client, bufnr)
+            if config.on_attach then
+              config.on_attach(client, bufnr)
+            end
+            vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+
+            require("config.keymaps").lsp_on_attach(client, bufnr)
+
+            if client.server_capabilities.documentHighlightProvider then
+              vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+              vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
+              vim.api.nvim_create_autocmd("CursorHold", {
+                callback = vim.lsp.buf.document_highlight,
+                buffer = bufnr,
+                group = "lsp_document_highlight",
+                desc = "Document Highlight",
+              })
+              vim.api.nvim_create_autocmd("CursorMoved", {
+                callback = vim.lsp.buf.clear_references,
+                buffer = bufnr,
+                group = "lsp_document_highlight",
+                desc = "Clear All the References",
+              })
+            end
+          end,
           capabilities = capabilities,
           settings = config.settings or {},
         })
       end
 
       local hover = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
-      vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
-        if result then
-          if type(result.contents) == "string" then
-            ---@cast result {contents: string}
-            result.contents = br2lf(result.contents)
-          elseif result.contents.value then
-            if result.contents.language or result.contents.kind == "markdown" then
-              result.contents.value = br2lf(result.contents.value)
-            end
-          elseif vim.tbl_islist(result.contents) then
-            ---@cast result {contents: MarkedString[]}
-            for i, v in ipairs(result.contents) do
-              if type(v) == "string" then
-                result.contents[i] = br2lf(v)
-              else
-                v.value = br2lf(v.value)
-              end
-            end
-          end
-        end
-        config = config or {}
-        config.max_width = 80
-        hover(err, result, ctx, config)
-      end
+      vim.lsp.handlers["textDocument/hover"] = hover
+      -- function(err, result, ctx, config)
+      --         if result then
+      --           if type(result.contents) == "string" then
+      --             result.contents = br2lf(result.contents)
+      --           elseif result.contents.value then
+      --             if result.contents.language or result.contents.kind == "markdown" then
+      --               result.contents.value = br2lf(result.contents.value)
+      --             end
+      --           elseif vim.tbl_islist(result.contents) then
+      --             for i, v in ipairs(result.contents) do
+      --               if type(v) == "string" then
+      --                 result.contents[i] = br2lf(v)
+      --               else
+      --                 v.value = br2lf(v.value)
+      --               end
+      --             end
+      --           end
+      --         end
+      --         config = config or {}
+      --         config.max_width = 80
+      --         hover(err, result, ctx, config)
+      --       end
 
       -- Setup null-ls. We only use null-ls for formatting
       local null_ls = require("null-ls")
       null_ls.setup({
         on_attach = function(client, bufnr) -- Enable format-on-save prefer null-ls for formatting
-          if client.supports_method("textDocument/formatting") then
-            vim.keymap.set("n", "<leader>F", function()
-              Format.format(client.id, bufnr, true, false)
-            end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
-
+          require("config.keymaps").null_ls_on_attach(client, bufnr)
+          if client.server_capabilities.documentFormattingProvider then
             vim.api.nvim_create_autocmd("BufWritePre", {
               buffer = bufnr,
               group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
               callback = function()
-                Format.format(client.id, bufnr, false, true)
+                require("helpers.format").format(client.id, bufnr, false, true)
               end,
             })
           end

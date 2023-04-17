@@ -97,16 +97,21 @@ local icons = {
     Variable = " ",
   },
 }
-icons.diagnostics.by_severity = function(severity)
-  if severity == vim.diagnostic.severity.ERROR then
-    return icons.diagnostics.error
-  elseif severity == vim.diagnostic.severity.WARN then
-    return icons.diagnostics.warn
-  elseif severity == vim.diagnostic.severity.INFO then
-    return icons.diagnostics.info
-  else
-    return icons.diagnostics.hint
+
+function icons:get_diagnostic(severity)
+  severity = vim.diagnostic.severity[severity]
+  if severity then
+    local icon = self.diagnostics[severity:lower()]
+    if icon then
+      return icon
+    end
   end
+  return "!"
 end
 
+local diagnostics = icons.diagnostics
+vim.fn.sign_define("DiagnosticSignError", { text = diagnostics.error, texthl = "DiagnosticSignError", numhl = "" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = diagnostics.warn, texthl = "DiagnosticSignWarn", numhl = "" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = diagnostics.info, texthl = "DiagnosticSignInfo", numhl = "" })
+vim.fn.sign_define("DiagnosticSignHint", { text = diagnostics.hint, texthl = "DiagnosticSignHint", numhl = "" })
 return icons

@@ -150,8 +150,14 @@ return {
         DiagnosticUnderlineWarn = { sp = "${yellow}", style = "undercurl" },
         DiagnosticUnderlineInfo = { sp = "${blue}", style = "undercurl" },
         DiagnosticUnderlineHint = { sp = "${cyan}", style = "undercurl" },
-        DiagnosticFloatSuffix = { fg = "${gray}" },
-        NoiceCmdline = { bg = "#23262c" },
+
+        DiagnosticFloatingSuffix = { fg = "${gray}" },
+        DiagnosticFloatingHint = { fg = "${fg}" },
+        DiagnosticFloatingWarn = { fg = "${fg}" },
+        DiagnosticFloatingInfo = { fg = "${fg}" },
+        DiagnosticFloatingError = { fg = "${fg}" },
+
+        ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
         NoiceMini = { link = "BetterVirtualTextInfo" },
         NoiceVirtualText = { link = "BetterVirtualTextInfo" },
       },
