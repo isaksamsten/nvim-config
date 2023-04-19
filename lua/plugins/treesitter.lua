@@ -13,6 +13,7 @@ return {
         "help",
         "html",
         "json",
+        "java",
         "lua",
         "markdown",
         "markdown_inline",

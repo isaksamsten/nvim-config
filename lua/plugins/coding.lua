@@ -1,4 +1,19 @@
+vim.g.ai_no_mappings = true
 return {
+  {
+    "aduros/ai.vim",
+    config = function()
+      vim.g.ai_temperature = 0.7
+      vim.g.ai_indicator_text = "󱚠"
+
+      vim.keymap.set("n", "<M-a>", ":AI ", { desc = "AI prompt" })
+      vim.keymap.set("v", "<M-a>", ":AI ", { desc = "AI prompt" })
+      vim.keymap.set("v", "gAc", ":AI Corrects sentences into standard English.<CR>", { desc = "Grammar check" })
+      vim.keymap.set("i", "<M-a>", "<Esc>:AI<CR>a", { desc = "AI prompt" })
+    end,
+    lazy = false,
+  },
+
   {
     "hrsh7th/nvim-cmp",
     version = false,

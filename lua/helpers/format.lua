@@ -24,4 +24,13 @@ function Format.format(client_id, bufnr, async, on_save)
   })
 end
 
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+  callback = function(args)
+    local root = require("helpers").get_root({ ".git" })
+    local file = vim.fn.simplify(root .. "/.disable-format-on-save")
+    local format_on_save = vim.loop.fs_stat(file) == nil
+    vim.fn.setbufvar(args.buf, "format_on_save", format_on_save)
+  end,
+})
+
 return Format

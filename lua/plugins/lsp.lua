@@ -1,13 +1,102 @@
-local function br2lf(s)
-  return s:gsub("<br>", "\n")
-end
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name == "null-ls" then
+      require("config.keymaps").null_ls_on_attach(client, bufnr)
+      if client.server_capabilities.documentFormattingProvider then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          buffer = bufnr,
+          group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
+          callback = function()
+            require("helpers.format").format(client.id, bufnr, false, true)
+          end,
+        })
+      end
+    else
+      vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+      require("config.keymaps").lsp_on_attach(client, bufnr)
 
-local function on_attach(client, bufnr) end
+      if client.server_capabilities.documentHighlightProvider then
+        vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+        vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
+        vim.api.nvim_create_autocmd("CursorHold", {
+          callback = vim.lsp.buf.document_highlight,
+          buffer = bufnr,
+          group = "lsp_document_highlight",
+          desc = "Document Highlight",
+        })
+        vim.api.nvim_create_autocmd("CursorMoved", {
+          callback = vim.lsp.buf.clear_references,
+          buffer = bufnr,
+          group = "lsp_document_highlight",
+          desc = "Clear All the References",
+        })
+      end
+    end
+  end,
+})
 
 return {
   {
+    "mfussenegger/nvim-jdtls",
+    ft = "java",
+    opts = {
+      root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" },
+    },
+    config = function(_, opts)
+      local resolve_opts = function()
+        local root_dir = require("jdtls.setup").find_root(opts.root_markers or { ".git", "pom.xml", "build.gradle" })
+        local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+        local workspace_dir = vim.fn.stdpath("data") .. "/site/java/workspace-root/" .. project_name
+        os.execute("mkdir " .. workspace_dir)
+        local install_path = require("mason-registry").get_package("jdtls"):get_install_path()
+        local os
+        if vim.fn.has("macunix") then
+          os = "mac"
+        else
+          os = "linux"
+        end
+
+        return {
+          cmd = {
+            "java",
+            "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+            "-Dosgi.bundles.defaultStartLevel=4",
+            "-Declipse.product=org.eclipse.jdt.ls.core.product",
+            "-Dlog.protocol=true",
+            "-Dlog.level=ALL",
+            "-javaagent:" .. install_path .. "/lombok.jar",
+            "-Xms1g",
+            "--add-modules=ALL-SYSTEM",
+            "--add-opens",
+            "java.base/java.util=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/java.lang=ALL-UNNAMED",
+            "-jar",
+            vim.fn.glob(install_path .. "/plugins/org.eclipse.equinox.launcher_*.jar"),
+            "-configuration",
+            install_path .. "/config_" .. os,
+            "-data",
+            workspace_dir,
+          },
+          root_dir = root_dir,
+        }
+      end
+      vim.api.nvim_create_autocmd("Filetype", {
+        pattern = "java", -- autocmd to start jdtls
+        callback = function()
+          local opts = resolve_opts()
+          if opts.root_dir and opts.root_dir ~= "" then
+            require("jdtls").start_or_attach(opts)
+          end
+        end,
+      })
+    end,
+  },
+  {
     "simrat39/rust-tools.nvim",
-    dependencies = { "VonHeikemen/lsp-zero.nvim" },
+    dependencies = { "neovim/nvim-lspconfig" },
     ft = "rust",
     opts = {
       server = {
@@ -31,6 +120,7 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "jose-elias-alvarez/null-ls.nvim",
+      "jay-babu/mason-null-ls.nvim",
       "hrsh7th/cmp-nvim-lsp",
       {
         "ray-x/lsp_signature.nvim",
@@ -111,6 +201,7 @@ return {
       },
 
       servers = {
+        jdtls = { skip_setup = true },
         lua_ls = {},
         pyright = {
           settings = {
@@ -154,6 +245,7 @@ return {
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
           null_ls.builtins.formatting.black,
+          null_ls.builtins.formatting.google_java_format,
         }
       end,
     },
@@ -170,7 +262,7 @@ return {
       local setup_servers = {}
       for server, config in pairs(opts.servers) do
         table.insert(ensure_installed, server)
-        if config.skip_setup ~= false then
+        if config.skip_setup ~= true then
           table.insert(setup_servers, server)
         end
       end
@@ -178,35 +270,11 @@ return {
       mason_lspconfig.setup({
         ensure_installed = ensure_installed,
       })
-
+      print(vim.inspect(setup_servers))
       for _, server in pairs(setup_servers) do
         local config = opts.servers[server]
         lspconfig[server].setup({
-          on_attach = function(client, bufnr)
-            if config.on_attach then
-              config.on_attach(client, bufnr)
-            end
-            vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-
-            require("config.keymaps").lsp_on_attach(client, bufnr)
-
-            if client.server_capabilities.documentHighlightProvider then
-              vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-              vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
-              vim.api.nvim_create_autocmd("CursorHold", {
-                callback = vim.lsp.buf.document_highlight,
-                buffer = bufnr,
-                group = "lsp_document_highlight",
-                desc = "Document Highlight",
-              })
-              vim.api.nvim_create_autocmd("CursorMoved", {
-                callback = vim.lsp.buf.clear_references,
-                buffer = bufnr,
-                group = "lsp_document_highlight",
-                desc = "Clear All the References",
-              })
-            end
-          end,
+          on_attach = config.on_attach,
           capabilities = capabilities,
           settings = config.settings or {},
         })
@@ -214,46 +282,16 @@ return {
 
       local hover = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
       vim.lsp.handlers["textDocument/hover"] = hover
-      -- function(err, result, ctx, config)
-      --         if result then
-      --           if type(result.contents) == "string" then
-      --             result.contents = br2lf(result.contents)
-      --           elseif result.contents.value then
-      --             if result.contents.language or result.contents.kind == "markdown" then
-      --               result.contents.value = br2lf(result.contents.value)
-      --             end
-      --           elseif vim.tbl_islist(result.contents) then
-      --             for i, v in ipairs(result.contents) do
-      --               if type(v) == "string" then
-      --                 result.contents[i] = br2lf(v)
-      --               else
-      --                 v.value = br2lf(v.value)
-      --               end
-      --             end
-      --           end
-      --         end
-      --         config = config or {}
-      --         config.max_width = 80
-      --         hover(err, result, ctx, config)
-      --       end
 
       -- Setup null-ls. We only use null-ls for formatting
       local null_ls = require("null-ls")
       null_ls.setup({
-        on_attach = function(client, bufnr) -- Enable format-on-save prefer null-ls for formatting
-          require("config.keymaps").null_ls_on_attach(client, bufnr)
-          if client.server_capabilities.documentFormattingProvider then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = bufnr,
-              group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-              callback = function()
-                require("helpers.format").format(client.id, bufnr, false, true)
-              end,
-            })
-          end
-        end,
-
         sources = opts.sources(null_ls),
+      })
+      require("mason-null-ls").setup({
+        ensure_installed = nil,
+        automatic_installation = true,
+        automatic_setup = false,
       })
     end,
   },

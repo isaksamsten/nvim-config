@@ -160,6 +160,9 @@ return {
         ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
         NoiceMini = { link = "BetterVirtualTextInfo" },
         NoiceVirtualText = { link = "BetterVirtualTextInfo" },
+
+        AIHighlight = { link = "NonText" },
+        AIIndicator = { link = "DiagnosticSignInfo" },
       },
       options = {
         cursorline = true,

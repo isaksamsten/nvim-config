@@ -2,7 +2,8 @@ vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
-
+vim.keymap.set("n", "<M-]>", "<C-w>w", { desc = "Go to next window" })
+vim.keymap.set("n", "<M-]>", "-1<C-w>w", { desc = "Go to next window" })
 -- vim.keymap.set("n", "<s-tab>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
 -- vim.keymap.set("n", "<tab>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 
