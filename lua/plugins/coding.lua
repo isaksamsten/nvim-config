@@ -17,15 +17,16 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-cmdline",
+      "saadparwaiz1/cmp_luasnip",
       "L3MON4D3/LuaSnip",
+      { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
       {
         "rafamadriz/friendly-snippets",
         config = function()
@@ -36,6 +37,8 @@ return {
     opts = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
+      local prev_item = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+      local next_item = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
       return {
         completion = {
           completeopt = "menu,menuone,noinsert",
@@ -61,14 +64,30 @@ return {
           },
         },
 
-        mapping = {
-          ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-          ["<C-p>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-n>"] = cmp.mapping.scroll_docs(4),
+        mapping = cmp.mapping.preset.insert({
+          ["<C-k>"] = { i = prev_item, c = prev_item },
+          ["<C-j>"] = { i = next_item, c = next_item },
+          ["<Up>"] = { i = prev_item, c = prev_item },
+          ["<Down>"] = { i = next_item, c = next_item },
+          ["<Tab>"] = {
+            i = cmp.mapping.confirm({ select = true }),
+            c = function(fallback)
+              if cmp.visible() then
+                cmp.confirm({ select = true })
+              else
+                cmp.complete()
+              end
+            end,
+          },
+          ["<C-e>"] = cmp.mapping(function(_)
+            if cmp.visible() then
+              cmp.abort()
+            else
+              cmp.complete()
+            end
+          end, { "i", "c" }),
+          ["<C-p>"] = { i = cmp.mapping.scroll_docs(-4) },
+          ["<C-n>"] = { i = cmp.mapping.scroll_docs(4) },
           ["<C-f>"] = cmp.mapping(function(fallback)
             if luasnip.jumpable(1) then
               luasnip.jump(1)
@@ -85,7 +104,7 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-        },
+        }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
@@ -97,23 +116,29 @@ return {
     config = function(_, opts)
       local cmp = require("cmp")
       cmp.setup(opts)
+
       cmp.setup.cmdline({ "/", "?" }, {
+        mapping = opts.mapping,
         sources = {
           { name = "buffer" },
         },
       })
-
       cmp.setup.cmdline(":", {
-        sources = {
+        mapping = opts.mapping,
+        sources = cmp.config.sources({
           { name = "cmdline" },
+        }, {
           { name = "path" },
-        },
+        }),
       })
 
-      cmp.setup.cmdline("@", {
-        sources = {
+      cmp.setup.filetype("gitcommit", {
+        mapping = opts.mapping,
+        sources = cmp.config.sources({
+          { name = "cmp_git" },
+        }, {
           { name = "buffer" },
-        },
+        }),
       })
     end,
   },
