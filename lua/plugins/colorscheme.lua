@@ -120,10 +120,10 @@ return {
         TelescopePreviewNormal = { bg = "${telescope_preview}" },
         TelescopePreviewBorder = { fg = "${telescope_preview}", bg = "${telescope_preview}" },
 
-        NeoTreeTabActive = { bg = "${telescope_preview}" },
-        NeoTreeTabSeparatorActive = { fg = "${telescope_preview}", bg = "${telescope_preview}" },
-        NeoTreeTabInactive = { bg = "${telescope_results}" },
-        NeoTreeTabSeparatorInactive = { fg = "${telescope_results}", bg = "${telescope_results}" },
+        NeoTreeTabActive = { bg = "${telescope_prompt}" },
+        NeoTreeTabSeparatorActive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+        NeoTreeTabInactive = { fg = "${gray}", bg = "${telescope_prompt}" },
+        NeoTreeTabSeparatorInactive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
 
         -- Cmp
         CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },

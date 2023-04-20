@@ -116,6 +116,7 @@ return {
 
   {
     "nvim-neo-tree/neo-tree.nvim",
+    branch = "main",
     cmd = "Neotree",
     keys = {
       { "<leader>e", "<cmd>Neotree <CR>", desc = "Focus explorer" },
@@ -143,10 +144,19 @@ return {
           statusline = false, -- toggle to show selector on statusline
           content_layout = "center",
           tabs_layout = "equal",
-          tab_labels = {
-            filesystem = "",
-            buffers = "",
-            git_status = "",
+          sources = {
+            { source = "filesystem", display_name = "" },
+            { source = "buffers", display_name = "" },
+            { source = "git_status", display_name = "" },
+            {
+              source = "document_symbols",
+              display_name = "",
+              server_filter = {
+                fn = function(name)
+                  return name ~= "null-ls"
+                end,
+              },
+            },
           },
         },
         window = {
