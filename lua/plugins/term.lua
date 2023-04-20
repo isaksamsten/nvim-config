@@ -7,7 +7,7 @@ return {
       open_mapping = [[<c-\>]],
       on_create = function(terminal)
         local Python = require("helpers.python")
-        if not Python.is_activated then
+        if not Python.is_activated() then
           local activate_command = Python.activate_command()
           if activate_command then
             terminal:send(activate_command)
