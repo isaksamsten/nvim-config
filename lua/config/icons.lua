@@ -7,6 +7,7 @@ local icons = {
     icons = "",
     help = ":h",
     git = "",
+    remote = "",
   },
   debug = {
     breakpoint = "",

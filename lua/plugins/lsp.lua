@@ -270,7 +270,6 @@ return {
       mason_lspconfig.setup({
         ensure_installed = ensure_installed,
       })
-      print(vim.inspect(setup_servers))
       for _, server in pairs(setup_servers) do
         local config = opts.servers[server]
         lspconfig[server].setup({

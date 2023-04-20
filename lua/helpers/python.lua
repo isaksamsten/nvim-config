@@ -4,11 +4,20 @@ local get_root = require("helpers").get_root
 M.current_conda_env = nil
 M.current_pyright = nil
 
-M.default_env = {
-  PATH = vim.env.PATH,
-  VIRTUAL_ENV = vim.env.VIRTUAL_ENV,
-  PYTHONHOME = vim.env.PYTHONHOME,
-}
+M.default_env = nil
+
+vim.api.nvim_create_autocmd("BufReadPre", {
+  pattern = "*.py",
+  callback = function()
+    if M.default_env == nil then
+      M.default_env = {
+        PATH = vim.env.PATH,
+        VIRTUAL_ENV = vim.env.VIRTUAL_ENV,
+        PYTHONHOME = vim.env.PYTHONHOME,
+      }
+    end
+  end,
+})
 
 local function python_version(executable)
   local version = vim.fn.system({ executable, "--version" })
@@ -220,9 +229,9 @@ local function set_env(python)
     reset_env()
     vim.env.PATH = vim.fn.simplify(python.path .. "/bin") .. ":" .. vim.env.PATH
     if python.type ~= "conda" then
-      vim.env.virtual_env = python.path
+      vim.env.VIRTUAL_ENV = python.path
     end
-    vim.env.pythonhome = nil
+    vim.env.PYTHONHOME = nil
   end
 end
 
@@ -231,7 +240,6 @@ end
 function M.activate(env)
   local venv = M.pyright_venv()
   if venv then
-    vim.notify("Activating virtual environment specified in pyrightconfig.json")
     set_env(venv)
     return false
   else
@@ -249,6 +257,10 @@ function M.activate(env)
       return false
     end
   end
+end
+
+function M.is_activated()
+  return vim.env.VIRTUAL_ENV ~= nil
 end
 
 --- Reset the environment

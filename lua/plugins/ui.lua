@@ -276,24 +276,6 @@ return {
           },
           lualine_x = {
             {
-              function()
-                return require("noice").api.status.command.get()
-              end,
-              cond = function()
-                return package.loaded["noice"] and require("noice").api.status.command.has()
-              end,
-              -- color = fg("Statement"),
-            },
-            {
-              function()
-                return require("noice").api.status.mode.get()
-              end,
-              cond = function()
-                return package.loaded["noice"] and require("noice").api.status.mode.has()
-              end,
-              -- color = fg("Constant"),
-            },
-            {
               "format-on-save",
               fmt = function()
                 if vim.b.format_on_save ~= false and require("helpers.format").format_on_save then
@@ -315,7 +297,7 @@ return {
             },
             {
               function()
-                return "SSH"
+                return require("config.icons").ui.remote
               end,
               cond = require("helpers").is_remote,
             },
@@ -345,12 +327,15 @@ return {
               cond = function()
                 return vim.bo.ft == "python"
               end,
-              color = function()
-                local _, color = require("nvim-web-devicons").get_icon_cterm_color_by_filetype(
-                  vim.api.nvim_buf_get_option(0, "filetype")
-                )
-                return { fg = color }
-              end,
+              -- color = function()
+              --   local link
+              --   if require("helpers.python").is_activated() then
+              --     link = "DiagnosticSignInfo"
+              --   else
+              --     link = "DiagnosticSignHint"
+              --   end
+              --   return { link = link }
+              -- end,
             },
           },
           lualine_z = {

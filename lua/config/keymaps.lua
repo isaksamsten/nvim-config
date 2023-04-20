@@ -54,8 +54,33 @@ vim.keymap.set("x", "g/", "<esc>/\\%V", { silent = false, desc = "Search inside 
 vim.keymap.set("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
 vim.keymap.set("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
 
--- Toggle
+local Python = require("helpers.python")
+vim.keymap.set("n", "<leader>mA", function()
+  Python.select_conda({
+    callback = function(env)
+      if Python.activate(env) then
+        vim.cmd(":LspRestart<CR>")
+      end
+    end,
+  })
+end, { desc = "Select Conda environment", silent = false })
 
+vim.keymap.set("n", "<leader>ma", function()
+  Python.activate()
+end, { desc = "Activate virtualenv" })
+
+vim.keymap.set("n", "<leader>ms", function()
+  Python.select_conda({
+    callback = function(env)
+      if env then
+        Python.write_pyrightconfig(env)
+      end
+    end,
+    force = true,
+  })
+end, { desc = "Select Pyright virtualenv" })
+
+-- Toggle
 local Toggle = require("helpers.toggle")
 vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
 vim.keymap.set("n", "<leader>uc", Toggle.conceal, { desc = "Toggle conceal" })

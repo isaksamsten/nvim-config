@@ -63,7 +63,25 @@ return {
             max_width = 80,
           },
         },
-
+        formatting = {
+          fields = { "abbr", "kind" },
+          format = function(_, item)
+            local label = item.abbr
+            local truncated_label = vim.fn.strcharpart(label, 0, 30)
+            if truncated_label ~= label then
+              item.abbr = truncated_label .. "..."
+            elseif string.len(label) < 30 then
+              local padding = string.rep(" ", 30 - string.len(label))
+              item.abbr = label .. padding
+            end
+            local icons = require("config.icons").kinds
+            if icons[item.kind] then
+              item.kind = icons[item.kind] .. item.kind
+            end
+            item.menu = nil
+            return item
+          end,
+        },
         mapping = cmp.mapping.preset.insert({
           ["<C-k>"] = { i = prev_item, c = prev_item },
           ["<C-j>"] = { i = next_item, c = next_item },
@@ -134,12 +152,11 @@ return {
 
       cmp.setup.filetype("gitcommit", {
         mapping = opts.mapping,
-        sources = cmp.config.sources({
-          { name = "cmp_git" },
-        }, {
-          { name = "buffer" },
-        }),
+        sources = {
+          { name = "git" },
+        },
       })
+      require("cmp_git").setup()
     end,
   },
 
