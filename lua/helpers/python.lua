@@ -8,7 +8,7 @@ M.default_env = nil
 
 -- Set the default environment when the buffer has been read, which is
 -- **after** Mason has been loaded.
-vim.api.nvim_create_autocmd("BufPostRead", {
+vim.api.nvim_create_autocmd("BufReadPre", {
   pattern = "*.py",
   callback = function()
     if M.default_env == nil then
