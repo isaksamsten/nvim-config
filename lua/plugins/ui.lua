@@ -243,21 +243,22 @@ return {
             },
           },
           lualine_c = {
-            -- {
-            --   "macro-recording",
-            --   fmt = function()
-            --     local recording_register = vim.fn.reg_recording()
-            --     if recording_register == "" then
-            --       return ""
-            --     else
-            --       return " " .. recording_register
-            --     end
-            --   end,
-            -- },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
             {
               "filename",
               path = 1,
+              shorting_target = 40,
+              fmt = function(filename)
+                -- Small attempt to workaround https://github.com/nvim-lualine/lualine.nvim/issues/872
+                if #filename > 80 then
+                  filename = vim.fs.basename(filename)
+                end
+
+                if #filename > 80 then
+                  return string.sub(filename, #filename - 80, #filename)
+                end
+                return filename
+              end,
               symbols = {
                 modified = " " .. icons.file.modified .. " ",
                 readonly = " " .. icons.file.readonly .. " ",
@@ -348,27 +349,6 @@ return {
     config = function(_, opts)
       local lualine = require("lualine")
       lualine.setup(opts)
-      -- vim.api.nvim_create_autocmd("RecordingEnter", {
-      --   callback = function()
-      --     lualine.refresh({
-      --       place = { "statusline" },
-      --     })
-      --   end,
-      -- })
-      -- vim.api.nvim_create_autocmd("RecordingLeave", {
-      --   callback = function()
-      --     local timer = vim.loop.new_timer()
-      --     timer:start(
-      --       50,
-      --       0,
-      --       vim.schedule_wrap(function()
-      --         lualine.refresh({
-      --           place = { "statusline" },
-      --         })
-      --       end)
-      --     )
-      --   end,
-      -- })
     end,
   },
 
@@ -574,6 +554,26 @@ return {
             }))
           end,
           desc = "Search symbols",
+        },
+        {
+          "<leader>T",
+          function()
+            require("telescope.builtin").lsp_workspace_symbols(vertical({
+              prompt_title = "Symbols",
+              preview_title = "Preview",
+              symbols = {
+                "Class",
+                "Function",
+                "Method",
+                "Interface",
+                "Module",
+                "Struct",
+                "Trait",
+                "Property",
+              },
+            }))
+          end,
+          desc = "Find symbol in workspace",
         },
       }
     end,

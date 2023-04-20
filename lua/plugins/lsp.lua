@@ -49,7 +49,9 @@ return {
         local root_dir = require("jdtls.setup").find_root(opts.root_markers or { ".git", "pom.xml", "build.gradle" })
         local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
         local workspace_dir = vim.fn.stdpath("data") .. "/site/java/workspace-root/" .. project_name
-        os.execute("mkdir " .. workspace_dir)
+        if vim.loop.fs_stat(workspace_dir) == nil then
+          os.execute("mkdir " .. workspace_dir)
+        end
         local install_path = require("mason-registry").get_package("jdtls"):get_install_path()
         local os
         if vim.fn.has("macunix") then
@@ -86,14 +88,15 @@ return {
       vim.api.nvim_create_autocmd("Filetype", {
         pattern = "java", -- autocmd to start jdtls
         callback = function()
-          local opts = resolve_opts()
-          if opts.root_dir and opts.root_dir ~= "" then
-            require("jdtls").start_or_attach(opts)
+          local start_opts = resolve_opts()
+          if start_opts.root_dir and start_opts.root_dir ~= "" then
+            require("jdtls").start_or_attach(start_opts)
           end
         end,
       })
     end,
   },
+
   {
     "simrat39/rust-tools.nvim",
     dependencies = { "neovim/nvim-lspconfig" },
