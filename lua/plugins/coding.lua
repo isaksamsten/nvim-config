@@ -214,8 +214,9 @@ return {
         desc = "Reveal test",
       },
     },
-    config = function(opts)
-      require("neotest").setup({
+    opts = function()
+      local icons = require("config.icons")
+      return {
         adapters = {
           require("neotest-python")({
             dap = { justMyCode = false },
@@ -224,7 +225,25 @@ return {
             python = require("helpers.python").executable,
           }),
         },
-      })
+        icons = {
+          child_indent = icons.indent.marker,
+          child_prefix = icons.indent.prefix,
+          collapsed = icons.indent.collapsed,
+          expanded = icons.indent.expanded,
+          failed = icons.test.failed,
+          final_child_indent = " ",
+          final_child_prefix = icons.indent.last,
+          non_collapsible = icons.indent.collapsible,
+          passed = icons.test.passed,
+          running = icons.test.running,
+          running_animated = icons.test.running_animated,
+          skipped = icons.test.skipped,
+          unknown = icons.test.unknown,
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("neotest").setup(opts)
     end,
   },
 
