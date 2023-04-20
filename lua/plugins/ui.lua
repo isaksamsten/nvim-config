@@ -116,7 +116,6 @@ return {
 
   {
     "nvim-neo-tree/neo-tree.nvim",
-    branch = "main",
     cmd = "Neotree",
     keys = {
       { "<leader>e", "<cmd>Neotree <CR>", desc = "Focus explorer" },
