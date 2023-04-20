@@ -123,7 +123,7 @@ return {
   {
     "jayp0521/mason-nvim-dap.nvim",
     dependencies = {
-      { "VonHeikemen/lsp-zero.nvim" },
+      { "williamboman/mason.nvim" },
     },
     opts = {
       ensure_installed = {},

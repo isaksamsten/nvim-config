@@ -6,7 +6,9 @@ M.current_pyright = nil
 
 M.default_env = nil
 
-vim.api.nvim_create_autocmd("BufReadPre", {
+-- Set the default environment when the buffer has been read, which is
+-- **after** Mason has been loaded.
+vim.api.nvim_create_autocmd("BufPostRead", {
   pattern = "*.py",
   callback = function()
     if M.default_env == nil then
@@ -19,11 +21,13 @@ vim.api.nvim_create_autocmd("BufReadPre", {
   end,
 })
 
+---@return string - the version the python executable
 local function python_version(executable)
   local version = vim.fn.system({ executable, "--version" })
   return string.sub(version, 8, -2)
 end
 
+---@return table|nil - The system global 'native' python executable
 function M.system()
   local where = vim.fn.exepath("python")
   if where == "" then
@@ -42,6 +46,7 @@ function M.system()
 end
 
 --- Detect the current virtual environment from pyrightconfig.json
+---@return table|nil - The python virtualenv specified in pyrightconfig.json
 function M.pyright_venv()
   -- Use the cached virtual environment if we already found it
   if M.current_pyright then
@@ -182,7 +187,7 @@ function M.select_conda(opts)
   end
 end
 
---- @return nil|table The python path
+--- @return nil|table - The python path
 function M.python()
   -- First, check if we have a pyrightconfig.json file with configured virtual environment
   local venv = M.pyright_venv()
@@ -259,6 +264,8 @@ function M.activate(env)
   end
 end
 
+--- Return the activation state of the currently selected virtualenv
+---@return boolean - true if activated; false otherwise
 function M.is_activated()
   return vim.env.VIRTUAL_ENV ~= nil
 end

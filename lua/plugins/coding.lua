@@ -165,7 +165,6 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = {
-      "VonHeikemen/lsp-zero.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "antoinemadec/FixCursorHold.nvim",

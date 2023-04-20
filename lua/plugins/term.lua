@@ -6,9 +6,12 @@ return {
     opts = {
       open_mapping = [[<c-\>]],
       on_create = function(terminal)
-        local activate_command = require("helpers.python").activate_command()
-        if activate_command then
-          terminal:send(activate_command)
+        local Python = require("helpers.python")
+        if not Python.is_activated then
+          local activate_command = Python.activate_command()
+          if activate_command then
+            terminal:send(activate_command)
+          end
         end
       end,
     },
