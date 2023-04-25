@@ -15,3 +15,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank()
   end,
 })
+
+-- Activate the current virtual environment. Typically loaded
+-- from the pyrightconfig.json file before entering the buffer,
+-- which means it is activated before pyright.
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.py",
+  callback = function()
+    vim.schedule(function()
+      local Python = require("helpers.python")
+      Python.activate()
+    end)
+  end,
+})

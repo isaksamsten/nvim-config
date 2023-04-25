@@ -77,6 +77,7 @@ return {
       },
       colors = {
         fg_context_char = "require('onedarkpro.helpers').lighten('bg', 18, 'onedark')",
+        fg_border = "require('onedarkpro.helpers').lighten('bg', 3, 'onedark')",
         telescope_prompt = "require('onedarkpro.helpers').darken('bg', 3, 'onedark')",
         telescope_results = "require('onedarkpro.helpers').darken('bg', 4, 'onedark')",
         telescope_preview = "require('onedarkpro.helpers').darken('bg', 6, 'onedark')",
@@ -127,6 +128,7 @@ return {
 
         -- Cmp
         CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
+        CmpItemMenu = { link = "NonText" },
         CmpItemAbbrMatchFuzzy = { fg = "${blue}", style = "underline" },
 
         -- Neotest
@@ -157,12 +159,39 @@ return {
         DiagnosticFloatingInfo = { fg = "${fg}" },
         DiagnosticFloatingError = { fg = "${fg}" },
 
-        ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
+        -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
         NoiceMini = { link = "BetterVirtualTextInfo" },
         NoiceVirtualText = { link = "BetterVirtualTextInfo" },
 
         AIHighlight = { link = "NonText" },
         AIIndicator = { link = "DiagnosticSignInfo" },
+        PopupNormal = {
+          bg = "${float_bg}",
+        },
+        PopupBorder = {
+          bg = "${float_bg}",
+          fg = "${fg_border}",
+        },
+        Pmenu = {
+          link = "PopupNormal",
+        },
+        PmenuSel = {
+          style = "bold",
+        },
+        PmenuBorder = {
+          link = "PopupBorder",
+        },
+        PmenuDocBorder = {
+          bg = "${float_bg}",
+          fg = "${fg_border}",
+        },
+        NormalFloat = {
+          bg = "${float_bg}",
+        },
+        FloatBorder = {
+          bg = "${float_bg}",
+          fg = "${fg_border}",
+        },
       },
       options = {
         cursorline = true,

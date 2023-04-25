@@ -7,7 +7,7 @@ return {
         use_shell = true,
         on_create = function(t)
           local Python = require("helpers.python")
-          if not Python.is_activated() then
+          if not Python.is_activated then
             local activate_command = Python.activate_command()
             if activate_command then
               t:send(activate_command)

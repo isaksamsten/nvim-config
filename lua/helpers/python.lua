@@ -3,23 +3,8 @@ local get_root = require("helpers").get_root
 
 M.current_conda_env = nil
 M.current_pyright = nil
-
+M.is_activated = false
 M.default_env = nil
-
--- Set the default environment when the buffer has been read, which is
--- **after** Mason has been loaded.
-vim.api.nvim_create_autocmd("BufReadPre", {
-  pattern = "*.py",
-  callback = function()
-    if M.default_env == nil then
-      M.default_env = {
-        PATH = vim.env.PATH,
-        VIRTUAL_ENV = vim.env.VIRTUAL_ENV,
-        PYTHONHOME = vim.env.PYTHONHOME,
-      }
-    end
-  end,
-})
 
 ---@return string - the version the python executable
 local function python_version(executable)
@@ -142,14 +127,19 @@ end
 
 local function create_conda_env_from_env_path(env_path)
   local exe = vim.fn.simplify(env_path .. "/bin/python")
-  local name = vim.fs.basename(env_path)
-  return {
-    exe = exe,
-    path = env_path,
-    type = "conda",
-    name = name,
-    version = python_version(exe),
-  }
+
+  if vim.loop.fs_stat(exe) then
+    local name = vim.fs.basename(env_path)
+    return {
+      exe = exe,
+      path = env_path,
+      type = "conda",
+      name = name,
+      version = python_version(exe),
+    }
+  else
+    return nil
+  end
 end
 
 --- Set the conda environment to the selected_conda_path variable
@@ -166,6 +156,7 @@ function M.select_conda(opts)
     else
       local envs = {}
       for _, env in ipairs(conda.envs) do
+        -- Only include Global conda environments
         if env ~= conda.conda_prefix and string.match(env, conda.conda_prefix) then
           table.insert(envs, env)
         end
@@ -187,6 +178,13 @@ function M.select_conda(opts)
   end
 end
 
+--- Returns the current Python environment
+---
+--- 1) Any virtual environment specified in pyrightconfig.json
+--- 2) Any conda environment specified with the variable vim.g.conda_environment
+--- 3) A selected conda environment
+--- 4) The system python installation
+---
 --- @return nil|table - The python path
 function M.python()
   -- First, check if we have a pyrightconfig.json file with configured virtual environment
@@ -199,13 +197,12 @@ function M.python()
   if M.current_conda_env then
     return M.current_conda_env
   else
-    -- Then, check if we have activated a conda environment other than "base"
-    local conda = M.current_conda_env
-    if conda then
-      M.current_conda_env = conda
+    if vim.g.conda_environment then
+      local conda_prefix = M.conda_envs().conda_prefix
+      local conda_env = vim.fn.simplify(conda_prefix .. "/envs/" .. vim.g.conda_environment)
+      M.current_conda_env = create_conda_env_from_env_path(conda_env)
     end
 
-    -- Fall back to system python
     return M.current_conda_env or M.system()
   end
 end
@@ -223,13 +220,25 @@ end
 
 --- Resets the environment variables set by set_env to the default values from when Vim was started.
 local function reset_env()
-  vim.env.PATH = M.default_env.PATH
-  vim.env.PYTHONHOME = M.default_env.PYTHONHOME
-  vim.env.VIRTUAL_ENV = M.default_env.VIRTUAL_ENV
+  if M.default_env ~= nil then
+    vim.env.PATH = M.default_env.PATH
+    vim.env.PYTHONHOME = M.default_env.PYTHONHOME
+    vim.env.VIRTUAL_ENV = M.default_env.VIRTUAL_ENV
+  end
+  M.is_activated = false
 end
 
 --- Set the environment variables according to the selected virtual environment.
 local function set_env(python)
+  -- save the default environment
+  if M.default_env == nil then
+    M.default_env = {
+      PATH = vim.env.PATH,
+      VIRTUAL_ENV = vim.env.VIRTUAL_ENV,
+      PYTHONHOME = vim.env.PYTHONHOME,
+    }
+  end
+
   if python and python.type ~= "native" then
     reset_env()
     vim.env.PATH = vim.fn.simplify(python.path .. "/bin") .. ":" .. vim.env.PATH
@@ -237,23 +246,18 @@ local function set_env(python)
       vim.env.VIRTUAL_ENV = python.path
     end
     vim.env.PYTHONHOME = nil
+    M.is_activated = true
   end
 end
 
 --- Activate the virtual environment specified in pyrightconfig or conda if there is no pyrightconfig.json
 --- @return boolean - true if the LSP needs to be restarted; false otherwise
 function M.activate(env)
-  local venv = M.pyright_venv()
-  if venv then
+  local venv = M.python()
+  if not env and venv and venv.type ~= "native" then
     set_env(venv)
-    return false
+    return venv.type == "venv"
   else
-    if not env then
-      if M.current_conda_env then
-        set_env(M.current_conda_env)
-        return true
-      end
-    end
     if env then
       set_env(env)
       return true
@@ -262,12 +266,6 @@ function M.activate(env)
       return false
     end
   end
-end
-
---- Return the activation state of the currently selected virtualenv
----@return boolean - true if activated; false otherwise
-function M.is_activated()
-  return vim.env.VIRTUAL_ENV ~= nil
 end
 
 --- Reset the environment

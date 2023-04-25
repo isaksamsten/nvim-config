@@ -65,10 +65,6 @@ vim.keymap.set("n", "<leader>mA", function()
   })
 end, { desc = "Select Conda environment", silent = false })
 
-vim.keymap.set("n", "<leader>ma", function()
-  Python.activate()
-end, { desc = "Activate virtualenv" })
-
 vim.keymap.set("n", "<leader>ms", function()
   Python.select_conda({
     callback = function(env)
@@ -78,7 +74,7 @@ vim.keymap.set("n", "<leader>ms", function()
     end,
     force = true,
   })
-end, { desc = "Select Pyright virtualenv" })
+end, { desc = "Save virtual environment" })
 
 -- Toggle
 local Toggle = require("helpers.toggle")

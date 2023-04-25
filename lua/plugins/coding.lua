@@ -35,6 +35,7 @@ return {
       },
     },
     opts = function()
+      local icons = require("config.icons")
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local prev_item = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
@@ -56,29 +57,36 @@ return {
         window = {
           -- completion = cmp.config.window.bordered(),
           completion = {
+            winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,CursorLine:PmenuSel,Search:None",
+            border = icons.borders.outer.all,
+            col_offset = 2,
+            side_padding = 1,
             scrollbar = false,
           },
+
           documentation = {
-            border = "solid",
+            winhighlight = "Normal:Pmenu,FloatBorder:PmenuDocBorder,CursorLine:PmenuSel,Search:None",
+            border = icons.borders.outer.all,
+            side_padding = 0,
+            scrollbar = false,
             max_width = 80,
           },
         },
         formatting = {
-          fields = { "abbr", "kind" },
+          fields = { "kind", "abbr", "menu" },
           format = function(_, item)
             local label = item.abbr
-            local truncated_label = vim.fn.strcharpart(label, 0, 30)
+            local max_width = vim.g.cmp_completion_max_width or 30
+            local truncated_label = vim.fn.strcharpart(label, 0, max_width - 1) -- 1 character for the elipsis
             if truncated_label ~= label then
-              item.abbr = truncated_label .. "..."
-            elseif string.len(label) < 30 then
-              local padding = string.rep(" ", 30 - string.len(label))
+              item.abbr = truncated_label .. "…"
+            elseif string.len(label) < max_width then
+              local padding = string.rep(" ", max_width - string.len(label))
               item.abbr = label .. padding
             end
-            local icons = require("config.icons").kinds
-            if icons[item.kind] then
-              item.kind = icons[item.kind] .. item.kind
-            end
-            item.menu = nil
+            item.abbr = icons.indent.marker .. " " .. item.abbr
+            item.menu = item.kind
+            item.kind = (icons.kinds[item.kind] or icons.kinds.Unknown)
             return item
           end,
         },
@@ -209,7 +217,7 @@ return {
       {
         "<leader>t,",
         function()
-          require("neotest").output.open({ enter = true })
+          require("neotest").output.open({ enter = false })
         end,
         desc = "Reveal test",
       },

@@ -1,6 +1,8 @@
+vim.o.exrc = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.g.no_plugin_maps = true
+vim.g.cmp_completion_max_width = 30
 vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
@@ -27,7 +29,7 @@ opt.list = true -- Show some invisible characters (tabs...
 opt.mouse = "a" -- enable mouse mode
 opt.number = true -- Print line number
 opt.relativenumber = true -- Relative line numbers
-opt.pumblend = 10 -- Popup blend
+opt.pumblend = nil -- Popup blend
 opt.pumheight = 10 -- Maximum number of entries in a popup
 opt.scrolloff = 8 -- Lines of context
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
