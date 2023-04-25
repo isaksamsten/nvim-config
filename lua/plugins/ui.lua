@@ -12,7 +12,6 @@ return {
               name = {
                 "Dap",
                 "neotest", --[[ "Diagnostic" ]]
-                "AI",
               },
               maxwidth = 1,
               colwidth = 2,
@@ -118,8 +117,8 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     keys = {
-      { "<leader>e", "<cmd>Neotree <CR>", desc = "Focus explorer" },
-      { "<leader>b", "<cmd>Neotree toggle<CR>", desc = "Toggle explorer" },
+      { "<leader>e", "<cmd>Neotree focus toggle<CR>", desc = "Focus explorer" },
+      { "<leader>b", "<cmd>Neotree show toggle<CR>", desc = "Toggle explorer" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1

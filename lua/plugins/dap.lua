@@ -106,16 +106,35 @@ return {
     config = function(_, opts)
       local dap = require("dap")
       local dapui = require("dapui")
+      local is_neotree_open = function()
+        for _, source in ipairs(require("neo-tree").config.sources) do
+          local state = require("neo-tree.sources.manager").get_state(source)
+          if state then
+            return true
+          end
+        end
+        return false
+      end
+      local neotree_open = is_neotree_open()
 
       dapui.setup(opts)
       dap.listeners.after.event_initialized["dapui_config"] = function()
+        if neotree_open then
+          vim.cmd.Neotree("close")
+        end
         dapui.open()
       end
       dap.listeners.before.event_terminated["dapui_config"] = function()
         dapui.close()
+        if neotree_open then
+          vim.cmd.Neotree("show")
+        end
       end
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()
+        if neotree_open then
+          vim.cmd.Neotree("show")
+        end
       end
     end,
   },
