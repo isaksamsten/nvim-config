@@ -4,16 +4,19 @@
 
 Clone the repository
 
-    https://github.com/isaksamsten/nvim-config.github
+    https://github.com/isaksamsten/nvim-config.git
 
 Start Neovim and sync the plugins with `:Lazy restore`.
 
 ## Screenshots
 
-Customized the excellent OneDark Pro color scheme.
+Color scheme: [OneDark Pro](https://github.com/olimorris/onedarkpro.nvim)
+![Debug](./assets/debug.png)
 
-![alt text](./assets/debug.png)
+![Completion](./assets/complete.png)
 
-![alt text](./assets/complete.png)
+![Diagnostics](./assets/error.png)
 
-![alt text](./assets/error.png)
+![Live search](./assets/search.png)
+
+![Open files](./assets/findfile.png)
