@@ -127,15 +127,19 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       {
         "ray-x/lsp_signature.nvim",
-        opts = {
-          bind = true,
-          hint_enable = false,
-          doc_lines = 3,
-          transparency = 10,
-          handler_opts = {
-            border = "solid",
-          },
-        },
+        opts = function()
+          local icons = require("config.icons")
+          return {
+            bind = true,
+            hint_enable = false,
+            floating_window = true,
+            doc_lines = 2,
+            transparency = 20,
+            handler_opts = {
+              border = icons.borders.outer.all,
+            },
+          }
+        end,
       },
 
       {

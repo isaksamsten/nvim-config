@@ -1,3 +1,14 @@
+local function blend(a, b, amount, theme)
+  local Color = require("onedarkpro.lib.color")
+  local Helper = require("onedarkpro.helpers")
+  if theme then
+    a = Color.from_hex(Helper.get_preloaded_colors(theme)[a])
+    b = Color.from_hex(Helper.get_preloaded_colors(theme)[b])
+    return a:blend(b, amount):to_css()
+  end
+  return Color.from_hex(a):blend(b, amount):to_css()
+end
+
 return {
   {
     "folke/tokyonight.nvim",
@@ -39,165 +50,156 @@ return {
   },
   {
     "olimorris/onedarkpro.nvim",
-    opts = {
-      styles = {
-        types = "bold",
-        methods = "bold",
-        numbers = "NONE",
-        strings = "NONE",
-        comments = "italic",
-        keywords = "bold",
-        constants = "NONE",
-        functions = "NONE",
-        operators = "NONE",
-        variables = "NONE",
-        parameters = "NONE",
-        conditionals = "NONE",
-        virtual_text = "italic",
-      },
-      plugins = {
-        aerial = false,
-        barbar = false,
-        copilot = false,
-        dashboard = false,
-        hop = false,
-        leap = false,
-        lsp_saga = false,
-        marks = false,
-        nvim_hlslens = false,
-        nvim_navic = false,
-        nvim_notify = false,
-        nvim_tree = false,
-        nvim_ts_rainbow = false,
-        op_nvim = false,
-        packer = false,
-        polygot = false,
-        startify = false,
-        vim_ultest = false,
-      },
-      colors = {
-        fg_context_char = "require('onedarkpro.helpers').lighten('bg', 18, 'onedark')",
-        fg_border = "require('onedarkpro.helpers').lighten('bg', 3, 'onedark')",
-        telescope_prompt = "require('onedarkpro.helpers').darken('bg', 3, 'onedark')",
-        telescope_results = "require('onedarkpro.helpers').darken('bg', 4, 'onedark')",
-        telescope_preview = "require('onedarkpro.helpers').darken('bg', 6, 'onedark')",
-        telescope_selection = "require('onedarkpro.helpers').darken('bg', 8, 'onedark')",
-      },
-      highlights = {
-        IndentBlanklineContextChar = { fg = "${fg_context_char}" },
-        ["@include.python"] = { fg = "${purple}", style = "bold" },
-        ["@variable"] = { fg = "${fg}" },
-        ["@lsp.type.function"] = { link = "@function" },
+    opts = function()
+      return {
+        styles = {
+          types = "bold",
+          methods = "bold",
+          numbers = "NONE",
+          strings = "NONE",
+          comments = "italic",
+          keywords = "bold",
+          constants = "NONE",
+          functions = "NONE",
+          operators = "NONE",
+          variables = "NONE",
+          parameters = "NONE",
+          conditionals = "NONE",
+          virtual_text = "italic",
+        },
+        plugins = {
+          aerial = false,
+          barbar = false,
+          copilot = false,
+          dashboard = false,
+          hop = false,
+          leap = false,
+          lsp_saga = false,
+          marks = false,
+          nvim_hlslens = false,
+          nvim_navic = false,
+          nvim_notify = false,
+          nvim_tree = false,
+          nvim_ts_rainbow = false,
+          op_nvim = false,
+          packer = false,
+          polygot = false,
+          startify = false,
+          vim_ultest = false,
+        },
+        colors = {
+          fg_context_char = "require('onedarkpro.helpers').lighten('bg', 18, 'onedark')",
+          fg_border = "require('onedarkpro.helpers').lighten('bg', 3, 'onedark')",
+          telescope_prompt = "require('onedarkpro.helpers').darken('bg', 3, 'onedark')",
+          telescope_results = "require('onedarkpro.helpers').darken('bg', 4, 'onedark')",
+          telescope_preview = "require('onedarkpro.helpers').darken('bg', 6, 'onedark')",
+          telescope_selection = "require('onedarkpro.helpers').darken('bg', 8, 'onedark')",
+          faded_yellow = blend("bg", "yellow", 0.1, "onedark"),
+          faded_red = blend("bg", "red", 0.1, "onedark"),
+        },
+        highlights = {
+          IndentBlanklineContextChar = { fg = "${fg_context_char}" },
+          ["@include.python"] = { fg = "${purple}", style = "bold" },
+          ["@variable"] = { fg = "${fg}" },
+          ["@lsp.type.function"] = { link = "@function" },
 
-        TelescopeBorder = {
-          fg = "${telescope_results}",
-          bg = "${telescope_results}",
-        },
-        TelescopePromptBorder = {
-          fg = "${telescope_prompt}",
-          bg = "${telescope_prompt}",
-        },
-        TelescopePromptCounter = { fg = "${fg}" },
-        TelescopePromptNormal = { fg = "${fg}", bg = "${telescope_prompt}" },
-        TelescopePromptPrefix = {
-          fg = "${purple}",
-          bg = "${telescope_prompt}",
-        },
-        TelescopePromptTitle = {
-          fg = "${telescope_prompt}",
-          bg = "${purple}",
-        },
-        TelescopePreviewTitle = {
-          fg = "${telescope_results}",
-          bg = "${green}",
-        },
-        TelescopeResultsTitle = {
-          fg = "${telescope_results}",
-          bg = "${telescope_results}",
-        },
-        TelescopeMatching = { fg = "${blue}" },
-        TelescopeNormal = { bg = "${telescope_results}" },
-        TelescopeSelection = { bg = "${telescope_selection}" },
-        TelescopePreviewNormal = { bg = "${telescope_preview}" },
-        TelescopePreviewBorder = { fg = "${telescope_preview}", bg = "${telescope_preview}" },
+          TelescopeBorder = {
+            fg = "${telescope_results}",
+            bg = "${telescope_results}",
+          },
+          TelescopePromptBorder = {
+            fg = "${telescope_prompt}",
+            bg = "${telescope_prompt}",
+          },
+          TelescopePromptCounter = { fg = "${fg}" },
+          TelescopePromptNormal = { fg = "${fg}", bg = "${telescope_prompt}" },
+          TelescopePromptPrefix = {
+            fg = "${purple}",
+            bg = "${telescope_prompt}",
+          },
+          TelescopePromptTitle = {
+            fg = "${telescope_prompt}",
+            bg = "${purple}",
+          },
+          TelescopePreviewTitle = {
+            fg = "${telescope_results}",
+            bg = "${green}",
+          },
+          TelescopeResultsTitle = {
+            fg = "${telescope_results}",
+            bg = "${telescope_results}",
+          },
+          TelescopeMatching = { fg = "${blue}" },
+          TelescopeNormal = { bg = "${telescope_results}" },
+          TelescopeSelection = { bg = "${telescope_selection}" },
+          TelescopePreviewNormal = { bg = "${telescope_preview}" },
+          TelescopePreviewBorder = { fg = "${telescope_preview}", bg = "${telescope_preview}" },
 
-        NeoTreeTabActive = { bg = "${telescope_prompt}" },
-        NeoTreeTabSeparatorActive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
-        NeoTreeTabInactive = { fg = "${gray}", bg = "${telescope_prompt}" },
-        NeoTreeTabSeparatorInactive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+          NeoTreeTabActive = { bg = "${telescope_prompt}" },
+          NeoTreeTabSeparatorActive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+          NeoTreeTabInactive = { fg = "${gray}", bg = "${telescope_prompt}" },
+          NeoTreeTabSeparatorInactive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
 
-        -- Cmp
-        CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
-        CmpItemMenu = { link = "NonText" },
-        CmpItemAbbrMatchFuzzy = { fg = "${blue}", style = "underline" },
+          -- Cmp
+          CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
+          CmpItemMenu = { link = "NonText" },
+          CmpItemAbbrMatchFuzzy = { fg = "${blue}", style = "underline" },
 
-        -- Neotest
-        NeotestAdapterName = { fg = "${purple}", style = "bold" },
-        NeotestFocused = { style = "bold" },
-        NeotestNamespace = { fg = "${blue}", style = "bold" },
+          -- Neotest
+          NeotestAdapterName = { fg = "${purple}", style = "bold" },
+          NeotestFocused = { style = "bold" },
+          NeotestNamespace = { fg = "${blue}", style = "bold" },
 
-        -- Neotree
-        NeoTreeRootName = { fg = "${purple}", style = "bold" },
-        NeoTreeFileNameOpened = { fg = "${purple}", style = "italic" },
+          -- Neotree
+          NeoTreeRootName = { fg = "${purple}", style = "bold" },
+          NeoTreeFileNameOpened = { fg = "${purple}", style = "italic" },
 
-        -- DAP
-        DebugBreakpoint = { fg = "${red}", style = "bold" },
-        DebugHighlightLine = { fg = "${purple}", style = "italic" },
-        NvimDapVirtualText = { fg = "${cyan}", style = "italic" },
+          -- DAP
+          -- DebugBreakpoint = { fg = "${red}", style = "bold" },
+          -- DebugHighlightLine = { fg = "${purple}", style = "italic" },
+          NvimDapVirtualText = { fg = "${cyan}", style = "italic" },
 
-        -- DAP UI
-        DapUIBreakpointsCurrentLine = { fg = "${yellow}", style = "bold" },
+          -- DAP UI
+          DapUIBreakpointsCurrentLine = { fg = "${yellow}", style = "bold" },
 
-        DiagnosticUnderlineError = { sp = "${red}", style = "undercurl" },
-        DiagnosticUnderlineWarn = { sp = "${yellow}", style = "undercurl" },
-        DiagnosticUnderlineInfo = { sp = "${blue}", style = "undercurl" },
-        DiagnosticUnderlineHint = { sp = "${cyan}", style = "undercurl" },
+          DiagnosticUnderlineError = { sp = "${red}", style = "undercurl" },
+          DiagnosticUnderlineWarn = { sp = "${yellow}", style = "undercurl" },
+          DiagnosticUnderlineInfo = { sp = "${blue}", style = "undercurl" },
+          DiagnosticUnderlineHint = { sp = "${cyan}", style = "undercurl" },
 
-        DiagnosticFloatingSuffix = { fg = "${gray}" },
-        DiagnosticFloatingHint = { fg = "${fg}" },
-        DiagnosticFloatingWarn = { fg = "${fg}" },
-        DiagnosticFloatingInfo = { fg = "${fg}" },
-        DiagnosticFloatingError = { fg = "${fg}" },
+          DiagnosticFloatingSuffix = { fg = "${gray}" },
+          DiagnosticFloatingHint = { fg = "${fg}" },
+          DiagnosticFloatingWarn = { fg = "${fg}" },
+          DiagnosticFloatingInfo = { fg = "${fg}" },
+          DiagnosticFloatingError = { fg = "${fg}" },
 
-        -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
-        NoiceMini = { link = "BetterVirtualTextInfo" },
-        NoiceVirtualText = { link = "BetterVirtualTextInfo" },
+          -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
+          NoiceMini = { link = "BetterVirtualTextInfo" },
+          NoiceVirtualText = { link = "BetterVirtualTextInfo" },
 
-        AIHighlight = { link = "NonText" },
-        AIIndicator = { link = "DiagnosticSignInfo" },
-        PopupNormal = {
-          bg = "${float_bg}",
+          AIHighlight = { link = "NonText" },
+          AIIndicator = { link = "DiagnosticSignInfo" },
+          PopupNormal = { bg = "${float_bg}" },
+          PopupBorder = { bg = "${float_bg}", fg = "${fg_border}" },
+          Pmenu = { link = "PopupNormal" },
+          PmenuSel = { style = "bold" },
+          PmenuBorder = { link = "PopupBorder" },
+          PmenuDocBorder = { bg = "${float_bg}", fg = "${fg_border}" },
+          NormalFloat = { bg = "${float_bg}" },
+          FloatBorder = { bg = "${float_bg}", fg = "${fg_border}" },
+          DebugLogPoint = { fg = "${purple}" },
+          DebugStopped = { fg = "${yellow}" },
+          DebugStoppedLine = { bg = "${faded_yellow}" },
+          DebugBreakpointRejected = { fg = "${purple}" },
+          DebugBreakpoint = { fg = "${red}" },
+          DebugBreakpointLine = { bg = "${faded_red}" },
         },
-        PopupBorder = {
-          bg = "${float_bg}",
-          fg = "${fg_border}",
+        options = {
+          cursorline = true,
+          highlight_inactive_windows = true,
         },
-        Pmenu = {
-          link = "PopupNormal",
-        },
-        PmenuSel = {
-          style = "bold",
-        },
-        PmenuBorder = {
-          link = "PopupBorder",
-        },
-        PmenuDocBorder = {
-          bg = "${float_bg}",
-          fg = "${fg_border}",
-        },
-        NormalFloat = {
-          bg = "${float_bg}",
-        },
-        FloatBorder = {
-          bg = "${float_bg}",
-          fg = "${fg_border}",
-        },
-      },
-      options = {
-        cursorline = true,
-        highlight_inactive_windows = true,
-      },
-    },
+      }
+    end,
     lazy = false,
     priority = 1000,
     config = function(_, opts)

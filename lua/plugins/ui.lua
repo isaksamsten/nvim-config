@@ -585,20 +585,23 @@ return {
         },
       }
     end,
-    opts = {
-      defaults = {
-        mappings = {
-          i = {
-            ["<C-u>"] = false,
-            ["<C-d>"] = false,
+    opts = function()
+      -- local icons = require("config.icons")
+      return {
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-u>"] = false,
+              ["<C-d>"] = false,
+            },
           },
+          selection_caret = "   ",
+          multi_icon = "   ",
+          prompt_prefix = "   ",
+          entry_prefix = "    ",
         },
-        selection_caret = "   ",
-        multi_icon = "   ",
-        prompt_prefix = "   ",
-        entry_prefix = "    ",
-      },
-    },
+      }
+    end,
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       "nvim-telescope/telescope-live-grep-args.nvim",

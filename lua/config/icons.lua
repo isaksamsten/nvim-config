@@ -15,6 +15,16 @@ local icons = {
     stopped = "",
     rejected = "",
     log = "",
+
+    disconnect = "",
+    pause = "",
+    play = "",
+    run_last = "",
+    step_back = "",
+    step_into = "",
+    step_out = "",
+    step_over = "",
+    terminate = "",
   },
   file = {
     file = "",
