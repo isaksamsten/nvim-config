@@ -10,7 +10,10 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ## Screenshots
 
-Color scheme: [OneDark Pro](https://github.com/olimorris/onedarkpro.nvim)
+Color scheme: [OneDark Pro](https://github.com/olimorris/onedarkpro.nvim),
+Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
+macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
+
 ![Debug](./assets/debug.png)
 
 ![Completion](./assets/complete.png)
