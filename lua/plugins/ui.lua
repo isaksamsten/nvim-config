@@ -43,7 +43,7 @@ return {
             opts = { enter = true, format = "details" },
             filter = {
               any = {
-                { event = "mini" },
+                { event = "notify" },
                 { error = true },
                 { warning = true },
                 { event = "msg_show", kind = { "" } },
@@ -56,7 +56,7 @@ return {
             opts = { enter = true, format = "details" },
             filter = {
               any = {
-                { event = "mini" },
+                { event = "notify" },
                 { error = true },
                 { warning = true },
                 { event = "msg_show", kind = { "" } },
@@ -106,6 +106,13 @@ return {
         smart_move = {
           enabled = false, -- you can disable this behaviour here
           excluded_filetypes = { "cmp_menu", "cmp_docs", "notify" },
+        },
+
+        routes = {
+          {
+            view = "popup",
+            filter = { event = "msg_show", min_height = 2 },
+          },
         },
         presets = {
           bottom_search = true, -- use a classic bottom cmdline for search
