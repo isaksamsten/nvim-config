@@ -1,59 +1,33 @@
 return {
 
   {
-    "phaazon/hop.nvim", -- Speedily navigate anywhere in a buffer
-    keys = {
-      {
-        "f",
-        function()
-          require("hop").hint_char1({
-            direction = require("hop.hint").HintDirection.AFTER_CURSOR,
-            current_line_only = true,
-          })
-        end,
-        remap = true,
-      },
-      {
-        "F",
-        function()
-          require("hop").hint_char1({
-            direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
-            current_line_only = true,
-          })
-        end,
-        remap = true,
-      },
-      {
-        "t",
-        function()
-          require("hop").hint_char1({
-            direction = require("hop.hint").HintDirection.AFTER_CURSOR,
-            current_line_only = true,
-            hint_offset = -1,
-          })
-        end,
-        remap = true,
-      },
-      {
-        "T",
-        function()
-          require("hop").hint_char1({
-            direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
-            current_line_only = true,
-            hint_offset = 1,
-          })
-        end,
-        remap = true,
-      },
-    },
-    config = true,
+    "ggandor/leap.nvim",
+    event = "BufReadPost",
+    version = false,
+    opts = {},
+    config = function(_, opts)
+      require("leap").add_default_mappings()
+    end,
   },
 
   {
     "echasnovski/mini.surround",
     event = "BufReadPost",
     version = false,
-    opts = {},
+    opts = {
+      mappings = {
+        add = "<CR>a", -- Add surrounding in Normal and Visual modes
+        delete = "<CR>d", -- Delete surrounding
+        find = "<CR>f", -- Find surrounding (to the right)
+        find_left = "<CR>F", -- Find surrounding (to the left)
+        highlight = "<CR>h", -- Highlight surrounding
+        replace = "<CR>r", -- Replace surrounding
+        update_n_lines = "", -- Update `n_lines`
+
+        suffix_last = "", -- Suffix to search with "prev" method
+        suffix_next = "", -- Suffix to search with "next" method
+      },
+    },
     config = function(_, opts)
       require("mini.surround").setup(opts)
     end,

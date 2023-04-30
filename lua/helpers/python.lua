@@ -39,10 +39,10 @@ function M.pyright_venv()
     if cache_mtime then
       local root = get_root({ "pyrightconfig.json" })
       if root then
-        local path = vim.fn.simplify(root .. "/" .. "pyrightconfig.json")
+        local path = vim.loop.fs_stat(vim.fn.simplify(root .. "/" .. "pyrightconfig.json"))
         if path then
           -- Also, check if the pyrightconfig.json file have changed since last
-          local actual_mtime = vim.loop.fs_stat(path).mtime
+          local actual_mtime = path.mtime
           if actual_mtime and actual_mtime.sec == cache_mtime.sec then
             return M.current_pyright.env
           end

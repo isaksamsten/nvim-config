@@ -1,5 +1,177 @@
 return {
   {
+    "folke/noice.nvim",
+    enabled = true,
+    event = "VeryLazy",
+    opts = function()
+      local icons = require("config.icons").ui
+      return {
+        cmdline = {
+          enabled = true, -- enables the Noice cmdline UI
+          view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
+          opts = {}, -- global options for the cmdline. See section on views
+          format = {
+            cmdline = { pattern = "^:", icon = icons.cmd, lang = "vim" },
+            search_down = { kind = "search", pattern = "^/", icon = icons.search_down, lang = "regex" },
+            search_up = { kind = "search", pattern = "^%?", icon = icons.search_up, lang = "regex" },
+            filter = { pattern = "^:%s*!", icon = icons.filter, lang = "bash" },
+            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = icons.help },
+            input = {}, -- Used by input()
+          },
+        },
+        messages = {
+          enabled = true, -- enables the Noice messages UI
+          view = "mini", -- default view for messages
+          view_error = "popup", -- view for errors
+          view_warn = "popup", -- view for warnings
+          view_history = "messages", -- view for :messages
+          view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+        },
+        popupmenu = {
+          enabled = false, -- enables the Noice popupmenu UI
+          backend = "cmp", -- backend to use to show regular cmdline completions
+          kind_icons = {}, -- set to `false` to disable icons
+        },
+        redirect = {
+          view = "popup",
+          filter = { event = "msg_show" },
+        },
+        commands = {
+          history = {
+            view = "split",
+            opts = { enter = true, format = "details" },
+            filter = {
+              any = {
+                { event = "mini" },
+                { error = true },
+                { warning = true },
+                { event = "msg_show", kind = { "" } },
+                { event = "lsp", kind = "message" },
+              },
+            },
+          },
+          last = {
+            view = "popup",
+            opts = { enter = true, format = "details" },
+            filter = {
+              any = {
+                { event = "mini" },
+                { error = true },
+                { warning = true },
+                { event = "msg_show", kind = { "" } },
+                { event = "lsp", kind = "message" },
+              },
+            },
+            filter_opts = { count = 1 },
+          },
+          errors = {
+            view = "popup",
+            opts = { enter = true, format = "details" },
+            filter = { error = true },
+            filter_opts = { reverse = true },
+          },
+        },
+        notify = {
+          enabled = true,
+          view = "popup",
+        },
+        lsp = {
+          progress = {
+            enabled = false,
+          },
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+            ["vim.lsp.util.stylize_markdown"] = false,
+            ["cmp.entry.get_documentation"] = false,
+          },
+          hover = {
+            enabled = false,
+          },
+          signature = {
+            enabled = false,
+          },
+          message = {
+            enabled = true,
+            view = "mini",
+            opts = {},
+          },
+          documentation = {
+            enabled = false,
+          },
+        },
+        health = {
+          checker = true, -- Disable if you don't want health checks to run
+        },
+        smart_move = {
+          enabled = false, -- you can disable this behaviour here
+          excluded_filetypes = { "cmp_menu", "cmp_docs", "notify" },
+        },
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = false, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+      }
+    end,
+  },
+  {
+    "nanozuki/tabby.nvim",
+    event = "TabNew",
+    opts = {
+      theme = {
+        fill = "TabLineFill",
+        -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+        head = "TabLineHead",
+        current_tab = "TabLineSel",
+        tab = "TabLine",
+        win = "TabLine",
+        tail = "TabLineSel",
+      },
+    },
+    config = function(_, opts)
+      local theme = opts.theme
+      local icons = {
+        left = "",
+        right = "",
+        space = " ",
+      }
+      require("tabby.tabline").set(function(line)
+        return {
+          {
+            { "  ", hl = theme.head },
+            line.sep(icons.right .. " ", theme.head, theme.fill),
+          },
+          line.tabs().foreach(function(tab)
+            local hl = tab.is_current() and theme.current_tab or theme.tab
+            return {
+              line.sep(icons.space, hl, theme.fill),
+              -- tab.number(),
+              tab.name(),
+              line.sep(icons.space, hl, theme.fill),
+              hl = hl,
+              margin = " ",
+            }
+          end),
+          line.spacer(),
+          line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+            local hl = win.is_current() and theme.current_tab or theme.tab
+            return {
+              line.sep(icons.space, hl, theme.fill),
+              win.buf_name(),
+              line.sep(icons.space, hl, theme.fill),
+              hl = hl,
+              margin = " ",
+            }
+          end),
+          hl = theme.fill,
+        }
+      end)
+    end,
+  },
+  {
     "luukvbaal/statuscol.nvim",
     event = "VeryLazy",
     opts = function()
@@ -100,6 +272,9 @@ return {
     "j-hui/fidget.nvim",
     event = { "LspAttach" },
     opts = {
+      window = {
+        blend = 0,
+      },
       text = {
         spinner = "pipe", -- animation shown when tasks are ongoing
         done = "✔", -- character shown when all tasks are complete
@@ -518,11 +693,18 @@ return {
           desc = "Search buffers",
         },
         {
+          "<leader>o",
+          function()
+            require("telescope").extensions.file_browser.file_browser(ivy({}))
+          end,
+          desc = "Open file",
+        },
+        {
           "<leader>f",
           function()
             require("telescope.builtin").find_files(ivy({}))
           end,
-          desc = "Open files",
+          desc = "Find file",
         },
 
         {
@@ -532,17 +714,17 @@ return {
               vertical({ prompt_title = "Search", preview_title = "" })
             )
           end,
-          desc = "Search files",
+          desc = "Search",
         },
-        -- {
-        --   "<leader>,",
-        --   function()
-        --     require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
-        --   end,
-        --   desc = "Search diagnostics",
-        -- },
         {
-          "<leader>o",
+          "<leader>D",
+          function()
+            require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
+          end,
+          desc = "Search diagnostics",
+        },
+        {
+          "<leader>O",
           function()
             require("telescope.builtin").lsp_document_symbols(vertical({
               prompt_title = "Symbols",
@@ -563,26 +745,26 @@ return {
           end,
           desc = "Search symbols",
         },
-        {
-          "<leader>T",
-          function()
-            require("telescope.builtin").lsp_workspace_symbols(vertical({
-              prompt_title = "Symbols",
-              preview_title = "Preview",
-              symbols = {
-                "Class",
-                "Function",
-                "Method",
-                "Interface",
-                "Module",
-                "Struct",
-                "Trait",
-                "Property",
-              },
-            }))
-          end,
-          desc = "Find symbol in workspace",
-        },
+        -- {
+        --   "<leader>T",
+        --   function()
+        --     require("telescope.builtin").lsp_workspace_symbols(vertical({
+        --       prompt_title = "Symbols",
+        --       preview_title = "Preview",
+        --       symbols = {
+        --         "Class",
+        --         "Function",
+        --         "Method",
+        --         "Interface",
+        --         "Module",
+        --         "Struct",
+        --         "Trait",
+        --         "Property",
+        --       },
+        --     }))
+        --   end,
+        --   desc = "Find symbol in workspace",
+        -- },
       }
     end,
     opts = function()
@@ -605,11 +787,13 @@ return {
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       "nvim-telescope/telescope-live-grep-args.nvim",
+      "nvim-telescope/telescope-file-browser.nvim",
     },
     config = function(_, opts)
       local telescope = require("telescope")
       telescope.load_extension("fzf")
       telescope.load_extension("live_grep_args")
+      require("telescope").load_extension("file_browser")
       telescope.setup(opts)
     end,
   },

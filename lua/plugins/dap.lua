@@ -278,7 +278,14 @@ return {
   {
     "jayp0521/mason-nvim-dap.nvim",
     dependencies = {
-      { "williamboman/mason.nvim" },
+      {
+        "williamboman/mason.nvim",
+        opts = {
+          registries = {
+            "github:mason-org/mason-registry",
+          },
+        },
+      },
     },
     opts = {
       ensure_installed = { "debugpy" },

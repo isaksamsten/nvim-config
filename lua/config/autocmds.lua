@@ -24,7 +24,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
     vim.schedule(function()
       local Python = require("helpers.python")
-      Python.activate()
+      if not Python.is_activated then
+        Python.activate()
+      end
     end)
   end,
 })

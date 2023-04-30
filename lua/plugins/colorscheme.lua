@@ -1,56 +1,220 @@
-local function blend(a, b, amount, theme)
-  local Color = require("onedarkpro.lib.color")
-  local Helper = require("onedarkpro.helpers")
-  if theme then
-    a = Color.from_hex(Helper.get_preloaded_colors(theme)[a])
-    b = Color.from_hex(Helper.get_preloaded_colors(theme)[b])
-    return a:blend(b, amount):to_css()
-  end
-  return Color.from_hex(a):blend(b, amount):to_css()
-end
-
 return {
   {
-    "folke/tokyonight.nvim",
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
-      light_style = "day", -- The theme is used when the background is set to light
-      transparent = false, -- Enable this to disable setting the background color
-      terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
-      styles = {
-        -- Style to be applied to different syntax groups
-        -- Value is any valid attr-list value for `:help nvim_set_hl`
-        comments = { italic = true },
-        keywords = { italic = true },
-        functions = {},
-        variables = {},
-        -- Background styles. Can be "dark", "transparent" or "normal"
-        sidebars = "dark", -- style for sidebars, see below
-        floats = "dark", -- style for floating windows
-      },
-      sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
-      day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
-      hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
-      dim_inactive = false, -- dims inactive windows
-      lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
+    "catppuccin/nvim",
+    name = "catppuccin",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("catppuccin")
+      theme.setup(opts)
+      vim.cmd([[colorscheme catppuccin]])
+    end,
+    opts = function()
+      local Color = require("helpers.color")
+      local overrides = function(lighten, darken)
+        local function override(colors)
+          local fg_context_char = lighten(colors.base, 18)
+          local fg_border = lighten(colors.base, 3)
+          local telescope_prompt = darken(colors.base, 3)
+          local telescope_results = darken(colors.base, 4)
+          local telescope_preview = darken(colors.base, 6)
+          local telescope_selection = darken(colors.base, 8)
+          local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
+          local faded_red = Color.mix(colors.base, colors.red, 0.1)
+          -- local faded_purple = Color.mix(colors.base, colors.purple, 0.1)
 
-      --- You can override specific color groups to use other groups or a hex color
-      --- function will be called with a ColorScheme table
-      ---@param colors ColorScheme
-      on_colors = function(colors) end,
+          local gray = colors.subtext0
+          local fg = colors.text
+          local purple = colors.mauve
+          local green = colors.green
+          local blue = colors.blue
+          local yellow = colors.yellow
+          local red = colors.red
+          local cyan = colors.sky
+          local float_bg = colors.mantle
 
-      --- You can override specific highlights to use other groups or a hex color
-      --- function will be called with a Highlights and ColorScheme table
-      ---@param highlights Highlights
-      ---@param colors ColorScheme
-      on_highlights = function(highlights, colors) end,
-    },
+          return {
+            IndentBlanklineContextChar = { fg = fg_context_char },
+
+            TelescopeBorder = {
+              fg = telescope_results,
+              bg = telescope_results,
+            },
+            TelescopePromptBorder = {
+              fg = telescope_prompt,
+              bg = telescope_prompt,
+            },
+            TelescopePromptCounter = { fg = fg },
+            TelescopePromptNormal = { fg = fg, bg = telescope_prompt },
+            TelescopePromptPrefix = {
+              fg = purple,
+              bg = telescope_prompt,
+            },
+            TelescopePromptTitle = {
+              fg = telescope_prompt,
+              bg = purple,
+            },
+            TelescopePreviewTitle = {
+              fg = telescope_results,
+              bg = green,
+            },
+            TelescopeResultsTitle = {
+              fg = telescope_results,
+              bg = telescope_results,
+            },
+            TelescopeMatching = { fg = blue },
+            TelescopeNormal = { bg = telescope_results },
+            TelescopeSelection = { bg = telescope_selection },
+            TelescopePreviewNormal = { bg = telescope_preview },
+            TelescopePreviewBorder = { fg = telescope_preview, bg = telescope_preview },
+
+            NeoTreeTabActive = { bg = telescope_preview },
+            NeoTreeTabSeparatorActive = { fg = telescope_preview, bg = telescope_preview },
+            NeoTreeTabInactive = { fg = gray, bg = telescope_preview },
+            NeoTreeTabSeparatorInactive = { fg = telescope_preview, bg = telescope_preview },
+            NeoTreeNormal = { link = "TelescopePromptNormal" },
+            NeoTreeNormalNC = { link = "TelescopeNormal" },
+
+            -- Cmp
+            CmpItemAbbrMatch = { fg = blue, bold = true },
+            CmpItemMenu = { link = "NonText" },
+            CmpItemAbbrMatchFuzzy = { fg = blue, underline = true },
+
+            -- Neotest
+            NeotestAdapterName = { fg = purple, bold = true },
+            NeotestFocused = { bold = true },
+            NeotestNamespace = { fg = blue, bold = true },
+
+            -- Neotree
+            NeoTreeRootName = { fg = purple, bold = true },
+            NeoTreeFileNameOpened = { fg = purple, italic = true },
+
+            -- DAP
+            -- DebugBreakpoint = { fg = "${red}", bold = true },
+            -- DebugHighlightLine = { fg = "${purple}", italic = true },
+            NvimDapVirtualText = { fg = cyan, italic = true },
+
+            -- DAP UI
+            DapUIBreakpointsCurrentLine = { fg = yellow, bold = true },
+
+            DiagnosticUnderlineError = { sp = red, undercurl = true },
+            DiagnosticUnderlineWarn = { sp = yellow, undercurl = true },
+            DiagnosticUnderlineInfo = { sp = blue, undercurl = true },
+            DiagnosticUnderlineHint = { sp = cyan, undercurl = true },
+
+            DiagnosticFloatingSuffix = { fg = gray },
+            DiagnosticFloatingHint = { fg = fg },
+            DiagnosticFloatingWarn = { fg = fg },
+            DiagnosticFloatingInfo = { fg = fg },
+            DiagnosticFloatingError = { fg = fg },
+
+            -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
+            NoiceMini = { link = "NonText" },
+            NoiceVirtualText = { link = "NonText" },
+
+            AIHighlight = { link = "NonText" },
+            AIIndicator = { link = "DiagnosticSignInfo" },
+
+            PopupNormal = { bg = float_bg },
+            PopupBorder = { bg = float_bg, fg = fg_border },
+            Pmenu = { link = "PopupNormal" },
+            PmenuSel = { bold = true, bg = "none" },
+            PmenuBorder = { link = "PopupBorder" },
+            PmenuDocBorder = { bg = float_bg, fg = fg_border },
+            NormalFloat = { bg = float_bg },
+            FloatBorder = { bg = float_bg, fg = fg_border },
+            DebugLogPoint = { fg = purple },
+            DebugStopped = { fg = yellow },
+            DebugStoppedLine = { bg = faded_yellow },
+            DebugBreakpointRejected = { fg = purple },
+            DebugBreakpoint = { fg = red },
+            DebugBreakpointLine = { bg = faded_red },
+            WinSeparator = { fg = fg_context_char, bg = colors.base },
+
+            TabLineHead = { bg = blue, fg = colors.base },
+            TabLineFill = { bg = colors.crust, fg = gray },
+            TabLine = { bg = colors.crust, fg = gray },
+            TabLineSel = { bg = colors.crust, fg = fg, bold = true },
+          }
+        end
+        return override
+      end
+
+      return {
+        flavour = "frappe", -- latte, frappe, macchiato, mocha
+        background = { -- :h background
+          light = "latte",
+          dark = "frappe",
+        },
+        transparent_background = false,
+        dim_inactive = {
+          enabled = false,
+          shade = "dark",
+          percentage = 0.15,
+        },
+        show_end_of_buffer = false, -- show the '~' characters after the end of buffers
+        term_colors = true,
+        styles = {
+          comments = { "italic" },
+          conditionals = {},
+          loops = {},
+          functions = { "bold" },
+          keywords = { "bold" },
+          strings = {},
+          variables = {},
+          numbers = {},
+          booleans = {},
+          properties = {},
+          types = { "bold" },
+          operators = {},
+        },
+        color_overrides = {},
+        highlight_overrides = {
+          mocha = overrides(Color.lighten, Color.darken),
+          macchiato = overrides(Color.lighten, Color.darken),
+          frappe = overrides(Color.lighten, Color.darken),
+          latte = overrides(Color.darken, Color.darken),
+        },
+        integrations = {
+          cmp = true,
+          gitsigns = true,
+          nvimtree = true,
+          telescope = true,
+          notify = false,
+          mini = true,
+          native_lsp = {
+            enabled = true,
+            virtual_text = {
+              errors = { "italic" },
+              hints = { "italic" },
+              warnings = { "italic" },
+              information = { "italic" },
+            },
+            underlines = {
+              errors = { "undercurl" },
+              hints = { "undercurl" },
+              warnings = { "undercurl" },
+              information = { "undercurl" },
+            },
+          },
+        },
+      }
+    end,
   },
   {
     "olimorris/onedarkpro.nvim",
     opts = function()
+      local function blend(a, b, amount, theme)
+        local Color = require("onedarkpro.lib.color")
+        local Helper = require("onedarkpro.helpers")
+        if theme then
+          a = Color.from_hex(Helper.get_preloaded_colors(theme)[a])
+          b = Color.from_hex(Helper.get_preloaded_colors(theme)[b])
+          return a:blend(b, amount):to_css()
+        end
+        return Color.from_hex(a):blend(b, amount):to_css()
+      end
+
       return {
         styles = {
           types = "bold",
@@ -139,6 +303,8 @@ return {
           NeoTreeTabSeparatorActive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
           NeoTreeTabInactive = { fg = "${gray}", bg = "${telescope_prompt}" },
           NeoTreeTabSeparatorInactive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+          NeoTreeNormal = { link = "TelescopeNormal" },
+          NeoTreeNormalNC = { link = "TelescopePromptNormal" },
 
           -- Cmp
           CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
@@ -193,19 +359,17 @@ return {
           DebugBreakpointRejected = { fg = "${purple}" },
           DebugBreakpoint = { fg = "${red}" },
           DebugBreakpointLine = { bg = "${faded_red}" },
+          WinSeparator = { fg = "${fg_context_char}", bg = "${bg}" },
+
+          TabLineFill = { bg = "${telescope_prompt}", fg = "${gray}" },
+          TabLine = { bg = "${telescope_prompt}", fg = "${gray}" },
+          TabLineSel = { bg = "${telescope_prompt}", fg = "${fg}" },
         },
         options = {
           cursorline = true,
-          highlight_inactive_windows = true,
+          highlight_inactive_windows = false,
         },
       }
-    end,
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("onedarkpro")
-      theme.setup(opts)
-      vim.cmd([[colorscheme onedark]])
     end,
   },
 }

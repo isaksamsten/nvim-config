@@ -54,6 +54,12 @@ vim.keymap.set("x", "g/", "<esc>/\\%V", { silent = false, desc = "Search inside 
 vim.keymap.set("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
 vim.keymap.set("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
 
+vim.keymap.set({ "n", "v" }, "<M-]>", "<Esc><Cmd>tabnext<CR>", { desc = "Next tab" })
+vim.keymap.set({ "n", "v" }, "<M-[>", "<Esc><Cmd>tabprev<CR>", { desc = "Previous tab" })
+
+vim.keymap.set({ "n", "v" }, "<M-t>", "<Esc><Cmd>tabnew<CR>", { desc = "New tab" })
+vim.keymap.set({ "n", "v" }, "<M-w>", "<Esc><Cmd>tabclose<CR>", { desc = "Close tab" })
+
 local Python = require("helpers.python")
 vim.keymap.set("n", "<leader>mA", function()
   Python.select_conda({
