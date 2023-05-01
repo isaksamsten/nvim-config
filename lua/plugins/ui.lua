@@ -3,9 +3,50 @@ return {
     "folke/noice.nvim",
     enabled = true,
     event = "VeryLazy",
+    dependencies = {
+      "rcarriga/nvim-notify",
+      keys = {
+        {
+          "<leader>un",
+          function()
+            require("notify").dismiss({ silent = true, pending = true })
+          end,
+          desc = "Dismiss notifications",
+        },
+      },
+      opts = function()
+        local helpers = require("helpers.nvim-notify")
+        local icons = require("config.icons")
+        return {
+          icons = {
+            DEBUG = icons.debug.debug,
+            ERROR = icons.diagnostics.error,
+            INFO = icons.diagnostics.info,
+            WARN = icons.diagnostics.warn,
+          },
+          timeout = 2000,
+          render = helpers.render,
+          stages = "static",
+          on_open = function(win)
+            vim.api.nvim_win_set_config(win, { border = require("config.icons").borders.outer.all })
+          end,
+          max_height = function()
+            return math.floor(vim.o.lines * 0.25)
+          end,
+          max_width = function()
+            return math.floor(vim.o.columns * 0.25)
+          end,
+        }
+      end,
+    },
     opts = function()
       local icons = require("config.icons").ui
       return {
+        views = {
+          split = {
+            enter = true,
+          },
+        },
         cmdline = {
           enabled = true, -- enables the Noice cmdline UI
           view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
@@ -23,16 +64,12 @@ return {
         messages = {
           enabled = true, -- enables the Noice messages UI
           view = "mini", -- default view for messages
-          view_error = "popup", -- view for errors
-          view_warn = "popup", -- view for warnings
+          view_error = "notify", -- view for errors
+          view_warn = "notify", -- view for warnings
           view_history = "messages", -- view for :messages
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
-        popupmenu = {
-          enabled = false, -- enables the Noice popupmenu UI
-          backend = "cmp", -- backend to use to show regular cmdline completions
-          kind_icons = {}, -- set to `false` to disable icons
-        },
+        popupmenu = { enabled = false },
         redirect = {
           view = "popup",
           filter = { event = "msg_show" },
@@ -66,7 +103,7 @@ return {
             filter_opts = { count = 1 },
           },
           errors = {
-            view = "popup",
+            view = "split",
             opts = { enter = true, format = "details" },
             filter = { error = true },
             filter_opts = { reverse = true },
@@ -74,7 +111,7 @@ return {
         },
         notify = {
           enabled = true,
-          view = "popup",
+          view = "notify",
         },
         lsp = {
           progress = {
@@ -85,32 +122,19 @@ return {
             ["vim.lsp.util.stylize_markdown"] = false,
             ["cmp.entry.get_documentation"] = false,
           },
-          hover = {
-            enabled = false,
-          },
-          signature = {
-            enabled = false,
-          },
-          message = {
-            enabled = true,
-            view = "mini",
-            opts = {},
-          },
-          documentation = {
-            enabled = false,
-          },
+          hover = { enabled = false },
+          signature = { enabled = false },
+          message = { enabled = false },
+          documentation = { enabled = false },
         },
         health = {
           checker = true, -- Disable if you don't want health checks to run
         },
-        smart_move = {
-          enabled = false, -- you can disable this behaviour here
-          excluded_filetypes = { "cmp_menu", "cmp_docs", "notify" },
-        },
+        smart_move = { enabled = false },
 
         routes = {
           {
-            view = "popup",
+            view = "split",
             filter = { event = "msg_show", min_height = 2 },
           },
         },
@@ -662,6 +686,20 @@ return {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
+    opts = function()
+      local icons = require("config.icons")
+      return {
+        input = {
+          border = icons.borders.empty,
+          override = function(conf)
+            conf.title_pos = "center"
+            if conf.title then
+              conf.title = string.gsub(conf.title, ":$", "")
+            end
+          end,
+        },
+      }
+    end,
     config = true,
   },
 

@@ -10,6 +10,7 @@ local icons = {
     remote = "",
   },
   debug = {
+    debug = "",
     breakpoint = "",
     condition = "",
     stopped = "",
