@@ -209,6 +209,7 @@ return {
       },
 
       servers = {
+        esbonio = {},
         jdtls = { skip_setup = true },
         lua_ls = {},
         pyright = {
@@ -245,28 +246,28 @@ return {
       },
       sources = function(null_ls)
         -- NOTE: formatters are run in the order in which the are defined here.
-        local h = require("null-ls.helpers")
-        local methods = require("null-ls.methods")
-        local FORMATTING = methods.internal.FORMATTING
-        local rstfmt = h.make_builtin({
-          name = "rstfmt",
-          meta = {
-            url = "https://github.com/dzhu/rstfmt",
-            description = "A formatter for reStructuredText",
-          },
-          method = FORMATTING,
-          filetypes = { "rst" },
-          generator_opts = {
-            command = "rstfmt",
-            args = {},
-            to_stdin = true,
-          },
-          factory = h.formatter_factory,
-        })
+        -- local h = require("null-ls.helpers")
+        -- local methods = require("null-ls.methods")
+        -- local FORMATTING = methods.internal.FORMATTING
+        -- local rstfmt = h.make_builtin({
+        --   name = "rstfmt",
+        --   meta = {
+        --     url = "https://github.com/dzhu/rstfmt",
+        --     description = "A formatter for reStructuredText",
+        --   },
+        --   method = FORMATTING,
+        --   filetypes = { "rst" },
+        --   generator_opts = {
+        --     command = "rstfmt",
+        --     args = {},
+        --     to_stdin = true,
+        --   },
+        --   factory = h.formatter_factory,
+        -- })
 
         return {
-          rstfmt.with({ args = { "--width", "80" } }),
-          null_ls.builtins.diagnostics.rstcheck,
+          -- rstfmt.with({ args = { "--width", "80" } }),
+          -- null_ls.builtins.diagnostics.rstcheck,
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.rustfmt,
           null_ls.builtins.formatting.latexindent,

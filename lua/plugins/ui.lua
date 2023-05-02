@@ -530,28 +530,28 @@ return {
                 return require("helpers.toggle").is_diagnostics_active
               end,
             },
-            {
-              function()
-                local python = require("helpers.python").python()
-                if python then
-                  return string.format("%s [%s]", python.name, python.version)
-                else
-                  return "[No interpreter]"
-                end
-              end,
-              cond = function()
-                return vim.bo.ft == "python"
-              end,
-              -- color = function()
-              --   local link
-              --   if require("helpers.python").is_activated() then
-              --     link = "DiagnosticSignInfo"
-              --   else
-              --     link = "DiagnosticSignHint"
-              --   end
-              --   return { link = link }
-              -- end,
-            },
+            -- {
+            --   function()
+            --     local python = require("helpers.python").python()
+            --     if python then
+            --       return string.format("%s [%s]", python.name, python.version)
+            --     else
+            --       return "[No interpreter]"
+            --     end
+            --   end,
+            --   -- cond = function()
+            --   --   return vim.bo.ft == "python"
+            --   -- end,
+            --   --   -- color = function()
+            --   --   --   local link
+            --   --   --   if require("helpers.python").is_activated() then
+            --   --   --     link = "DiagnosticSignInfo"
+            --   --   --   else
+            --   --   --     link = "DiagnosticSignHint"
+            --   --   --   end
+            --   --   --   return { link = link }
+            --   --   -- end,
+            -- },
           },
           lualine_z = {
             { "location" },

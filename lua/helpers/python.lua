@@ -262,7 +262,6 @@ function M.activate(env)
       set_env(env)
       return true
     else
-      vim.notify("No environment specified. No virtual environment is activated")
       return false
     end
   end
