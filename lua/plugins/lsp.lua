@@ -118,7 +118,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     version = false,
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufEnter" },
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -161,8 +161,9 @@ return {
 
     opts = {
       hover = {
-        border = "solid",
+        border = require("config.icons").borders.outer.all,
         max_width = 80,
+        max_height = 25,
       },
       diagnostic = {
         signs = false,
@@ -209,65 +210,34 @@ return {
       },
 
       servers = {
+        bashls = {},
+        clangd = {},
+        erlangls = {},
         esbonio = {},
         jdtls = { skip_setup = true },
+        jedi_language_server = {},
         lua_ls = {},
-        pyright = {
-          settings = {
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = "openFilesOnly",
-                useLibraryCodeForTypes = true,
-                typeCheckingMode = "off",
-              },
-            },
-          },
-        },
-        texlab = {},
+        jsonls = {},
+        marksman = {},
         ltex = {
           settings = {
             additionalRules = {
               motherTongeu = "sv",
             },
-
-            dictionary = {
-              ["en-US"] = { ":en-US-personal-dictionary" },
-            },
           },
         },
-        yamlls = {},
         ruff_lsp = {
           on_attach = function(client, bufnr)
-            client.server_capabilities.Hover = false
+            client.server_capabilities.hoverProvider = false
           end,
         },
         rust_analyzer = { skip_setup = true },
+        texlab = {},
+        yamlls = {},
       },
       sources = function(null_ls)
         -- NOTE: formatters are run in the order in which the are defined here.
-        -- local h = require("null-ls.helpers")
-        -- local methods = require("null-ls.methods")
-        -- local FORMATTING = methods.internal.FORMATTING
-        -- local rstfmt = h.make_builtin({
-        --   name = "rstfmt",
-        --   meta = {
-        --     url = "https://github.com/dzhu/rstfmt",
-        --     description = "A formatter for reStructuredText",
-        --   },
-        --   method = FORMATTING,
-        --   filetypes = { "rst" },
-        --   generator_opts = {
-        --     command = "rstfmt",
-        --     args = {},
-        --     to_stdin = true,
-        --   },
-        --   factory = h.formatter_factory,
-        -- })
-
         return {
-          -- rstfmt.with({ args = { "--width", "80" } }),
-          -- null_ls.builtins.diagnostics.rstcheck,
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.rustfmt,
           null_ls.builtins.formatting.latexindent,

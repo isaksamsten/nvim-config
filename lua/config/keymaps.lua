@@ -122,7 +122,9 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.referencesProvider then
-    map("n", "gr", vim.lsp.buf.references, "Show references")
+    map("n", "gr", function()
+      vim.lsp.buf.references({ includeDeclaration = false })
+    end, "Show references")
   end
 
   if client.server_capabilities.renameProvider then
@@ -130,7 +132,7 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.codeActionProvider then
-    map("n", "<C-.>", vim.lsp.buf.code_action, "Code action")
+    map({ "n", "v" }, "<C-.>", vim.lsp.buf.code_action, "Code action")
   end
 end
 

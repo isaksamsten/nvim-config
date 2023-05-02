@@ -25,7 +25,7 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
-      "L3MON4D3/LuaSnip",
+      { "L3MON4D3/LuaSnip", opts = { history = false } },
       { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
       {
         "rafamadriz/friendly-snippets",
@@ -70,6 +70,7 @@ return {
             side_padding = 0,
             scrollbar = false,
             max_width = 80,
+            max_height = 25,
           },
         },
         formatting = {

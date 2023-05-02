@@ -224,6 +224,8 @@ local function reset_env()
     vim.env.PATH = M.default_env.PATH
     vim.env.PYTHONHOME = M.default_env.PYTHONHOME
     vim.env.VIRTUAL_ENV = M.default_env.VIRTUAL_ENV
+    vim.env.CONDA_DEFAULT_ENV = M.default_env.CONDA_DEFAULT_ENV
+    vim.env.CONDA_PREFIX = M.default_env.CONDA_PREFIX
   end
   M.is_activated = false
 end
@@ -236,14 +238,19 @@ local function set_env(python)
       PATH = vim.env.PATH,
       VIRTUAL_ENV = vim.env.VIRTUAL_ENV,
       PYTHONHOME = vim.env.PYTHONHOME,
+      CONDA_DEFAULT_ENV = vim.env.CONDA_DEFAULT_ENV,
+      CONDA_PREFIX = vim.env.CONDA_PREFIX,
     }
   end
 
   if python and python.type ~= "native" then
     reset_env()
     vim.env.PATH = vim.fn.simplify(python.path .. "/bin") .. ":" .. vim.env.PATH
-    if python.type ~= "conda" then
+    if python.type == "venv" then
       vim.env.VIRTUAL_ENV = python.path
+    elseif python.type == "conda" then
+      vim.env.CONDA_PREFIX = python.path
+      vim.env.CONDA_DEFAULT_ENV = python.name
     end
     vim.env.PYTHONHOME = nil
     M.is_activated = true

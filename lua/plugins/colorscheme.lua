@@ -163,10 +163,10 @@ return {
       end
 
       return {
-        flavour = "frappe", -- latte, frappe, macchiato, mocha
+        flavour = "macchiato", -- latte, frappe, macchiato, mocha
         background = { -- :h background
           light = "latte",
-          dark = "frappe",
+          dark = "macchiato",
         },
         transparent_background = false,
         dim_inactive = {
