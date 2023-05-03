@@ -130,7 +130,7 @@ return {
             DebugBreakpointRejected = { fg = purple },
             DebugBreakpoint = { fg = red },
             DebugBreakpointLine = { bg = faded_red },
-            WinSeparator = { fg = fg_context_char, bg = colors.base },
+            WinSeparator = { fg = colors.surface2, bg = colors.base },
 
             TabLineHead = { bg = blue, fg = colors.base },
             TabLineFill = { bg = colors.crust, fg = gray },
