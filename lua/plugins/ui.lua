@@ -204,7 +204,7 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
-    event = "VeryLazy",
+    event = "VimEnter",
     opts = function()
       local builtin = require("statuscol.builtin")
       return {
@@ -229,6 +229,8 @@ return {
               maxwidth = 1,
               colwidth = 1,
               auto = false,
+              fillchar = require("config.icons").indent.marker,
+              fillcharhl = "WinSeparator",
             },
             click = "v:lua.ScSa",
           },
@@ -304,7 +306,7 @@ return {
     event = { "LspAttach" },
     opts = {
       window = {
-        blend = 0,
+        blend = 10,
       },
       text = {
         spinner = "pipe", -- animation shown when tasks are ongoing
@@ -323,7 +325,7 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     keys = {
-      { "<leader>e", "<cmd>Neotree focus toggle<CR>", desc = "Focus explorer" },
+      { "<leader>e", "<cmd>Neotree focus<CR>", desc = "Focus explorer" },
       { "<leader>b", "<cmd>Neotree show toggle<CR>", desc = "Toggle explorer" },
     },
     init = function()
@@ -491,6 +493,10 @@ return {
           },
           lualine_x = {
             {
+              require("noice").api.status.mode.get,
+              cond = require("noice").api.status.mode.has,
+            },
+            {
               "format-on-save",
               fmt = function()
                 if vim.b.format_on_save ~= false and require("helpers.format").format_on_save then
@@ -539,18 +545,9 @@ return {
             --       return "[No interpreter]"
             --     end
             --   end,
-            --   -- cond = function()
-            --   --   return vim.bo.ft == "python"
-            --   -- end,
-            --   --   -- color = function()
-            --   --   --   local link
-            --   --   --   if require("helpers.python").is_activated() then
-            --   --   --     link = "DiagnosticSignInfo"
-            --   --   --   else
-            --   --   --     link = "DiagnosticSignHint"
-            --   --   --   end
-            --   --   --   return { link = link }
-            --   --   -- end,
+            --   cond = function()
+            --     return vim.bo.ft == "python"
+            --   end,
             -- },
           },
           lualine_z = {
@@ -695,6 +692,23 @@ return {
             conf.title_pos = "center"
             if conf.title then
               conf.title = string.gsub(conf.title, ":$", "")
+            end
+          end,
+        },
+        select = {
+          border = icons.borders.empty,
+          override = function(conf)
+            conf.title_pos = "center"
+            if conf.title then
+              conf.title = string.gsub(conf.title, ":$", "")
+            end
+          end,
+          get_config = function(opts)
+            if opts.kind == "codeaction" then
+              return {
+                backend = "telescope",
+                telescope = require("telescope.themes").get_cursor({}),
+              }
             end
           end,
         },

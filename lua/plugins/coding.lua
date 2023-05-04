@@ -17,7 +17,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = { "InsertEnter", "CmdlineEnter" },
+    event = { "InsertEnter" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
@@ -25,12 +25,30 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
-      { "L3MON4D3/LuaSnip", opts = { history = false } },
+      {
+        "L3MON4D3/LuaSnip",
+        build = "make install_jsregexp",
+        opts = function()
+          return {
+            enable_autosnippets = true,
+            store_selection_keys = "<Tab>",
+            history = false,
+          }
+        end,
+        config = function(_, opts)
+          require("luasnip").setup(opts)
+
+          -- Extend python and rst with corresponding snippets
+          require("luasnip").filetype_extend("python", { "rst" })
+          require("luasnip").filetype_extend("rst", { "python" })
+        end,
+      },
       { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
       {
         "rafamadriz/friendly-snippets",
         config = function()
           require("luasnip.loaders.from_vscode").lazy_load()
+          require("luasnip.loaders.from_vscode").load({ paths = { "~/.config/nvim/snippets/" } })
         end,
       },
     },
@@ -38,6 +56,11 @@ return {
       local icons = require("config.icons")
       local cmp = require("cmp")
       local luasnip = require("luasnip")
+      local has_words_before = function()
+        unpack = unpack or table.unpack
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      end
       local prev_item = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
       local next_item = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
       return {
@@ -96,16 +119,6 @@ return {
           ["<C-j>"] = { i = next_item, c = next_item },
           ["<Up>"] = { i = prev_item, c = prev_item },
           ["<Down>"] = { i = next_item, c = next_item },
-          ["<Tab>"] = {
-            i = cmp.mapping.confirm({ select = true }),
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.confirm({ select = true })
-              else
-                cmp.complete()
-              end
-            end,
-          },
           ["<C-e>"] = cmp.mapping(function(_)
             if cmp.visible() then
               cmp.abort()
@@ -115,17 +128,43 @@ return {
           end, { "i", "c" }),
           ["<C-p>"] = { i = cmp.mapping.scroll_docs(-4) },
           ["<C-n>"] = { i = cmp.mapping.scroll_docs(4) },
-          ["<C-f>"] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(1) then
-              luasnip.jump(1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
+          ["<Tab>"] = {
+            i = function(fallback)
+              if cmp.visible() then
+                cmp.confirm()
+              elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+              elseif has_words_before() then
+                cmp.complete()
+              else
+                fallback()
+              end
+            end,
+            s = function(fallback)
+              if cmp.visible() then
+                cmp.confirm()
+              elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+              elseif has_words_before() then
+                cmp.complete()
+              else
+                fallback()
+              end
+            end,
 
-          -- go to previous placeholder in the snippet
-          ["<C-b>"] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
+            c = function(fallback)
+              if cmp.visible() then
+                cmp.confirm({ select = true })
+              else
+                cmp.complete()
+              end
+            end,
+          },
+
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
               luasnip.jump(-1)
             else
               fallback()

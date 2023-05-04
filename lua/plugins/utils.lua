@@ -1,5 +1,9 @@
 return {
-  { "tpope/vim-fugitive", event = "VeryLazy" },
+  {
+    "tpope/vim-fugitive",
+    cmd = "G",
+    keys = { { "<leader>hh", "<cmd>G <CR>", desc = "Git status" } },
+  },
 
   {
     "ojroques/nvim-osc52",
@@ -22,10 +26,9 @@ return {
 
   {
     "ThePrimeagen/harpoon",
-    event = "VeryLazy",
     keys = {
       {
-        "<leader>k",
+        "<leader>A",
         function()
           require("harpoon.ui").toggle_quick_menu()
         end,

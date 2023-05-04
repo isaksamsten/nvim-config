@@ -16,12 +16,12 @@ return {
     version = false,
     opts = {
       mappings = {
-        add = "<CR>a", -- Add surrounding in Normal and Visual modes
-        delete = "<CR>d", -- Delete surrounding
-        find = "<CR>f", -- Find surrounding (to the right)
-        find_left = "<CR>F", -- Find surrounding (to the left)
-        highlight = "<CR>h", -- Highlight surrounding
-        replace = "<CR>r", -- Replace surrounding
+        add = "zsa", -- Add surrounding in Normal and Visual modes
+        delete = "zsd", -- Delete surrounding
+        find = "zsf", -- Find surrounding (to the right)
+        find_left = "zsF", -- Find surrounding (to the left)
+        highlight = "zsh", -- Highlight surrounding
+        replace = "zsr", -- Replace surrounding
         update_n_lines = "", -- Update `n_lines`
 
         suffix_last = "", -- Suffix to search with "prev" method

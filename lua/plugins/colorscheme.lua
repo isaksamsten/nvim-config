@@ -130,12 +130,12 @@ return {
             DebugBreakpointRejected = { fg = purple },
             DebugBreakpoint = { fg = red },
             DebugBreakpointLine = { bg = faded_red },
-            WinSeparator = { fg = colors.surface2, bg = colors.base },
+            WinSeparator = { fg = colors.surface2, bg = "none" },
 
             TabLineHead = { bg = blue, fg = colors.base },
-            TabLineFill = { bg = colors.crust, fg = gray },
-            TabLine = { bg = colors.crust, fg = gray },
-            TabLineSel = { bg = colors.crust, fg = fg, bold = true },
+            TabLineFill = { bg = colors.mantle, fg = gray },
+            TabLine = { bg = colors.mantle, fg = gray },
+            TabLineSel = { bg = colors.mantle, fg = fg, bold = true },
 
             NotifyERRORBorder = { link = "PopupBorder" },
             NotifyWARNBorder = { link = "PopupBorder" },
