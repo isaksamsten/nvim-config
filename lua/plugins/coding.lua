@@ -41,6 +41,20 @@ return {
           -- Extend python and rst with corresponding snippets
           require("luasnip").filetype_extend("python", { "rst" })
           require("luasnip").filetype_extend("rst", { "python" })
+
+          -- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1011938524
+          vim.api.nvim_create_autocmd("ModeChanged", {
+            pattern = "*",
+            callback = function()
+              if
+                ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
+                and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+                and not require("luasnip").session.jump_active
+              then
+                require("luasnip").unlink_current()
+              end
+            end,
+          })
         end,
       },
       { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
@@ -130,7 +144,7 @@ return {
           ["<C-n>"] = { i = cmp.mapping.scroll_docs(4) },
           ["<Tab>"] = {
             i = function(fallback)
-              if cmp.visible() then
+              if cmp.visible() and (cmp.get_active_entry() or not luasnip.expand_or_jumpable()) then
                 cmp.confirm()
               elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
@@ -141,12 +155,8 @@ return {
               end
             end,
             s = function(fallback)
-              if cmp.visible() then
-                cmp.confirm()
-              elseif luasnip.expand_or_jumpable() then
+              if luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
-              elseif has_words_before() then
-                cmp.complete()
               else
                 fallback()
               end

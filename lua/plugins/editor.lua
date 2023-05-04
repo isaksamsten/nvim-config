@@ -1,14 +1,14 @@
 return {
 
-  {
-    "ggandor/leap.nvim",
-    event = "BufReadPost",
-    version = false,
-    opts = {},
-    config = function(_, opts)
-      require("leap").add_default_mappings()
-    end,
-  },
+  -- {
+  --   "ggandor/leap.nvim",
+  --   event = "BufReadPost",
+  --   version = false,
+  --   opts = {},
+  --   config = function(_, opts)
+  --     require("leap").add_default_mappings()
+  --   end,
+  -- },
 
   {
     "echasnovski/mini.surround",
@@ -16,12 +16,12 @@ return {
     version = false,
     opts = {
       mappings = {
-        add = "zsa", -- Add surrounding in Normal and Visual modes
-        delete = "zsd", -- Delete surrounding
-        find = "zsf", -- Find surrounding (to the right)
-        find_left = "zsF", -- Find surrounding (to the left)
-        highlight = "zsh", -- Highlight surrounding
-        replace = "zsr", -- Replace surrounding
+        add = "ysa", -- Add surrounding in Normal and Visual modes
+        delete = "ysd", -- Delete surrounding
+        find = "ysf", -- Find surrounding (to the right)
+        find_left = "ysF", -- Find surrounding (to the left)
+        highlight = "ysh", -- Highlight surrounding
+        replace = "ysr", -- Replace surrounding
         update_n_lines = "", -- Update `n_lines`
 
         suffix_last = "", -- Suffix to search with "prev" method
