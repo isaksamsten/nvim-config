@@ -46,17 +46,24 @@ return {
           split = {
             enter = true,
           },
+          confirm = {
+            border = { style = require("config.icons").borders.outer.all, text = { top = "" } },
+          },
         },
         cmdline = {
           enabled = true, -- enables the Noice cmdline UI
-          view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
-          opts = {}, -- global options for the cmdline. See section on views
+          -- view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
+          opts = {
+            position = { row = "5%", col = "50%" },
+            border = { style = require("config.icons").borders.outer.all, text = { top = "" } },
+          }, -- global options for the cmdline. See section on views
           format = {
             cmdline = { pattern = "^:", icon = icons.cmd, lang = "vim" },
             search_down = { kind = "search", pattern = "^/", icon = icons.search_down, lang = "regex" },
             search_up = { kind = "search", pattern = "^%?", icon = icons.search_up, lang = "regex" },
             filter = { pattern = "^:%s*!", icon = icons.filter, lang = "bash" },
-            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = icons.lua, lang = "lua" },
+            git = { pattern = { "^:%s*G%s+" }, icon = icons.git },
             help = { pattern = "^:%s*he?l?p?%s+", icon = icons.help },
             input = {}, -- Used by input()
           },
@@ -134,14 +141,21 @@ return {
 
         routes = {
           {
+            filter = {
+              event = "msg_show",
+              find = "%d+L, %d+B",
+            },
             view = "mini",
-            filter = { event = "msg_show", max_height = 2 },
+          },
+          {
+            view = "cmdline_output",
+            filter = { cmdline = "^:" },
           },
         },
         presets = {
           bottom_search = true, -- use a classic bottom cmdline for search
           command_palette = true, -- position the cmdline and popupmenu together
-          long_message_to_split = false, -- long messages will be sent to a split
+          long_message_to_split = true, -- long messages will be sent to a split
           inc_rename = false, -- enables an input dialog for inc-rename.nvim
           lsp_doc_border = false, -- add a border to hover docs and signature help
         },
@@ -235,7 +249,7 @@ return {
             click = "v:lua.ScSa",
           },
         },
-        ft_ignore = { "help", "vim", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "toggleterm" },
+        ft_ignore = { "help", "vim", "alpha", "dashboard", "neo-tree", "Trouble", "noice", "lazy", "toggleterm" },
       }
     end,
   },
@@ -305,9 +319,6 @@ return {
     "j-hui/fidget.nvim",
     event = { "LspAttach" },
     opts = {
-      window = {
-        blend = 10,
-      },
       text = {
         spinner = "pipe", -- animation shown when tasks are ongoing
         done = "✔", -- character shown when all tasks are complete

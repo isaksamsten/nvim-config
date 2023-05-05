@@ -110,6 +110,11 @@ return {
             -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
             NoiceMini = { link = "NonText" },
             NoiceVirtualText = { link = "NonText" },
+            NoiceCmdlinePopup = { link = "PopupNormal" },
+            NoiceCmdlinePopupBorder = { link = "PopupBorder" },
+            NoiceCmdlinePrompt = { link = "PopupNormal" },
+            NoiceConfirm = { link = "PopupNormal" },
+            NoiceConfirmBorder = { link = "PopupBorder" },
 
             AIHighlight = { link = "NonText" },
             AIIndicator = { link = "DiagnosticSignInfo" },
