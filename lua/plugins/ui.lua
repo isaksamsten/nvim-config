@@ -63,7 +63,7 @@ return {
         },
         messages = {
           enabled = true, -- enables the Noice messages UI
-          view = "mini", -- default view for messages
+          view = "notify", -- default view for messages
           view_error = "notify", -- view for errors
           view_warn = "notify", -- view for warnings
           view_history = "messages", -- view for :messages
@@ -134,8 +134,8 @@ return {
 
         routes = {
           {
-            view = "split",
-            filter = { event = "msg_show", min_height = 2 },
+            view = "mini",
+            filter = { event = "msg_show", max_height = 2 },
           },
         },
         presets = {
@@ -230,7 +230,7 @@ return {
               colwidth = 1,
               auto = false,
               fillchar = require("config.icons").indent.marker,
-              fillcharhl = "WinSeparator",
+              fillcharhl = "StatusColumnSeparator",
             },
             click = "v:lua.ScSa",
           },
@@ -884,7 +884,8 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      char = "│",
+      char = require("config.icons").indent.dotted_marker,
+      indent_blankline_context_char = require("config.icons").indent.marker,
       filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
       show_trailing_blankline_indent = false,
       show_current_context = true,

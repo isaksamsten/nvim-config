@@ -1,31 +1,31 @@
 {
   "Part": {
-    "prefix": "#",
+    "prefix": "h1",
     "body": ["${1/./#/g}", "$1", "${1/./#/g}", "$0"],
     "description": "Part"
   },
   "Chapter": {
-    "prefix": "*",
+    "prefix": "h2",
     "body": ["${1/./*/g}", "$1", "${1/./*/g}", "$0"],
     "description": "Section"
   },
   "Section": {
-    "prefix": "=",
+    "prefix": "h3",
     "body": ["$1", "${1/./=/g}", "$0"],
     "description": "Section"
   },
   "Subsection": {
-    "prefix": "-",
+    "prefix": "h4",
     "body": ["$1", "${1/./-/g}", "$0"],
     "description": "Subsection"
   },
   "Subsubsection": {
-    "prefix": "^",
+    "prefix": "h5",
     "body": ["$1", "${1/./^/g}", "$0"],
     "description": "Subsubsection"
   },
   "Paragraph": {
-    "prefix": "\"",
+    "prefix": "h6",
     "body": ["$1", "${1/./\"/g}", "$0"],
     "description": "Paragraph"
   },

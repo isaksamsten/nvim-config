@@ -42,6 +42,7 @@ return {
           require("luasnip").filetype_extend("python", { "rst" })
           require("luasnip").filetype_extend("rst", { "python" })
 
+          -- Unlink the snippet and restore completion
           -- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1011938524
           vim.api.nvim_create_autocmd("ModeChanged", {
             pattern = "*",
@@ -52,7 +53,26 @@ return {
                 and not require("luasnip").session.jump_active
               then
                 require("luasnip").unlink_current()
+                require("cmp.config").global.completion.autocomplete =
+                  { require("cmp.types").cmp.TriggerEvent.TextChanged }
               end
+            end,
+          })
+
+          -- Do not automatically trigger completion if we are in a snippet
+          vim.api.nvim_create_autocmd("User", {
+            pattern = "LuaSnipInsertNodeEnter",
+            callback = function()
+              require("cmp.config").global.completion.autocomplete = false
+            end,
+          })
+
+          -- But restore it when we leave.
+          vim.api.nvim_create_autocmd("User", {
+            pattern = "LuaSnipInsertNodeLeave",
+            callback = function()
+              require("cmp.config").global.completion.autocomplete =
+                { require("cmp.types").cmp.TriggerEvent.TextChanged }
             end,
           })
         end,
@@ -133,18 +153,20 @@ return {
           ["<C-j>"] = { i = next_item, c = next_item },
           ["<Up>"] = { i = prev_item, c = prev_item },
           ["<Down>"] = { i = next_item, c = next_item },
-          ["<C-e>"] = cmp.mapping(function(_)
+          ["<C-Space>"] = cmp.mapping(function(_)
             if cmp.visible() then
               cmp.abort()
             else
               cmp.complete()
             end
           end, { "i", "c" }),
-          ["<C-p>"] = { i = cmp.mapping.scroll_docs(-4) },
-          ["<C-n>"] = { i = cmp.mapping.scroll_docs(4) },
+          ["<C-u>"] = { i = cmp.mapping.scroll_docs(-4) },
+          ["<C-d>"] = { i = cmp.mapping.scroll_docs(4) },
           ["<Tab>"] = {
             i = function(fallback)
-              if cmp.visible() and (cmp.get_active_entry() or not luasnip.expand_or_jumpable()) then
+              -- We dont autocomplete if we are in an active Snippet unless the completion
+              -- item is selected explicitly.
+              if cmp.visible() then
                 cmp.confirm()
               elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
@@ -162,7 +184,7 @@ return {
               end
             end,
 
-            c = function(fallback)
+            c = function(_)
               if cmp.visible() then
                 cmp.confirm({ select = true })
               else

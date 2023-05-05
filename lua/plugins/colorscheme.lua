@@ -13,7 +13,6 @@ return {
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
         local function override(colors)
-          local fg_context_char = lighten(colors.base, 18)
           local fg_border = lighten(colors.base, 3)
           local telescope_prompt = darken(colors.base, 3)
           local telescope_results = darken(colors.base, 4)
@@ -21,7 +20,6 @@ return {
           local telescope_selection = darken(colors.base, 8)
           local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
           local faded_red = Color.mix(colors.base, colors.red, 0.1)
-          -- local faded_purple = Color.mix(colors.base, colors.purple, 0.1)
 
           local gray = colors.subtext0
           local fg = colors.text
@@ -34,7 +32,8 @@ return {
           local float_bg = colors.mantle
 
           return {
-            IndentBlanklineContextChar = { fg = fg_context_char },
+            IndentBlanklineContextChar = { fg = colors.surface1 },
+            IndentBlanklineChar = { fg = colors.surface1 },
 
             TelescopeBorder = {
               fg = telescope_results,
@@ -68,12 +67,12 @@ return {
             TelescopePreviewNormal = { bg = telescope_preview },
             TelescopePreviewBorder = { fg = telescope_preview, bg = telescope_preview },
 
-            NeoTreeTabActive = { bg = telescope_prompt, bold = true },
-            NeoTreeTabSeparatorActive = { fg = telescope_prompt, bg = telescope_prompt },
-            NeoTreeTabInactive = { bg = telescope_prompt, fg = colors.overlay0 },
-            NeoTreeTabSeparatorInactive = { fg = telescope_prompt, bg = telescope_prompt },
-            NeoTreeNormal = { link = "TelescopePromptNormal" },
-            NeoTreeNormalNC = { link = "TelescopeNormal" },
+            NeoTreeTabActive = { bg = colors.mantle, bold = true },
+            NeoTreeTabSeparatorActive = { fg = colors.mantle, bg = colors.mantle },
+            NeoTreeTabInactive = { bg = colors.mantle, fg = colors.overlay0 },
+            NeoTreeTabSeparatorInactive = { fg = colors.mantle, bg = colors.mantle },
+            NeoTreeNormal = { fg = colors.text, bg = colors.mantle },
+            NeoTreeNormalNC = { fg = colors.text, bg = colors.mantle },
 
             -- Cmp
             CmpItemAbbrMatch = { fg = blue, bold = true },
@@ -130,7 +129,8 @@ return {
             DebugBreakpointRejected = { fg = purple },
             DebugBreakpoint = { fg = red },
             DebugBreakpointLine = { bg = faded_red },
-            WinSeparator = { fg = colors.surface2, bg = "none" },
+            WinSeparator = { fg = colors.mantle, bg = colors.mantle },
+            StatusColumnSeparator = { fg = colors.surface2, bg = "none" },
 
             TabLineHead = { bg = blue, fg = colors.base },
             TabLineFill = { bg = colors.mantle, fg = gray },
@@ -285,6 +285,7 @@ return {
         },
         highlights = {
           IndentBlanklineContextChar = { fg = "${fg_context_char}" },
+          IndentBlanklineChar = { fg = "${fg_context_char}" },
           ["@include.python"] = { fg = "${purple}", style = "bold" },
           ["@variable"] = { fg = "${fg}" },
           ["@lsp.type.function"] = { link = "@function" },
@@ -326,7 +327,7 @@ return {
           NeoTreeTabInactive = { fg = "${gray}", bg = "${telescope_prompt}" },
           NeoTreeTabSeparatorInactive = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
           NeoTreeNormal = { link = "TelescopeNormal" },
-          NeoTreeNormalNC = { link = "TelescopePromptNormal" },
+          NeoTreeNormalNC = { link = "TelescopeNormal" },
 
           -- Cmp
           CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
@@ -381,8 +382,8 @@ return {
           DebugBreakpointRejected = { fg = "${purple}" },
           DebugBreakpoint = { fg = "${red}" },
           DebugBreakpointLine = { bg = "${faded_red}" },
-          WinSeparator = { fg = "${fg_context_char}", bg = "${bg}" },
-
+          WinSeparator = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+          StatusColumnSeparator = { fg = "${gray}", bg = "none" },
           TabLineFill = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLine = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLineSel = { bg = "${telescope_prompt}", fg = "${fg}", style = "bold" },
@@ -410,7 +411,7 @@ return {
           NotifyTRACEBody = { link = "NormalFloat" },
         },
         options = {
-          cursorline = true,
+          cursorline = false,
           highlight_inactive_windows = false,
         },
       }
