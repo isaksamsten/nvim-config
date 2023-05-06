@@ -74,10 +74,13 @@ return {
             NeoTreeNormal = { fg = colors.text, bg = colors.mantle },
             NeoTreeNormalNC = { fg = colors.text, bg = colors.mantle },
 
+            LineNr = { fg = colors.overlay0, bold = true },
+            CursorLineNr = { fg = colors.lavender, bold = true },
             -- Cmp
             CmpItemAbbrMatch = { fg = blue, bold = true },
-            CmpItemMenu = { link = "NonText" },
             CmpItemAbbrMatchFuzzy = { fg = blue, underline = true },
+            CmpItemMenu = { fg = colors.surface1, italic = true },
+            -- CmpItemAbbr = { fg = colors.surface2 },
 
             -- Neotest
             NeotestAdapterName = { fg = purple, bold = true },

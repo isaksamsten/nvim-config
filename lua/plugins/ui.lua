@@ -41,6 +41,9 @@ return {
     },
     opts = function()
       local icons = require("config.icons").ui
+      local popup_opts = {
+        border = { style = require("config.icons").borders.outer.all, text = { top = "" } },
+      }
       return {
         views = {
           split = {
@@ -53,18 +56,25 @@ return {
         cmdline = {
           enabled = true, -- enables the Noice cmdline UI
           -- view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
-          opts = {
-            position = { row = "5%", col = "50%" },
-            border = { style = require("config.icons").borders.outer.all, text = { top = "" } },
-          }, -- global options for the cmdline. See section on views
+          opts = {}, -- global options for the cmdline. See section on views
           format = {
-            cmdline = { pattern = "^:", icon = icons.cmd, lang = "vim" },
+            cmdline = {
+              pattern = "^:",
+              icon = icons.cmd,
+              lang = "vim",
+              opts = popup_opts,
+            },
             search_down = { kind = "search", pattern = "^/", icon = icons.search_down, lang = "regex" },
             search_up = { kind = "search", pattern = "^%?", icon = icons.search_up, lang = "regex" },
-            filter = { pattern = "^:%s*!", icon = icons.filter, lang = "bash" },
-            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = icons.lua, lang = "lua" },
-            git = { pattern = { "^:%s*G%s+" }, icon = icons.git },
-            help = { pattern = "^:%s*he?l?p?%s+", icon = icons.help },
+            filter = { pattern = "^:%s*!", icon = icons.filter, lang = "bash", opts = popup_opts },
+            lua = {
+              pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" },
+              icon = icons.lua,
+              lang = "lua",
+              opts = popup_opts,
+            },
+            git = { pattern = { "^:%s*G%s+" }, icon = icons.git, opts = popup_opts },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = icons.help, opts = popup_opts },
             input = {}, -- Used by input()
           },
         },
@@ -76,7 +86,7 @@ return {
           view_history = "messages", -- view for :messages
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
-        popupmenu = { enabled = false },
+        popupmenu = { enabled = true, backend = "nui" },
         redirect = {
           view = "popup",
           filter = { event = "msg_show" },
@@ -222,6 +232,7 @@ return {
     opts = function()
       local builtin = require("statuscol.builtin")
       return {
+        relculright = true,
         setopt = true,
         segments = {
           {
@@ -249,7 +260,17 @@ return {
             click = "v:lua.ScSa",
           },
         },
-        ft_ignore = { "help", "vim", "alpha", "dashboard", "neo-tree", "Trouble", "noice", "lazy", "toggleterm" },
+        ft_ignore = {
+          "help",
+          "vim",
+          "alpha",
+          "dashboard",
+          "neo-tree",
+          "Trouble",
+          "noice",
+          "lazy",
+          "toggleterm",
+        },
       }
     end,
   },

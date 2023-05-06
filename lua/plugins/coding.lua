@@ -8,7 +8,7 @@ return {
 
       vim.keymap.set("n", "<M-a>", ":AI ", { desc = "AI prompt" })
       vim.keymap.set("v", "<M-a>", ":AI ", { desc = "AI prompt" })
-      vim.keymap.set("v", "gAc", ":AI Corrects sentences into standard English.<CR>", { desc = "Grammar check" })
+      vim.keymap.set("v", "zAc", ":AI Corrects sentences into standard English.<CR>", { desc = "Grammar check" })
       vim.keymap.set("i", "<M-a>", "<Esc>:AI<CR>a", { desc = "AI prompt" })
     end,
     lazy = false,
@@ -17,7 +17,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = { "InsertEnter" },
+    event = { "VeryLazy" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
@@ -142,7 +142,7 @@ return {
               local padding = string.rep(" ", max_width - string.len(label))
               item.abbr = label .. padding
             end
-            item.abbr = icons.indent.marker .. " " .. item.abbr
+            item.abbr = " " .. item.abbr
             item.menu = item.kind
             item.kind = (icons.kinds[item.kind] or icons.kinds.Unknown)
             return item
