@@ -25,14 +25,13 @@ return {
               },
               size = 50,
               border = {
-                style = "single",
+                style = require("config.icons").borders.outer.all,
                 text = {
-                  top = "Condition: ",
-                  top_align = "left",
+                  top = "",
                 },
               },
               win_options = {
-                winhighlight = "Normal:Normal",
+                winhighlight = "PopupNormal:FloatBorder",
               },
             }
 
@@ -126,36 +125,12 @@ return {
           }
         end,
         config = function(_, opts)
-          local icons = require("config.icons").debug
           local dap = require("dap")
           for key, options in pairs(opts) do
-            print(key, vim.inspect(options))
             for language, language_config in pairs(options) do
               dap[key][language] = language_config
             end
           end
-
-          vim.fn.sign_define("DapBreakpoint", {
-            text = icons.breakpoint,
-            texthl = "DebugBreakpoint",
-            linehl = "DebugBreakpointLine",
-            numhl = "",
-          })
-          vim.fn.sign_define("DapBreakpointConditional", {
-            text = icons.condition,
-            texthl = "DebugBreakpoint",
-            linehl = "DebugBreakpointLine",
-            numhl = "",
-          })
-          vim.fn.sign_define(
-            "DapStopped",
-            { text = icons.stopped, texthl = "DebugStopped", linehl = "DebugStoppedLine", numhl = "" }
-          )
-          vim.fn.sign_define(
-            "DapBreakpointRejected",
-            { text = icons.rejected, texthl = "DebugBreakpointRejected", linehl = "", numhl = "" }
-          )
-          vim.fn.sign_define("DapLogPoint", { text = icons.log, texthl = "DebugLogPoint", linehl = "", numhl = "" })
         end,
       },
     },

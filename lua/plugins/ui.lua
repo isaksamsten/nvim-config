@@ -153,6 +153,20 @@ return {
           {
             filter = {
               event = "msg_show",
+              find = "^E486",
+            },
+            view = "mini",
+          },
+          {
+            filter = {
+              event = "msg_show",
+              find = "search hit BOTTOM, continuing at TOP",
+            },
+            view = "mini",
+          },
+          {
+            filter = {
+              event = "msg_show",
               find = "%d+L, %d+B",
             },
             view = "mini",
@@ -525,34 +539,23 @@ return {
           },
           lualine_x = {
             {
-              require("noice").api.status.mode.get,
-              cond = require("noice").api.status.mode.has,
-            },
-            {
-              "format-on-save",
-              fmt = function()
-                if vim.b.format_on_save ~= false and require("helpers.format").format_on_save then
-                  return ""
-                else
-                  return ""
-                end
-              end,
-            },
-            {
-              "conceal-active",
-              fmt = function()
-                if require("helpers.toggle").is_conceal_active then
-                  return ""
-                else
-                  return ""
-                end
-              end,
-            },
-            {
               function()
-                return require("config.icons").ui.remote
+                return require("noice").api.status.command.get()
               end,
-              cond = require("helpers").is_remote,
+              cond = function()
+                return package.loaded["noice"] and require("noice").api.status.command.has()
+              end,
+            },
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.mode.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+            },
+            -- stylua: ignore
+            {
+              function() return "  " .. require("dap").status() end,
+              cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
+              color = "DiagnosticSignWarn",
             },
           },
           lualine_y = {
@@ -583,7 +586,28 @@ return {
             -- },
           },
           lualine_z = {
-            { "location" },
+            {
+              function()
+                return ""
+              end,
+              cond = function()
+                return vim.b.format_on_save ~= false and require("helpers.format").format_on_save
+              end,
+            },
+            {
+              function()
+                return ""
+              end,
+              cond = function()
+                return require("helpers.toggle").is_conceal_active
+              end,
+            },
+            {
+              function()
+                return require("config.icons").ui.remote
+              end,
+              cond = require("helpers").is_remote,
+            },
           },
         },
         extensions = { "nvim-tree" },
@@ -593,25 +617,6 @@ return {
       local lualine = require("lualine")
       lualine.setup(opts)
     end,
-  },
-
-  {
-    "windwp/nvim-spectre",
-    keys = {
-      {
-        "<leader>R",
-        function()
-          require("spectre").open()
-        end,
-        desc = "Search and replace",
-      },
-    },
-    opts = {
-      open_cmd = "60vnew",
-      line_sep_start = "┌─────────────────────────────────────────────────────────────",
-      result_padding = "│ ",
-      line_sep = "└─────────────────────────────────────────────────────────────",
-    },
   },
 
   {
@@ -629,9 +634,10 @@ return {
           untracked = { text = signs.untracked },
         },
         preview_config = {
-          border = "rounded",
+          border = require("config.icons").borders.outer.all,
           style = "minimal",
           relative = "cursor",
+          width = 88,
           row = 0,
           col = 1,
         },
@@ -665,21 +671,27 @@ return {
           end, { expr = true, desc = "Previous hunk" })
 
           -- Actions
-          map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>", { desc = "Stage hunk" })
-          map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
+          map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
+          map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
+          map("v", "<leader>hs", function()
+            gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+          end, { desc = "Stage hunk" })
+          map("v", "<leader>hr", function()
+            gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+          end, { desc = "Reset hunk" })
           map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
-          map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
-          map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer " })
-          map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk " })
+          map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Unstage hunk" })
+          map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+          map("n", "<leader>hp", gs.preview_hunk_inline, { desc = "Preview hunk" })
           map("n", "<leader>hb", function()
             gs.blame_line({ full = true })
           end, { desc = "Blame line" })
-          map("n", "<leader>hb", gs.toggle_current_line_blame, { desc = "Toggle blame" })
-          map("n", "<leader>hd", gs.diffthis, { desc = "Show diff" })
+          map("n", "<leader>hB", gs.toggle_current_line_blame, { desc = "Toggle Git blame" })
+          map("n", "<leader>hd", gs.diffthis, { desc = "Diff" })
           map("n", "<leader>hD", function()
             gs.diffthis("~")
-          end, { desc = "Show diff (last commit)" })
-          map("n", "<leader>hd", gs.toggle_deleted, { desc = "Toggle deleted" })
+          end, { desc = "Diff HEAD" })
+          map("n", "<leader>hR", gs.toggle_deleted, { desc = "Toggle removed" })
 
           -- Text object
           map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
@@ -889,7 +901,16 @@ return {
     end,
   },
 
-  { "kevinhwang91/nvim-bqf", event = "VeryLazy", config = true },
+  {
+    "kevinhwang91/nvim-bqf",
+    event = "VeryLazy",
+    opts = {
+      preview = {
+        show_title = false,
+        border_chars = { "▏", "▕", "▔", "▁", "🭽", "🭾", "🭼", "🭿", "" },
+      },
+    },
+  },
 
   -- active indent guide and indent text objects
   -- {

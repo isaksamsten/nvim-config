@@ -20,6 +20,7 @@ return {
           local telescope_selection = darken(colors.base, 8)
           local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
           local faded_red = Color.mix(colors.base, colors.red, 0.1)
+          local faded_purple = Color.mix(colors.base, colors.mauve, 0.1)
 
           local gray = colors.subtext0
           local fg = colors.text
@@ -131,11 +132,14 @@ return {
             NormalFloat = { bg = float_bg },
             FloatBorder = { bg = float_bg, fg = fg_border },
             FloatTitle = { fg = colors.lavender, bg = float_bg },
-            DebugLogPoint = { fg = purple },
-            DebugStopped = { fg = yellow },
+            BqfPreviewBorder = { link = "PopupBorder" },
+            BqfPreviewFloat = { link = "PopupNormal" },
+
+            DebugLogPoint = { fg = purple, bg = faded_purple },
+            DebugLogPointLine = { bg = faded_purple },
+            DebugStopped = { fg = yellow, bg = faded_yellow },
             DebugStoppedLine = { bg = faded_yellow },
-            DebugBreakpointRejected = { fg = purple },
-            DebugBreakpoint = { fg = red },
+            DebugBreakpoint = { fg = red, bg = faded_red },
             DebugBreakpointLine = { bg = faded_red },
             WinSeparator = { fg = colors.mantle, bg = colors.mantle },
             StatusColumnSeparator = { fg = colors.surface2, bg = "none" },

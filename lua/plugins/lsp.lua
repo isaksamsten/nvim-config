@@ -171,7 +171,7 @@ return {
         update_in_insert = false,
         underline = true,
         float = {
-          border = "solid",
+          border = require("config.icons").borders.outer.all,
           severity_sort = true,
           header = {},
           suffix = function(diag)
