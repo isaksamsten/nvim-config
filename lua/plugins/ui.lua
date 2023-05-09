@@ -66,15 +66,28 @@ return {
             },
             search_down = { kind = "search", pattern = "^/", icon = icons.search_down, lang = "regex" },
             search_up = { kind = "search", pattern = "^%?", icon = icons.search_up, lang = "regex" },
-            filter = { pattern = "^:%s*!", icon = icons.filter, lang = "bash", opts = popup_opts },
+            filter = {
+              pattern = "^:%s*!",
+              icon = icons.filter,
+              lang = "bash",
+              opts = popup_opts,
+            },
             lua = {
               pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" },
               icon = icons.lua,
               lang = "lua",
               opts = popup_opts,
             },
-            git = { pattern = { "^:%s*G%s+" }, icon = icons.git, opts = popup_opts },
-            help = { pattern = "^:%s*he?l?p?%s+", icon = icons.help, opts = popup_opts },
+            git = {
+              pattern = { "^:%s*G%s+" },
+              icon = icons.git,
+              opts = popup_opts,
+            },
+            help = {
+              pattern = "^:%s*he?l?p?%s+",
+              icon = icons.help,
+              opts = popup_opts,
+            },
             input = {}, -- Used by input()
           },
         },
@@ -172,8 +185,36 @@ return {
             view = "mini",
           },
           {
+            filter = {
+              event = "msg_show",
+              find = ";%s(%a+)%s#(%d+)", -- matches undo messages
+            },
+            view = "mini",
+          },
+          {
+            filter = {
+              event = "msg_show",
+              find = "^%d+.*lines", -- fewer, more yanked etc lines
+            },
+            view = "mini",
+          },
+          {
+            filter = {
+              event = "msg_show",
+              find = "^Already at", -- More undo messages
+            },
+            view = "mini",
+          },
+          {
             view = "cmdline_output",
             filter = { cmdline = "^:" },
+          },
+          {
+            filter = {
+              event = "msg_show",
+              kind = "search_count",
+            },
+            opts = { skip = true },
           },
         },
         presets = {
@@ -192,7 +233,6 @@ return {
     opts = {
       theme = {
         fill = "TabLineFill",
-        -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
         head = "TabLineHead",
         current_tab = "TabLineSel",
         tab = "TabLine",
@@ -310,35 +350,11 @@ return {
     opts = {},
   },
 
-  {
-    "ahmedkhalf/project.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-    },
-    opts = {
-      ignore_lsp = { "null-ls" },
-    },
-    keys = {
-      {
-        "<leader>p",
-        function()
-          require("telescope").extensions.projects.projects({})
-        end,
-        desc = "Recent projects",
-      },
-    },
-    config = function(opts)
-      require("project_nvim").setup(opts)
-      require("telescope").load_extension("projects")
-    end,
-  },
-
   "nvim-tree/nvim-web-devicons",
-
   "MunifTanjim/nui.nvim",
+
   {
-    "famiu/bufdelete.nvim",
+    "isaksamsten/bufdelete.nvim", -- For with confirm+less noice
     keys = {
       {
         "<leader>q",
@@ -346,23 +362,6 @@ return {
           require("bufdelete").bufdelete(0, false)
         end,
         desc = "Delete current Buffer",
-      },
-    },
-  },
-
-  {
-    "j-hui/fidget.nvim",
-    event = { "LspAttach" },
-    opts = {
-      text = {
-        spinner = "pipe", -- animation shown when tasks are ongoing
-        done = "✔", -- character shown when all tasks are complete
-        commenced = "", -- message shown when task starts
-        completed = "", -- message shown when task completes
-      },
-      sources = {
-        ltex = { ignore = true },
-        ["null-ls"] = { ignore = true },
       },
     },
   },
@@ -472,7 +471,20 @@ return {
   },
 
   {
+    "windwp/windline.nvim",
+    event = "VeryLazy",
+    enabled = true,
+    version = false,
+    config = function()
+      -- require("wlsample.evil_line")
+      -- require("wlsample.vscode")
+      require("helpers.statusline")
+    end,
+  },
+
+  {
     "nvim-lualine/lualine.nvim",
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       local icons = require("config.icons")
@@ -540,10 +552,10 @@ return {
           lualine_x = {
             {
               function()
-                return require("noice").api.status.command.get()
+                return require("config.icons").debug.debug .. require("dap").status()
               end,
               cond = function()
-                return package.loaded["noice"] and require("noice").api.status.command.has()
+                return package.loaded["dap"] and require("dap").status() ~= ""
               end,
             },
             -- stylua: ignore

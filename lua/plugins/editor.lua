@@ -77,7 +77,7 @@ return {
             end
           end
         end,
-        desc = "Previous trouble/quickfix item",
+        desc = "Previous trouble",
       },
       {
         "]q",
@@ -94,7 +94,7 @@ return {
             end
           end
         end,
-        desc = "Next trouble/quickfix item",
+        desc = "Next trouble",
       },
     },
   },

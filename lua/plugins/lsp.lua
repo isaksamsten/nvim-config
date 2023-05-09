@@ -125,6 +125,23 @@ return {
       "jose-elias-alvarez/null-ls.nvim",
       "jay-babu/mason-null-ls.nvim",
       "hrsh7th/cmp-nvim-lsp",
+      "barreiroleo/ltex_extra.nvim",
+
+      {
+        "j-hui/fidget.nvim",
+        opts = {
+          text = {
+            spinner = "pipe", -- animation shown when tasks are ongoing
+            done = "✔", -- character shown when all tasks are complete
+            -- commenced = "", -- message shown when task starts
+            -- completed = "", -- message shown when task completes
+          },
+          sources = {
+            ltex = { ignore = true },
+            ["null-ls"] = { ignore = true },
+          },
+        },
+      },
       {
         "ray-x/lsp_signature.nvim",
         opts = function()
@@ -220,9 +237,15 @@ return {
         jsonls = {},
         marksman = {},
         ltex = {
+          on_attach = function(client, bufnr)
+            require("ltex_extra").setup({ path = "~/.ltex/" })
+          end,
           settings = {
+            ["ltex-ls"] = {
+              logLevel = "severe",
+            },
             additionalRules = {
-              motherTongeu = "sv",
+              motherTongue = "sv",
             },
           },
         },
