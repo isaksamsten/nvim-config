@@ -55,6 +55,10 @@ vim.keymap.set("n", "<leader>mA", function()
   })
 end, { desc = "Select Conda environment", silent = false })
 
+vim.keymap.set("n", "<leader>ma", function()
+  Python.activate()
+end, { desc = "Activate Python environment", silent = false })
+
 vim.keymap.set("n", "<leader>ms", function()
   Python.select_conda({
     callback = function(env)

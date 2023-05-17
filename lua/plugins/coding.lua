@@ -98,8 +98,9 @@ return {
       local prev_item = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
       local next_item = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
       return {
+        preselect = cmp.PreselectMode.None,
         completion = {
-          completeopt = "menu,menuone,noinsert",
+          -- completeopt = "menu,menuone,noinsert",
         },
         experimental = {
           ghost_text = {
@@ -160,6 +161,7 @@ return {
               cmp.complete()
             end
           end, { "i", "c" }),
+          ["<CR>"] = cmp.mapping.confirm({ select = false }),
           ["<C-u>"] = { i = cmp.mapping.scroll_docs(-4) },
           ["<C-d>"] = { i = cmp.mapping.scroll_docs(4) },
           ["<Tab>"] = {
@@ -167,7 +169,7 @@ return {
               -- We dont autocomplete if we are in an active Snippet unless the completion
               -- item is selected explicitly.
               if cmp.visible() then
-                cmp.confirm()
+                cmp.confirm({ select = true })
               elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
               elseif has_words_before() then
@@ -194,9 +196,7 @@ return {
           },
 
           ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
+            if luasnip.jumpable(-1) then
               luasnip.jump(-1)
             else
               fallback()
@@ -204,10 +204,10 @@ return {
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
           { name = "path" },
+          { name = "nvim_lsp", keyword_length = 1 },
+          { name = "buffer", keyword_length = 3 },
+          { name = "luasnip", keyword_length = 2 },
         }),
       }
     end,
@@ -342,6 +342,7 @@ return {
         function()
           require("neogen").generate()
         end,
+        mode = { "n", "i" },
         desc = "Generate documentation",
       },
     },

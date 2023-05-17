@@ -838,48 +838,48 @@ return {
           end,
           desc = "Search diagnostics",
         },
-        {
-          "<leader>O",
-          function()
-            require("telescope.builtin").lsp_document_symbols(vertical({
-              prompt_title = "Symbols",
-              preview_title = "",
-              symbols = {
-                "Class",
-                "Function",
-                "Method",
-                "Constructor",
-                "Interface",
-                "Module",
-                "Struct",
-                "Trait",
-                "Field",
-                "Property",
-              },
-            }))
-          end,
-          desc = "Search symbols",
-        },
         -- {
-        --   "<leader>T",
+        --   "<leader>s",
         --   function()
-        --     require("telescope.builtin").lsp_workspace_symbols(vertical({
+        --     require("telescope.builtin").lsp_document_symbols(vertical({
         --       prompt_title = "Symbols",
-        --       preview_title = "Preview",
+        --       preview_title = "",
         --       symbols = {
         --         "Class",
         --         "Function",
         --         "Method",
+        --         "Constructor",
         --         "Interface",
         --         "Module",
         --         "Struct",
         --         "Trait",
+        --         "Field",
         --         "Property",
         --       },
         --     }))
         --   end,
-        --   desc = "Find symbol in workspace",
+        --   desc = "Search symbols",
         -- },
+        {
+          "<C-S-p>",
+          function()
+            require("telescope.builtin").lsp_dynamic_workspace_symbols(vertical({
+              prompt_title = "Symbols",
+              preview_title = "Preview",
+              symbols = {
+                "Class",
+                "Function",
+                "Method",
+                "Interface",
+                "Module",
+                "Struct",
+                "Trait",
+                "Property",
+              },
+            }))
+          end,
+          desc = "Search symbols in workspace",
+        },
       }
     end,
     opts = function()
@@ -912,38 +912,6 @@ return {
       telescope.setup(opts)
     end,
   },
-
-  {
-    "kevinhwang91/nvim-bqf",
-    event = "VeryLazy",
-    opts = {
-      preview = {
-        show_title = false,
-        border_chars = { "▏", "▕", "▔", "▁", "🭽", "🭾", "🭼", "🭿", "" },
-      },
-    },
-  },
-
-  -- active indent guide and indent text objects
-  -- {
-  --   "echasnovski/mini.indentscope",
-  --   event = "BufReadPre",
-  --   version = false, -- wait till new 0.7.0 release to put it back on semver
-  --   opts = {
-  --     symbol = "│",
-  --   },
-  --   config = function(_, opts)
-  --     vim.api.nvim_create_autocmd("FileType", {
-  --       pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason" },
-  --       callback = function()
-  --         vim.b.miniindentscope_disable = true
-  --       end,
-  --     })
-  --     require("mini.indentscope").setup(
-  --       vim.tbl_extend("keep", opts, { draw = { animation = require("mini.indentscope").gen_animation.none() } })
-  --     )
-  --   end,
-  -- },
 
   {
     "lukas-reineke/indent-blankline.nvim",

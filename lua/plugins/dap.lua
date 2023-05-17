@@ -25,9 +25,10 @@ return {
               },
               size = 50,
               border = {
-                style = require("config.icons").borders.outer.all,
+                style = require("config.icons").borders.empty,
                 text = {
-                  top = "",
+                  top = "Condition",
+                  title_pos = "center",
                 },
               },
               win_options = {

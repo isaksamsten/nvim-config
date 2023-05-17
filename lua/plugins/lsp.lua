@@ -232,7 +232,17 @@ return {
         erlangls = {},
         esbonio = {},
         jdtls = { skip_setup = true },
-        jedi_language_server = {},
+        jedi_language_server = {
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          },
+        },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -298,7 +308,7 @@ return {
         local config = opts.servers[server]
         lspconfig[server].setup({
           on_attach = config.on_attach,
-          capabilities = capabilities,
+          capabilities = vim.tbl_extend("force", capabilities, config.capabilities or {}),
           settings = config.settings or {},
         })
       end

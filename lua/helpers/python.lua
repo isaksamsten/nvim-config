@@ -269,6 +269,7 @@ function M.activate(env)
       set_env(env)
       return true
     else
+      vim.notify("No Python environment to activate")
       return false
     end
   end
