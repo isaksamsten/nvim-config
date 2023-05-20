@@ -71,12 +71,12 @@ local icons = {
   },
   git = {
     signs = {
-      add = "┃",
+      add = "▎",
       topdelete = "󱨉",
-      delete = "┃",
-      changedelete = "┃",
-      change = "┃",
-      untracked = "┃",
+      delete = "▎",
+      changedelete = "▎",
+      change = "▎",
+      untracked = "▎",
     },
     git = "",
     add = "",

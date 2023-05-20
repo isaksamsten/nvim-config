@@ -74,8 +74,7 @@ return {
             NeoTreeTabSeparatorInactive = { fg = colors.mantle, bg = colors.mantle },
             NeoTreeNormal = { fg = colors.text, bg = colors.mantle },
             NeoTreeNormalNC = { fg = colors.text, bg = colors.mantle },
-
-            LineNr = { fg = colors.overlay0, bold = true },
+            LineNr = { fg = colors.overlay0 },
             CursorLineNr = { fg = colors.lavender, bold = true },
             -- Cmp
             CmpItemAbbrMatch = { fg = blue, bold = true },
@@ -142,7 +141,9 @@ return {
             DebugBreakpoint = { fg = red, bg = faded_red },
             DebugBreakpointLine = { bg = faded_red },
             WinSeparator = { fg = colors.mantle, bg = colors.mantle },
-            StatusColumnSeparator = { fg = colors.surface2, bg = "none" },
+
+            StatusColumnSeparator = { fg = colors.surface0, bg = "NONE" },
+            SignColumn = { fg = colors.surface0 },
 
             TabLineHead = { bg = blue, fg = colors.base },
             TabLineFill = { bg = colors.mantle, fg = gray },

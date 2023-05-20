@@ -53,8 +53,9 @@ return {
                 and not require("luasnip").session.jump_active
               then
                 require("luasnip").unlink_current()
-                require("cmp.config").global.completion.autocomplete =
-                  { require("cmp.types").cmp.TriggerEvent.TextChanged }
+                require("cmp.config").set_global({
+                  completion = { autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged } },
+                })
               end
             end,
           })
@@ -63,7 +64,7 @@ return {
           vim.api.nvim_create_autocmd("User", {
             pattern = "LuaSnipInsertNodeEnter",
             callback = function()
-              require("cmp.config").global.completion.autocomplete = false
+              require("cmp.config").set_global({ completion = { autocomplete = false } })
             end,
           })
 
@@ -71,8 +72,9 @@ return {
           vim.api.nvim_create_autocmd("User", {
             pattern = "LuaSnipInsertNodeLeave",
             callback = function()
-              require("cmp.config").global.completion.autocomplete =
-                { require("cmp.types").cmp.TriggerEvent.TextChanged }
+              require("cmp.config").set_global({
+                completion = { autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged } },
+              })
             end,
           })
         end,

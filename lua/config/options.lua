@@ -19,14 +19,14 @@ opt.expandtab = true -- Use spaces instead of tabs
 opt.formatoptions = "jcroqlnt" -- tcqj
 opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg = "rg --vimgrep"
-opt.guifont = "FiraCode Nerd Font:h11"
+opt.guifont = "Jetbrains Mono:h13"
 opt.hidden = true -- Enable modified buffers in background
 opt.ignorecase = true -- Ignore case
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.joinspaces = false -- No double spaces with join after a dot
 opt.laststatus = 2
 opt.foldenable = false
-opt.list = true -- Show some invisible characters (tabs...
+-- opt.list = true -- Show some invisible characters (tabs...
 opt.mouse = "a" -- enable mouse mode
 opt.number = true -- Print line number
 opt.relativenumber = true -- Relative line numbers
@@ -52,8 +52,8 @@ opt.undolevels = 10000
 opt.updatetime = 200 -- save swap file and trigger CursorHold
 opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- minimum window width
-opt.wrap = false -- Disable line wrap
-
+opt.wrap = true -- Disable line wrap
+opt.linebreak = true
 if vim.fn.has("nvim-0.9.0") == 1 then
   opt.splitkeep = "screen"
   opt.shortmess:append({ C = true })

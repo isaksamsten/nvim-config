@@ -1,5 +1,4 @@
 return {
-
   {
     "ggandor/leap.nvim",
     event = "BufReadPost",
@@ -9,14 +8,33 @@ return {
       require("leap").add_default_mappings()
     end,
   },
-
+  {
+    "kylecui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branc for the latest features
+    event = "VeryLazy",
+    opts = {
+      keymaps = {
+        insert = "<C-g>z",
+        -- insert_line = "gC-ggZ",
+        normal = "gz",
+        normal_cur = "gZ",
+        normal_line = "gzz",
+        normal_cur_line = "gZZ",
+        visual = "gz",
+        visual_line = "gZ",
+        delete = "gzd",
+        change = "gzr",
+      },
+    },
+  },
   {
     "echasnovski/mini.surround",
     event = "BufReadPost",
+    enabled = false,
     version = false,
     opts = {
       mappings = {
-        add = "zsa", -- Add surrounding in Normal and Visual modes
+        add = "gza", -- Add surrounding in Normal and Visual modes
         delete = "zsd", -- Delete surrounding
         find = "zsf", -- Find surrounding (to the right)
         find_left = "zsF", -- Find surrounding (to the left)
