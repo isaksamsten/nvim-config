@@ -15,11 +15,14 @@ return {
           end
         end,
       },
+      form = {
+        border = require("config.icons").borders.outer.all,
+      },
       task_list = { direction = "right" },
     },
     keys = {
-      { "<leader>r", "<cmd>OverseerRun<cr>", desc = "Run task" },
-      { "<leader>g", "<cmd>OverseerToggle<cr>", desc = "Toggle tasks" },
+      { "<M-B>", "<cmd>OverseerRun<cr>", desc = "Run task" },
+      { "<leader>ob", "<cmd>OverseerToggle<cr>", desc = "Build tasks" },
     },
   },
 }

@@ -9,7 +9,7 @@ return {
     end,
   },
   {
-    "kylecui/nvim-surround",
+    "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branc for the latest features
     event = "VeryLazy",
     opts = {
@@ -26,29 +26,6 @@ return {
         change = "gzr",
       },
     },
-  },
-  {
-    "echasnovski/mini.surround",
-    event = "BufReadPost",
-    enabled = false,
-    version = false,
-    opts = {
-      mappings = {
-        add = "gza", -- Add surrounding in Normal and Visual modes
-        delete = "zsd", -- Delete surrounding
-        find = "zsf", -- Find surrounding (to the right)
-        find_left = "zsF", -- Find surrounding (to the left)
-        highlight = "zsh", -- Highlight surrounding
-        replace = "zsr", -- Replace surrounding
-        update_n_lines = "", -- Update `n_lines`
-
-        suffix_last = "", -- Suffix to search with "prev" method
-        suffix_next = "", -- Suffix to search with "next" method
-      },
-    },
-    config = function(_, opts)
-      require("mini.surround").setup(opts)
-    end,
   },
 
   {
@@ -76,40 +53,40 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>,", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Show document diagnostics" },
-      { "<leader><", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Show workspace diagnostics" },
-      { "<leader>L", "<cmd>TroubleToggle loclist<cr>", desc = "Show location list" },
-      { "<leader>U", "<cmd>TroubleToggle quickfix<cr>", desc = "Show quickfix list" },
+      { "<M-,>", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document diagnostics" },
+      { "<M-<>", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace diagnostics" },
+      { "<leader>ol", "<cmd>TroubleToggle loclist<cr>", desc = "Location" },
+      { "<leader>oq", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix" },
       {
-        "[q",
+        "[,",
         function()
           if require("trouble").is_open() then
             require("trouble").previous({ skip_groups = true, jump = true })
           else
-            local ok, result = pcall(vim.cmd, "cprev")
-            if not ok then
-              ok, result = pcall(vim.cmd, "clast")
-              if not ok then
-                print("No errors")
-              end
-            end
+            -- local ok, result = pcall(vim.cmd, "cprev")
+            -- if not ok then
+            --   ok, result = pcall(vim.cmd, "clast")
+            --   if not ok then
+            vim.diagnostic.goto_prev()
+            --   end
+            -- end
           end
         end,
         desc = "Previous trouble",
       },
       {
-        "]q",
+        "],",
         function()
           if require("trouble").is_open() then
             require("trouble").next({ skip_groups = true, jump = true })
           else
-            local ok, result = pcall(vim.cmd, "cnext")
-            if not ok then
-              ok, result = pcall(vim.cmd, "cfirst")
-              if not ok then
-                print("No errors")
-              end
-            end
+            -- local ok, result = pcall(vim.cmd, "cnext")
+            -- if not ok then
+            --   ok, result = pcall(vim.cmd, "cfirst")
+            --   if not ok then
+            vim.diagnostic.goto_next()
+            --   end
+            -- end
           end
         end,
         desc = "Next trouble",

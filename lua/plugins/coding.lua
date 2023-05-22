@@ -253,42 +253,49 @@ return {
     },
     keys = {
       {
-        "<leader>tr",
+        "<M-r>r",
         function()
           require("neotest").run.run()
         end,
         desc = "Run test",
       },
       {
-        "<leader>tR",
+        "<M-r>R",
         function()
           require("neotest").run.run(vim.fn.expand("%"))
         end,
-        desc = "Run tests in file",
+        desc = "Run all tests",
       },
       {
-        "<leader>td",
+        "<M-r>d",
         function()
           require("neotest").run.run({ strategy = "dap" })
         end,
         desc = "Debug test",
       },
+      -- {
+      --   "<leader>ts",
+      --   function()
+      --     require("neotest").run.stop()
+      --   end,
+      --   desc = "Stop test",
+      -- },
       {
-        "<leader>ts",
-        function()
-          require("neotest").run.stop()
-        end,
-        desc = "Stop test",
-      },
-      {
-        "<leader>to",
+        "<leader>ot",
         function()
           require("neotest").summary.toggle()
         end,
-        desc = "Show test summary",
+        desc = "Test summary",
       },
       {
-        "<leader>t,",
+        "<leader>oT",
+        function()
+          require("neotest").output_panel.toggle()
+        end,
+        desc = "Test outputs",
+      },
+      {
+        "<M-r>t",
         function()
           require("neotest").output.open({ enter = false })
         end,
@@ -320,6 +327,14 @@ return {
           running_animated = icons.test.running_animated,
           skipped = icons.test.skipped,
           unknown = icons.test.unknown,
+        },
+        floating = {
+          border = icons.borders.outer.all,
+        },
+        quickfix = {
+          open = function()
+            require("trouble").open("quickfix")
+          end,
         },
       }
     end,

@@ -45,7 +45,7 @@ vim.keymap.set({ "n", "v" }, "<M-t>", "<Esc><Cmd>tabnew<CR>", { desc = "New tab"
 vim.keymap.set({ "n", "v" }, "<M-w>", "<Esc><Cmd>tabclose<CR>", { desc = "Close tab" })
 
 local Python = require("helpers.python")
-vim.keymap.set("n", "<leader>mA", function()
+vim.keymap.set("n", "<leader>aA", function()
   Python.select_conda({
     callback = function(env)
       if Python.activate(env) then
@@ -55,11 +55,11 @@ vim.keymap.set("n", "<leader>mA", function()
   })
 end, { desc = "Select Conda environment", silent = false })
 
-vim.keymap.set("n", "<leader>ma", function()
+vim.keymap.set("n", "<leader>aa", function()
   Python.activate()
 end, { desc = "Activate Python environment", silent = false })
 
-vim.keymap.set("n", "<leader>ms", function()
+vim.keymap.set("n", "<leader>as", function()
   Python.select_conda({
     callback = function(env)
       if env then
@@ -79,8 +79,8 @@ vim.keymap.set("n", "<leader>ud", Toggle.diagnostics, { desc = "Toggle diagnosti
 vim.keymap.set("n", "<C-,>", function()
   vim.diagnostic.open_float(nil, { scope = "line" })
 end, { silent = true, desc = "Show diagnostics" })
-vim.keymap.set("n", "[,", vim.diagnostic.goto_prev, { silent = true, desc = "Previous diagnostic" })
-vim.keymap.set("n", "],", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnostic" })
+-- vim.keymap.set("n", "[,", vim.diagnostic.goto_prev, { silent = true, desc = "Previous diagnostic" })
+-- vim.keymap.set("n", "],", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnostic" })
 
 local M = {}
 

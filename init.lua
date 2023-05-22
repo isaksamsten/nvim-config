@@ -1,6 +1,6 @@
 vim.cmd([[
-  command! -nargs=+ -complete=file Grep noautocmd silent grep! <args> | redraw! | copen
-  command! -nargs=+ -complete=file LGrep noautocmd silent lgrep! <args> | redraw! | lopen
+  command! -nargs=+ -complete=file Grep noautocmd silent grep! <args> | redraw! | Trouble quickfix
+  command! -nargs=+ -complete=file LGrep noautocmd silent lgrep! <args> | redraw! | Trouble loclist
 ]])
 
 require("config.options")

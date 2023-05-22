@@ -199,7 +199,7 @@ local default = {
   },
 }
 local explorer = {
-  filetypes = { "neo-tree" },
+  filetypes = { "neo-tree", "neotest-summary", "OverseerList", "Trouble" },
   active = {},
   always_active = true,
   show_last_status = true,

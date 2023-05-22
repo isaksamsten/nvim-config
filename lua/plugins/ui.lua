@@ -7,7 +7,7 @@ return {
       "rcarriga/nvim-notify",
       keys = {
         {
-          "<leader>un",
+          "<M-n>",
           function()
             require("notify").dismiss({ silent = true, pending = true })
           end,
@@ -338,12 +338,12 @@ return {
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     keys = {
       {
-        "<leader>hv",
+        "<leader>gv",
         "<cmd>DiffviewFileHistory %<cr>",
         desc = "Show file history",
       },
       {
-        "<leader>hV",
+        "<leader>gV",
         "<cmd>DiffviewFileHistory<cr>",
         desc = "Show branch history",
       },
@@ -358,7 +358,7 @@ return {
     "isaksamsten/bufdelete.nvim", -- For with confirm+less noice
     keys = {
       {
-        "<leader>q",
+        "<C-q>",
         function()
           require("bufdelete").bufdelete(0, false)
         end,
@@ -371,8 +371,8 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     keys = {
-      { "<leader>e", "<cmd>Neotree focus<CR>", desc = "Focus explorer" },
-      { "<leader>b", "<cmd>Neotree show toggle<CR>", desc = "Toggle explorer" },
+      { "<M-e>", "<cmd>Neotree focus<CR>", desc = "Focus explorer" },
+      { "<M-b>", "<cmd>Neotree show toggle<CR>", desc = "Toggle explorer" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -477,158 +477,7 @@ return {
     enabled = true,
     version = false,
     config = function()
-      -- require("wlsample.evil_line")
-      -- require("wlsample.vscode")
       require("helpers.statusline")
-    end,
-  },
-
-  {
-    "nvim-lualine/lualine.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    opts = function()
-      local icons = require("config.icons")
-      return {
-        options = {
-          theme = "auto",
-          globalstatus = true,
-          -- disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
-          component_separators = { left = "", right = "" },
-          section_separators = { right = "", left = "" },
-        },
-        sections = {
-          lualine_a = {
-            {
-              "mode",
-              fmt = function(mode)
-                return string.sub(mode, 0, 6)
-              end,
-            },
-          },
-          lualine_b = {
-            { "branch", icon = icons.git.branch, separator = "" },
-            {
-              "diff",
-              symbols = {
-                added = icons.git.add .. " ",
-                modified = icons.git.change .. " ",
-                removed = icons.git.delete .. " ",
-              },
-            },
-          },
-          lualine_c = {
-            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-            {
-              "filename",
-              path = 1,
-              shorting_target = 40,
-              fmt = function(filename)
-                -- Small attempt to workaround https://github.com/nvim-lualine/lualine.nvim/issues/872
-                if #filename > 80 then
-                  filename = vim.fs.basename(filename)
-                end
-
-                if #filename > 80 then
-                  return string.sub(filename, #filename - 80, #filename)
-                end
-                return filename
-              end,
-              symbols = {
-                modified = " " .. icons.file.modified .. " ",
-                readonly = " " .. icons.file.readonly .. " ",
-                unnamed = "",
-                newfile = " " .. icons.file.new .. " ",
-              },
-            },
-            {
-              function()
-                return require("nvim-navic").get_location()
-              end,
-              cond = function()
-                return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-              end,
-            },
-          },
-          lualine_x = {
-            {
-              function()
-                return require("config.icons").debug.debug .. require("dap").status()
-              end,
-              cond = function()
-                return package.loaded["dap"] and require("dap").status() ~= ""
-              end,
-            },
-            -- stylua: ignore
-            {
-              function() return require("noice").api.status.mode.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-            },
-            -- stylua: ignore
-            {
-              function() return "  " .. require("dap").status() end,
-              cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
-              color = "DiagnosticSignWarn",
-            },
-          },
-          lualine_y = {
-            {
-              "diagnostics",
-              symbols = {
-                error = icons.diagnostics.error,
-                warn = icons.diagnostics.warn,
-                info = icons.diagnostics.info,
-                hint = icons.diagnostics.hint,
-              },
-              cond = function()
-                return require("helpers.toggle").is_diagnostics_active
-              end,
-            },
-            -- {
-            --   function()
-            --     local python = require("helpers.python").python()
-            --     if python then
-            --       return string.format("%s [%s]", python.name, python.version)
-            --     else
-            --       return "[No interpreter]"
-            --     end
-            --   end,
-            --   cond = function()
-            --     return vim.bo.ft == "python"
-            --   end,
-            -- },
-          },
-          lualine_z = {
-            {
-              function()
-                return ""
-              end,
-              cond = function()
-                return vim.b.format_on_save ~= false and require("helpers.format").format_on_save
-              end,
-            },
-            {
-              function()
-                return ""
-              end,
-              cond = function()
-                return require("helpers.toggle").is_conceal_active
-              end,
-            },
-            {
-              function()
-                return require("config.icons").ui.remote
-              end,
-              cond = require("helpers").is_remote,
-            },
-          },
-        },
-        extensions = { "nvim-tree" },
-      }
-    end,
-    config = function(_, opts)
-      local lualine = require("lualine")
-      lualine.setup(opts)
     end,
   },
 
@@ -663,9 +512,9 @@ return {
             vim.keymap.set(mode, l, r, opts)
           end
 
-          map("n", "]h", function()
+          map("n", "]g", function()
             if vim.wo.diff then
-              return "]h"
+              return "]g"
             end
             vim.schedule(function()
               gs.next_hunk()
@@ -673,9 +522,9 @@ return {
             return "<Ignore>"
           end, { expr = true, desc = "Next hunk" })
 
-          map("n", "[h", function()
+          map("n", "[g", function()
             if vim.wo.diff then
-              return "[h"
+              return "[g"
             end
             vim.schedule(function()
               gs.prev_hunk()
@@ -684,30 +533,30 @@ return {
           end, { expr = true, desc = "Previous hunk" })
 
           -- Actions
-          map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
-          map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
-          map("v", "<leader>hs", function()
+          map("n", "<leader>gs", gs.stage_hunk, { desc = "Stage hunk" })
+          map("n", "<leader>gr", gs.reset_hunk, { desc = "Reset hunk" })
+          map("v", "<leader>gs", function()
             gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
           end, { desc = "Stage hunk" })
-          map("v", "<leader>hr", function()
+          map("v", "<leader>gr", function()
             gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
           end, { desc = "Reset hunk" })
-          map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
-          map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Unstage hunk" })
-          map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
-          map("n", "<leader>hp", gs.preview_hunk_inline, { desc = "Preview hunk" })
-          map("n", "<leader>hb", function()
+          map("n", "<leader>gS", gs.stage_buffer, { desc = "Stage buffer" })
+          map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "Unstage hunk" })
+          map("n", "<leader>gR", gs.reset_buffer, { desc = "Reset buffer" })
+          map("n", "<leader>gp", gs.preview_hunk, { desc = "Preview hunk" })
+          map("n", "<leader>gb", function()
             gs.blame_line({ full = true })
           end, { desc = "Blame line" })
-          map("n", "<leader>hB", gs.toggle_current_line_blame, { desc = "Toggle Git blame" })
-          map("n", "<leader>hd", gs.diffthis, { desc = "Diff" })
-          map("n", "<leader>hD", function()
+          map("n", "<leader>ub", gs.toggle_current_line_blame, { desc = "Toggle Git blame" })
+          map("n", "<leader>gd", gs.diffthis, { desc = "Diff" })
+          map("n", "<leader>gD", function()
             gs.diffthis("~")
           end, { desc = "Diff HEAD" })
-          map("n", "<leader>hR", gs.toggle_deleted, { desc = "Toggle removed" })
+          map("n", "<leader>gR", gs.toggle_deleted, { desc = "Toggle removed" })
 
           -- Text object
-          map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+          map({ "o", "x" }, "ig", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
         end,
       }
     end,
@@ -729,9 +578,10 @@ return {
         ["gA"] = { name = "AI" },
         ["]"] = { name = "Next" },
         ["["] = { name = "Previous" },
-        ["<leader>h"] = { name = "Git" },
-        ["<leader>d"] = { name = "Debug" },
-        ["<leader>t"] = { name = "Test" },
+        ["<leader>g"] = { name = "Git" },
+        ["<M-r>"] = { name = "Run" },
+        ["<M-a>"] = { name = "Activate" },
+        ["<leader>o"] = { name = "Open" },
         ["<leader>u"] = { name = "Toggle" },
       })
     end,
@@ -808,13 +658,13 @@ return {
           end,
           desc = "Search buffers",
         },
-        {
-          "<leader>o",
-          function()
-            require("telescope").extensions.file_browser.file_browser(ivy({}))
-          end,
-          desc = "Open file",
-        },
+        -- {
+        --   "<leader>o",
+        --   function()
+        --     require("telescope").extensions.file_browser.file_browser(ivy({}))
+        --   end,
+        --   desc = "Open file",
+        -- },
         {
           "<leader>f",
           function()
@@ -833,7 +683,7 @@ return {
           desc = "Search",
         },
         {
-          "<leader>D",
+          "<leader>d",
           function()
             require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
           end,
@@ -903,13 +753,11 @@ return {
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       "nvim-telescope/telescope-live-grep-args.nvim",
-      "nvim-telescope/telescope-file-browser.nvim",
     },
     config = function(_, opts)
       local telescope = require("telescope")
       telescope.load_extension("fzf")
       telescope.load_extension("live_grep_args")
-      require("telescope").load_extension("file_browser")
       telescope.setup(opts)
     end,
   },

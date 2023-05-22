@@ -2,7 +2,7 @@ return {
   {
     "tpope/vim-fugitive",
     cmd = "G",
-    keys = { { "<leader>hh", "<cmd>G <CR>", desc = "Git status" } },
+    keys = { { "<leader>gg", "<cmd>G <CR>", desc = "Git status" } },
   },
 
   {
@@ -28,14 +28,14 @@ return {
     "ThePrimeagen/harpoon",
     keys = {
       {
-        "<leader>A",
+        "<M-M>",
         function()
           require("harpoon.ui").toggle_quick_menu()
         end,
         desc = "Show file marks",
       },
       {
-        "<leader>a",
+        "<M-m>",
         function()
           require("harpoon.mark").add_file()
         end,
@@ -68,20 +68,4 @@ return {
       },
     },
   },
-  -- {
-  --   "TimUntersberger/neogit",
-  --   dependencies = { "nvim-lua/plenary.nvim" },
-  --   keys = function(_, keys)
-  --     return {
-  --       {
-  --         "<leader>hh",
-  --         function()
-  --           return require("neogit").open()
-  --         end,
-  --         desc = "Open neogit",
-  --       },
-  --     }
-  --   end,
-  --   config = true,
-  -- },
 }
