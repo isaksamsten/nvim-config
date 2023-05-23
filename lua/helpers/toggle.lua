@@ -56,4 +56,31 @@ function Toggle.neotree()
   end
 end
 
+Toggle.neotree_current_window = nil
+function Toggle.focus_neotree(source)
+  local state = manager.get_state(source)
+  local current_win = vim.api.nvim_get_current_win()
+  local window_exists = renderer.window_exists(state)
+  if state.winid == current_win then
+    -- If the window is not yet set or gone, default to the right window
+    local winid = vim.fn.win_getid(vim.fn.winnr("1l"))
+    if
+      Toggle.neotree_current_window
+      and vim.api.nvim_win_is_valid(Toggle.neotree_current_window)
+      and vim.api.nvim_win_get_tabpage(Toggle.neotree_current_window) == vim.api.nvim_get_current_tabpage()
+    then
+      winid = Toggle.neotree_current_window
+    end
+    vim.api.nvim_set_current_win(winid)
+  else
+    Toggle.neotree_current_window = current_win
+    if window_exists then
+      vim.api.nvim_set_current_win(state.winid)
+    else
+      manager.close_all("left")
+      manager.navigate(state, nil, nil, nil, false)
+    end
+  end
+end
+
 return Toggle

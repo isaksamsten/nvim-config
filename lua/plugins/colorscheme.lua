@@ -110,7 +110,9 @@ return {
             DiagnosticFloatingInfo = { fg = fg },
             DiagnosticFloatingError = { fg = fg },
 
-            -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
+            -- ModeMsg = { fg = fg, bg = float_bg },
+            -- MsgArea = { fg = fg, bg = float_bg },
+
             NoiceMini = { link = "NonText" },
             NoiceVirtualText = { link = "NonText" },
             NoiceCmdlinePopup = { link = "PopupNormal" },

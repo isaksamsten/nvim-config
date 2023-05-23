@@ -1,7 +1,7 @@
 return {
   {
     "folke/noice.nvim",
-    enabled = true,
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
       "rcarriga/nvim-notify",
@@ -379,9 +379,27 @@ return {
     branch = "main",
     cmd = "Neotree",
     keys = {
-      { "<M-e>", "<cmd>Neotree source=filesystem focus<CR>", desc = "Focus explorer" },
-      { "<M-s>", "<cmd>Neotree source=document_symbols focus<CR>", desc = "Focus symbols" },
-      { "<M-g>", "<cmd>Neotree source=git_status focus<CR>", desc = "Focus Git status" },
+      {
+        "<M-e>",
+        function()
+          require("helpers.toggle").focus_neotree("filesystem")
+        end,
+        desc = "Focus explorer",
+      },
+      {
+        "<M-s>",
+        function()
+          require("helpers.toggle").focus_neotree("document_symbols")
+        end,
+        desc = "Focus symbols",
+      },
+      {
+        "<M-g>",
+        function()
+          require("helpers.toggle").focus_neotree("git_status")
+        end,
+        desc = "Focus Git status",
+      },
       {
         "<M-b>",
         function()
@@ -412,7 +430,7 @@ return {
         },
         sources = {
           "filesystem",
-          "buffers",
+          -- "buffers",
           "git_status",
           "document_symbols",
         },
@@ -423,7 +441,7 @@ return {
           tabs_layout = "equal",
           sources = {
             { source = "filesystem", display_name = "" },
-            { source = "buffers", display_name = "" },
+            -- { source = "buffers", display_name = "" },
             { source = "git_status", display_name = "" },
             {
               source = "document_symbols",

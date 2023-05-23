@@ -9,7 +9,7 @@ local icons = {
     lua = "󰢱",
     git = "",
     remote = "",
-    auto_format = "",
+    auto_format = "󰗈",
     conceal = "",
   },
   debug = {
@@ -95,7 +95,7 @@ local icons = {
   diagnostics = {
     error = " ",
     warn = " ",
-    hint = " ",
+    hint = "󰌶 ",
     info = " ",
   },
   kinds = {
