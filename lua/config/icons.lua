@@ -9,6 +9,8 @@ local icons = {
     lua = "󰢱",
     git = "",
     remote = "",
+    auto_format = "",
+    conceal = "",
   },
   debug = {
     debug = "",
@@ -88,12 +90,12 @@ local icons = {
     renamed = "",
     staged = "✓",
     unstaged = "✗",
-    untracked = "★",
+    untracked = "*",
   },
   diagnostics = {
     error = " ",
     warn = " ",
-    hint = " ",
+    hint = " ",
     info = " ",
   },
   kinds = {

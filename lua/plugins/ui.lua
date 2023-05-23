@@ -179,6 +179,13 @@ return {
           },
           {
             filter = {
+              event = "notify",
+              kind = { "info" },
+            },
+            view = "mini",
+          },
+          {
+            filter = {
               event = "msg_show",
               find = "%d+L, %d+B",
             },
@@ -310,7 +317,7 @@ return {
               colwidth = 1,
               auto = false,
               fillchar = require("config.icons").borders.outer.all[8],
-              fillcharhl = "StatusColumnSeparator",
+              -- fillcharhl = "StatusColumnSeparator",
             },
             click = "v:lua.ScSa",
           },
@@ -369,10 +376,19 @@ return {
 
   {
     "nvim-neo-tree/neo-tree.nvim",
+    branch = "main",
     cmd = "Neotree",
     keys = {
-      { "<M-e>", "<cmd>Neotree focus<CR>", desc = "Focus explorer" },
-      { "<M-b>", "<cmd>Neotree show toggle<CR>", desc = "Toggle explorer" },
+      { "<M-e>", "<cmd>Neotree source=filesystem focus<CR>", desc = "Focus explorer" },
+      { "<M-s>", "<cmd>Neotree source=document_symbols focus<CR>", desc = "Focus symbols" },
+      { "<M-g>", "<cmd>Neotree source=git_status focus<CR>", desc = "Focus Git status" },
+      {
+        "<M-b>",
+        function()
+          require("helpers.toggle").neotree()
+        end,
+        desc = "Toggle explorer",
+      },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -386,10 +402,19 @@ return {
       local icons = require("config.icons")
 
       return {
-        close_if_last_window = true,
+        close_if_last_window = false,
+        -- popup_border_style = icons.borders.outer.all,
+        use_popups_for_input = false,
         filesystem = {
           follow_current_file = true,
           hijack_netrw_behavior = "open_current",
+          use_libuv_file_watcher = true,
+        },
+        sources = {
+          "filesystem",
+          "buffers",
+          "git_status",
+          "document_symbols",
         },
         source_selector = {
           winbar = true,
@@ -465,6 +490,29 @@ return {
               staged = icons.git.staged,
               conflict = icons.git.conflict,
             },
+          },
+        },
+        document_symbols = {
+          kinds = {
+            File = { icon = icons.kinds.File, hl = "Tag" },
+            Namespace = { icon = icons.kinds.Namespace, hl = "Include" },
+            Package = { icon = icons.kinds.Package, hl = "Label" },
+            Class = { icon = icons.kinds.Class, hl = "Include" },
+            Property = { icon = icons.kinds.Property, hl = "@property" },
+            Enum = { icon = icons.kinds.Enum, hl = "@lsp.type.enum" },
+            EnumMember = { icon = icons.kinds.Enum, hl = "@lsp.type.enumMember" },
+            Event = { icon = icons.kinds.Enum, hl = "@number" },
+            Function = { icon = icons.kinds.Function, hl = "Function" },
+            String = { icon = icons.kinds.String, hl = "String" },
+            Number = { icon = icons.kinds.Number, hl = "Number" },
+            Array = { icon = icons.kinds.Array, hl = "Type" },
+            Object = { icon = icons.kinds.Object, hl = "Type" },
+            Key = { icon = icons.kinds.Key, hl = "" },
+            Struct = { icon = icons.kinds.Struct, hl = "Type" },
+            Operator = { icon = icons.kinds.Operator, hl = "Operator" },
+            TypeParameter = { icon = icons.kinds.TypeParameter, hl = "Type" },
+            StaticMethod = { icon = icons.kinds.StaticMethod, hl = "Function" },
+            Constant = { icon = icons.kinds.Constant, hl = "Constant" },
           },
         },
       }
@@ -599,6 +647,11 @@ return {
             conf.title_pos = "center"
             if conf.title then
               conf.title = string.gsub(conf.title, ":$", "")
+
+              -- Replace the title of Neotree popups
+              if string.match(conf.title, '^Enter new name for "%w+"') then
+                conf.title = "New name"
+              end
             end
           end,
         },

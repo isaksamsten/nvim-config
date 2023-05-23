@@ -78,7 +78,17 @@ basic.lsp_diagnos = {
     return ""
   end,
 }
-
+local function toggle(name, icon)
+  local Toggle = require("helpers.toggle")
+  return function()
+    local is_active = Toggle["is_" .. name .. "_active"]
+    if is_active then
+      return icon .. " "
+    else
+      return ""
+    end
+  end
+end
 basic.file = {
   name = "file_name",
   text = function()
@@ -190,6 +200,8 @@ local default = {
     { " " },
     basic.file,
     basic.line_col_right,
+    { toggle("format", icons.ui.auto_format) },
+    { toggle("conceal", icons.ui.conceal) }, -- TODO: improve
   },
   inactive = {
     { b_components.full_file_name, hl_list.Inactive },

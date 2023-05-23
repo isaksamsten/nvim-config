@@ -133,7 +133,6 @@ return {
             FloatTitle = { fg = colors.lavender, bg = float_bg },
             BqfPreviewBorder = { link = "PopupBorder" },
             BqfPreviewFloat = { link = "PopupNormal" },
-
             DebugLogPoint = { fg = purple, bg = faded_purple },
             DebugLogPointLine = { bg = faded_purple },
             DebugStopped = { fg = yellow, bg = faded_yellow },
