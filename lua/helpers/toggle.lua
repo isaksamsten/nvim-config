@@ -56,6 +56,7 @@ function Toggle.neotree()
   end
 end
 
+-- Toggle neotree focus.
 Toggle.neotree_current_window = nil
 function Toggle.focus_neotree(source)
   local state = manager.get_state(source)

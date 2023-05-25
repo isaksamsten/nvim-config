@@ -21,6 +21,7 @@ return {
           local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
           local faded_red = Color.mix(colors.base, colors.red, 0.1)
           local faded_purple = Color.mix(colors.base, colors.mauve, 0.1)
+          local neotree_cursorline_bg = Color.mix(colors.mantle, colors.text, 0.01)
 
           local gray = colors.subtext0
           local fg = colors.text
@@ -67,13 +68,14 @@ return {
             TelescopeSelection = { bg = telescope_selection },
             TelescopePreviewNormal = { bg = telescope_preview },
             TelescopePreviewBorder = { fg = telescope_preview, bg = telescope_preview },
-
+            NeoTreeCursorLine = { bg = neotree_cursorline_bg, bold = true },
             NeoTreeTabActive = { bg = colors.mantle, bold = true },
             NeoTreeTabSeparatorActive = { fg = colors.mantle, bg = colors.mantle },
             NeoTreeTabInactive = { bg = colors.mantle, fg = colors.overlay0 },
             NeoTreeTabSeparatorInactive = { fg = colors.mantle, bg = colors.mantle },
             NeoTreeNormal = { fg = colors.text, bg = colors.mantle },
             NeoTreeNormalNC = { fg = colors.text, bg = colors.mantle },
+
             LineNr = { fg = colors.overlay0 },
             CursorLineNr = { fg = colors.lavender, bold = true },
             -- Cmp
@@ -115,6 +117,7 @@ return {
 
             NoiceMini = { link = "NonText" },
             NoiceVirtualText = { link = "NonText" },
+            NoiceCmdline = { fg = fg, bg = colors.mantle },
             NoiceCmdlinePopup = { link = "PopupNormal" },
             NoiceCmdlinePopupBorder = { link = "PopupBorder" },
             NoiceCmdlinePrompt = { link = "PopupNormal" },
@@ -136,11 +139,11 @@ return {
             BqfPreviewBorder = { link = "PopupBorder" },
             BqfPreviewFloat = { link = "PopupNormal" },
             DebugLogPoint = { fg = purple, bg = faded_purple },
-            DebugLogPointLine = { bg = faded_purple },
+            DebugLogPointLine = { fg = purple, bg = faded_purple },
             DebugStopped = { fg = yellow, bg = faded_yellow },
-            DebugStoppedLine = { bg = faded_yellow },
+            DebugStoppedLine = { fg = yellow, bg = faded_yellow },
             DebugBreakpoint = { fg = red, bg = faded_red },
-            DebugBreakpointLine = { bg = faded_red },
+            DebugBreakpointLine = { fg = red, bg = faded_red },
             WinSeparator = { fg = colors.mantle, bg = colors.mantle },
 
             StatusColumnSeparator = { fg = colors.surface0, bg = "NONE" },

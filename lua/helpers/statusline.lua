@@ -2,6 +2,7 @@ local windline = require("windline")
 local b_components = require("windline.components.basic")
 local vim_components = require("windline.components.vim")
 local git_rev_components = require("windline.components.git_rev")
+local virtualenv = require("windline.components.virtualenv")
 
 local state = _G.WindLine.state
 local utils = require("windline.utils")
@@ -19,6 +20,7 @@ local basic = {}
 local small_width = 40
 local medium_width = 88
 local large_width = 100
+local ignore_filetypes = { "neo-tree", "neotest-summary", "OverseerList", "Trouble" }
 basic.divider = { b_components.divider, "" }
 
 -- stylua: ignore
@@ -153,7 +155,7 @@ basic.git_branch = {
       return {
         { git_comps.git_branch(), hl_list.default, large_width },
         {
-          git_rev_components.git_rev(),
+          git_rev_components.git_rev({ format = " %s⇣%s⇡ " }),
           hl_list.default,
           large_width,
         },
@@ -184,6 +186,34 @@ basic.command = {
     end
   end,
 }
+
+basic.icons = {
+  hl_colors = hl_list.icons,
+  text = function(_, _, width)
+    if vim.api.nvim_buf_get_option(0, "filetype") == "" and vim.fn.wordcount().bytes < 1 then
+      return ""
+    end
+    if width > large_width then
+      return {
+        { toggle("format", icons.ui.auto_format) },
+        { toggle("conceal", icons.ui.conceal) }, -- TODO: improve
+      }
+    else
+      return {}
+    end
+  end,
+}
+
+basic.file_name = function(bufnr)
+  local ft = b_components.file_type({ default = "" })
+  return function(bufnr)
+    local name = ft(bufnr)
+    if vim.tbl_contains(ignore_filetypes, name) or name == "alpha" then
+      return ""
+    end
+    return name:sub(1, 1):upper() .. name:sub(2)
+  end
+end
 local default = {
   filetypes = { "default" },
   active = {
@@ -191,17 +221,21 @@ local default = {
     basic.lsp_diagnos,
     { " " },
     basic.vi_mode,
+    basic.macro,
     { " " },
     basic.divider,
-    basic.macro,
     { " " },
     basic.command,
     { vim_components.search_count() },
     { " " },
     basic.file,
+    basic.icons,
     basic.line_col_right,
-    { toggle("format", icons.ui.auto_format) },
-    { toggle("conceal", icons.ui.conceal) }, -- TODO: improve
+    {
+      basic.file_name(),
+    },
+    { virtualenv.virtualenv({ format = " [%s]" }) },
+    { " " },
   },
   inactive = {
     { b_components.full_file_name, hl_list.Inactive },
@@ -211,7 +245,7 @@ local default = {
   },
 }
 local explorer = {
-  filetypes = { "neo-tree", "neotest-summary", "OverseerList", "Trouble" },
+  filetypes = ignore_filetypes,
   active = {},
   always_active = true,
   show_last_status = true,

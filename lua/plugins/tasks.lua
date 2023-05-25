@@ -21,7 +21,7 @@ return {
       task_list = { direction = "right" },
     },
     keys = {
-      { "<M-B>", "<cmd>OverseerRun<cr>", desc = "Run task" },
+      { "<leader>rb", "<cmd>OverseerRun<cr>", desc = "Run task" },
       { "<leader>ob", "<cmd>OverseerToggle<cr>", desc = "Build tasks" },
     },
   },

@@ -49,7 +49,7 @@ vim.keymap.set("n", "<leader>aA", function()
   Python.select_conda({
     callback = function(env)
       if Python.activate(env) then
-        vim.cmd(":LspRestart<CR>")
+        vim.cmd("LspRestart<CR>")
       end
     end,
   })
@@ -74,7 +74,6 @@ end, { desc = "Save virtual environment" })
 local Toggle = require("helpers.toggle")
 vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
 vim.keymap.set("n", "<leader>uc", Toggle.conceal, { desc = "Toggle conceal" })
-vim.keymap.set("n", "<leader>ud", Toggle.diagnostics, { desc = "Toggle diagnostics" })
 
 vim.keymap.set("n", "<C-,>", function()
   vim.diagnostic.open_float(nil, { scope = "line" })
@@ -94,7 +93,7 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.definitionProvider then
-    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+    map("n", "gd", "<Cmd>Trouble lsp_definitions<CR>", "Go to definition")
   end
 
   if client.server_capabilities.declarationProvider then
@@ -102,17 +101,15 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.implementationProvider then
-    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+    map("n", "gi", "<Cmd>Trouble lsp_implementations<CR>", "Go to implementation")
   end
 
   if client.server_capabilities.typeDefinitionProvider then
-    map("n", "go", vim.lsp.buf.type_definition, "Go to type definition")
+    map("n", "go", "<Cmd>Trouble lsp_type_definitions<CR>", "Go to type definition")
   end
 
   if client.server_capabilities.referencesProvider then
-    map("n", "gr", function()
-      vim.lsp.buf.references({ includeDeclaration = false })
-    end, "Show references")
+    map("n", "gr", "<Cmd>Trouble lsp_references<CR>", "Show references")
   end
 
   if client.server_capabilities.renameProvider then

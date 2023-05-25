@@ -17,7 +17,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = { "VeryLazy" },
+    event = { "InsertEnter", "CmdlineChanged" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
@@ -253,21 +253,21 @@ return {
     },
     keys = {
       {
-        "<M-r>r",
+        "<leader>tr",
         function()
           require("neotest").run.run()
         end,
         desc = "Run test",
       },
       {
-        "<M-r>R",
+        "<leader>tR",
         function()
           require("neotest").run.run(vim.fn.expand("%"))
         end,
         desc = "Run all tests",
       },
       {
-        "<M-r>d",
+        "<leader>td",
         function()
           require("neotest").run.run({ strategy = "dap" })
         end,
@@ -295,9 +295,9 @@ return {
         desc = "Test outputs",
       },
       {
-        "<M-r>t",
+        "<leader>tt",
         function()
-          require("neotest").output.open({ enter = false })
+          require("neotest").output.open({ enter = true })
         end,
         desc = "Reveal test",
       },

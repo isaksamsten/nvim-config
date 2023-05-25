@@ -1,13 +1,13 @@
 return {
   {
     "folke/noice.nvim",
-    enabled = false,
+    -- enabled = false,
     event = "VeryLazy",
     dependencies = {
       "rcarriga/nvim-notify",
       keys = {
         {
-          "<M-n>",
+          "<leader>un",
           function()
             require("notify").dismiss({ silent = true, pending = true })
           end,
@@ -173,7 +173,7 @@ return {
           {
             filter = {
               event = "msg_show",
-              find = "search hit BOTTOM, continuing at TOP",
+              find = "search hit [A-Z]+, continuing at [A-Z]+",
             },
             view = "mini",
           },
@@ -380,28 +380,28 @@ return {
     cmd = "Neotree",
     keys = {
       {
-        "<M-e>",
+        "<leader>e",
         function()
           require("helpers.toggle").focus_neotree("filesystem")
         end,
         desc = "Focus explorer",
       },
       {
-        "<M-s>",
+        "<leader>os",
         function()
           require("helpers.toggle").focus_neotree("document_symbols")
         end,
         desc = "Focus symbols",
       },
       {
-        "<M-g>",
+        "<leader>og",
         function()
           require("helpers.toggle").focus_neotree("git_status")
         end,
         desc = "Focus Git status",
       },
       {
-        "<M-b>",
+        "<leader>b",
         function()
           require("helpers.toggle").neotree()
         end,
@@ -420,7 +420,7 @@ return {
       local icons = require("config.icons")
 
       return {
-        close_if_last_window = false,
+        close_if_last_window = true,
         -- popup_border_style = icons.borders.outer.all,
         use_popups_for_input = false,
         filesystem = {
@@ -435,8 +435,8 @@ return {
           "document_symbols",
         },
         source_selector = {
-          winbar = true,
-          statusline = false, -- toggle to show selector on statusline
+          -- winbar = true,
+          -- statusline = true, -- toggle to show selector on statusline
           content_layout = "center",
           tabs_layout = "equal",
           sources = {
@@ -645,10 +645,11 @@ return {
         ["]"] = { name = "Next" },
         ["["] = { name = "Previous" },
         ["<leader>g"] = { name = "Git" },
-        ["<M-r>"] = { name = "Run" },
-        ["<M-a>"] = { name = "Activate" },
+        ["<leader>t"] = { name = "Test" },
+        ["<leader>r"] = { name = "Run" },
         ["<leader>o"] = { name = "Open" },
         ["<leader>u"] = { name = "Toggle" },
+        ["\\"] = { name = "Mark" },
       })
     end,
   },
@@ -657,21 +658,43 @@ return {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
     opts = function()
+      -- local function is_neotree(opts)
+      --   return string.match(opts.prompt, '^Enter new name for "%w+"')
+      --     or string.match(opts.prompt, "Are you sure you want to delete")
+      --     or string.match(opts.prompt, "^Enter name for new")
+      -- end
       local icons = require("config.icons")
       return {
         input = {
-          border = icons.borders.empty,
+          padding = 1,
+          border = icons.borders.outer.all,
+          -- border = "shadow",
           override = function(conf)
             conf.title_pos = "center"
             if conf.title then
               conf.title = string.gsub(conf.title, ":$", "")
 
               -- Replace the title of Neotree popups
-              if string.match(conf.title, '^Enter new name for "%w+"') then
+              if string.match(conf.title, "^Enter new name for") then
                 conf.title = "New name"
+                -- conf.border = "rounded"
+              elseif string.match(conf.title, "Are you sure you want to delete") then
+                conf.title = "Delete (y/n)"
+              elseif string.match(conf.title, "^Enter name for new file or directory") then
+                conf.title = "New file or directory"
+              elseif string.match(conf.title, "^Enter name for new directory") then
+                conf.title = "New directory"
               end
             end
           end,
+          -- get_config = function(opts)
+          --   if is_neotree(opts) then
+          --     return {
+          --       max_width = 60,
+          --       min_width = 30,
+          --     }
+          --   end
+          -- end,
         },
         select = {
           border = icons.borders.empty,
@@ -783,11 +806,11 @@ return {
         --   desc = "Search symbols",
         -- },
         {
-          "<C-S-p>",
+          "<leader>p",
           function()
             require("telescope.builtin").lsp_dynamic_workspace_symbols(vertical({
               prompt_title = "Symbols",
-              preview_title = "Preview",
+              preview_title = "",
               symbols = {
                 "Class",
                 "Function",
@@ -800,7 +823,7 @@ return {
               },
             }))
           end,
-          desc = "Search symbols in workspace",
+          desc = "Search symbols",
         },
       }
     end,

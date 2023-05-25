@@ -7,6 +7,8 @@ vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
 opt.title = true
+opt.titlestring = "%<%F%=%l/%L - nvim"
+opt.selection = "exclusive"
 opt.autowrite = true -- enable auto write
 opt.clipboard = "unnamedplus" -- sync with system clipboard
 opt.cmdheight = 1

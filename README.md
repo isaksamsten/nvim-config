@@ -41,12 +41,12 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 | Keymap       | Action             |
 | ------------ | ------------------ |
-| `M-rr`       | Run current test   |
-| `M-rR`       | Run current tests  |
-| `M-rd`       | Debug current test |
+| `<leader>tr` | Run current test   |
+| `<leader>tR` | Run current tests  |
+| `<leader>td` | Debug current test |
 | `<leader>ot` | Open summary       |
 | `<leader>oT` | Open output        |
-| `M-rt`       | Reveal output      |
+| `<leader>tt` | Reveal output      |
 
 ### Debugging
 
@@ -63,22 +63,22 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ### LSP
 
-| Keymap         | Action                |
-| -------------- | --------------------- |
-| `K`            | Hover                 |
-| `gd`           | Go to definition      |
-| `gD`           | Go to declaration     |
-| `gi`           | Go to implementation  |
-| `go`           | Go to type definition |
-| `gr`           | Go to references      |
-| `Ctrl-Enter`   | Rename                |
-| `Ctrl-.`       | Code action           |
-| `<leader>F`    | Format document       |
-| `gq`           | Format range          |
-| `Ctrl-,`       | Show diagnostic       |
-| `[,`           | Previous diagnostic   |
-| `],`           | Next diagnostic       |
-| `Ctrl-Shift-P` | Find symbol           |
+| Keymap       | Action                |
+| ------------ | --------------------- |
+| `K`          | Hover                 |
+| `gd`         | Go to definition      |
+| `gD`         | Go to declaration     |
+| `gi`         | Go to implementation  |
+| `go`         | Go to type definition |
+| `gr`         | Go to references      |
+| `Ctrl-Enter` | Rename                |
+| `Ctrl-.`     | Code action           |
+| `<leader>F`  | Format document       |
+| `gq`         | Format range          |
+| `Ctrl-,`     | Show diagnostic popup |
+| `[,`         | Previous diagnostic   |
+| `],`         | Next diagnostic       |
+| `<leader>p`  | Find symbol           |
 
 ### Toggle
 
@@ -86,20 +86,20 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 | ------------ | --------------------- |
 | `<leader>uf` | Toggle format on save |
 | `<leader>uc` | Toggle conceal        |
-| `<leader>ud` | Toggle diagnostics    |
 | `<leader>ub` | Toggle Git blame      |
 
 ### Sidebar
 
-| Keymap       | Action               |
-| ------------ | -------------------- |
-| `M-e`        | Focus explorer       |
-| `M-b`        | Toggle explorer      |
-| `M-,`        | Document diagnostics |
-| `M-<`        | Workspace diagnostic |
-| `Ctrl-\`     | Terminal             |
-| `<leader>ol` | Location list        |
-| `<leader>oq` | Quickfix list        |
+| Keymap       | Action                         |
+| ------------ | ------------------------------ |
+| `<leader>e`  | Toggle focus explorer          |
+| `<leader>og` | Toggle focus git               |
+| `<leader>os` | Toggle focus symbols           |
+| `<leader>b`  | Toggle left sidebar visibility |
+| `<leader>od` | Toggle workspace diagnostic    |
+| `<leader>oD` | Toggle document diagnostics    |
+| `<leader>oq` | Toggle quickfix list           |
+| `Ctrl-\`     | Toggle terminal                |
 
 ### Git
 
@@ -123,24 +123,25 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ### Buffers, windows and tabs
 
-| Keymap             | Action        |
-| ------------------ | ------------- |
-| `C-q`              | Close buffer  |
-| `C-h`              | Left window   |
-| `C-j`              | South window  |
-| `C-k`              | North window  |
-| `C-l`              | Right window  |
-| `<leader><leader>` | Switch buffer |
-| `<leader>-f`       | Find file     |
-| `<leader>-s`       | Global search |
-| `M-[`              | Previous tab  |
-| `M-]`              | Next tab      |
-| `M-w`              | Close tab     |
-| `M-t`              | New tab       |
+| Keymap             | Action         |
+| ------------------ | -------------- |
+| `C-q`              | Close buffer   |
+| `C-h`              | Left window    |
+| `C-j`              | South window   |
+| `C-k`              | North window   |
+| `C-l`              | Right window   |
+| `<leader><leader>` | Switch buffer  |
+| `<leader>-f`       | Find file      |
+| `<leader>-s`       | Search files   |
+| `<leader>-d`       | Search symbols |
+| `M-[`              | Previous tab   |
+| `M-]`              | Next tab       |
+| `M-w`              | Close tab      |
+| `M-t`              | New tab        |
 
 Default Keybindings as set by `mini.ai`, `mini.move` and `leap`.
 
-## Screenshots
+## Screenshot
 
 I use two different themes that I have customized to my liking.
 
@@ -150,15 +151,7 @@ Color scheme: [OneDark Pro](https://github.com/olimorris/onedarkpro.nvim),
 Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
 macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
 
-![Debug](./assets/onedark/debug.png)
-
-![Completion](./assets/onedark/complete.png)
-
-![Diagnostics](./assets/onedark/error.png)
-
-![Live search](./assets/onedark/search.png)
-
-![Open files](./assets/onedark/findfile.png)
+![Dark](./assets/onedark/dark.png)
 
 ### Catppuccin
 
@@ -166,12 +159,10 @@ Color scheme: [Catppuccin](https://github.com/catppuccin/nvim),
 Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
 macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
 
-![Debug](./assets/catppuccin/debug.png)
+#### Light
 
-![Completion](./assets/catppuccin/complete.png)
+![Dark](./assets/catppuccin/dark.png)
 
-![Diagnostics](./assets/catppuccin/error.png)
+#### Dark
 
-![Live search](./assets/catppuccin/search.png)
-
-![Open files](./assets/catppuccin/findfile.png)
+![Light](./assets/catppuccin/light.png)
