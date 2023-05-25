@@ -149,7 +149,7 @@ I use two different themes that I have customized to my liking.
 
 Color scheme: [OneDark Pro](https://github.com/olimorris/onedarkpro.nvim),
 Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
-macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
+macOS title bar](https://github.com/isaksamsten/kitty), Font: SF Mono
 
 ![Dark](./assets/onedark/dark.png)
 
@@ -157,7 +157,7 @@ macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
 
 Color scheme: [Catppuccin](https://github.com/catppuccin/nvim),
 Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
-macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
+macOS title bar](https://github.com/isaksamsten/kitty), Font: SF Mono
 
 #### Dark
 
