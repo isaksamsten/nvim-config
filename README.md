@@ -159,10 +159,10 @@ Color scheme: [Catppuccin](https://github.com/catppuccin/nvim),
 Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
 macOS title bar](https://github.com/isaksamsten/kitty), Font: Meslo LG S
 
-#### Light
+#### Dark
 
 ![Dark](./assets/catppuccin/dark.png)
 
-#### Dark
+#### Light
 
 ![Light](./assets/catppuccin/light.png)
