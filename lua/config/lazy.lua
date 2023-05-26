@@ -14,8 +14,10 @@ require("lazy").setup({
     lazy = true, -- every plugin is lazy-loaded by default
     version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "kanagawa", "onedark" } },
-  -- checker = { enabled = true }, -- automatically check for plugin updates
+  install = { colorscheme = { "catppuccin", "onedark" } },
+  ui = {
+    border = require("config.icons").borders.outer.all,
+  },
   performance = {
     rtp = {
       -- disable some rtp plugins

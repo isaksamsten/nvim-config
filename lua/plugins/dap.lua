@@ -1,5 +1,4 @@
 return {
-
   {
     "rcarriga/nvim-dap-ui",
     -- event = { "BufReadPre", "BufNewFile" },

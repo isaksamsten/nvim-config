@@ -221,7 +221,8 @@ return {
           telescope = true,
           notify = false,
           mini = true,
-          markdown = true,
+          markdown = false,
+          headlines = true,
           native_lsp = {
             enabled = true,
             virtual_text = {

@@ -1,4 +1,4 @@
-return {
+return { -- TODO
   {
     "ggandor/leap.nvim",
     event = "BufReadPost",
@@ -27,7 +27,61 @@ return {
       },
     },
   },
+  {
+    "echasnovski/mini.hipatterns",
+    version = false,
+    event = { "BufReadPre", "BufNewFile" },
+    opts = function()
+      local function in_comment(marker)
+        local comment_chars = {
+          java = "//",
+          rust = "//",
+          cpp = "//",
+          c = "//",
+          python = "#",
+          bash = "#",
+          lua = "--",
+          tex = "%",
+        }
+        return function(bufnr)
+          local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+          local comment_char = comment_chars[filetype]
 
+          if comment_char then
+            return comment_char .. " ()" .. marker .. "()%f[%W]"
+          else
+            return nil
+          end
+        end
+      end
+
+      local function markdown_title(level)
+        local prefix = string.rep("#", level)
+        return function(bufnr)
+          local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+          if filetype ~= "markdown" then
+            return nil
+          end
+
+          return "^" .. prefix .. "%s+.*$"
+        end
+      end
+      return {
+        highlighters = {
+          fixme = { pattern = in_comment("FIXME"), group = "DiagnosticSignError" },
+          hack = { pattern = in_comment("HACK"), group = "DiagnosticSignInfo" },
+          todo = { pattern = in_comment("TODO"), group = "DiagnosticSignWarn" },
+          note = { pattern = in_comment("NOTE"), group = "DiagnosticSignHint" },
+          md1 = { pattern = markdown_title(1), group = "Headline1" },
+          md2 = { pattern = markdown_title(2), group = "Headline2" },
+          md3 = { pattern = markdown_title(3), group = "Headline3" },
+          md4 = { pattern = markdown_title(4), group = "Headline4" },
+          md5 = { pattern = markdown_title(5), group = "Headline5" },
+          md6 = { pattern = markdown_title(6), group = "Headline6" },
+        },
+      }
+    end,
+  },
   {
     "echasnovski/mini.move",
     event = "BufReadPost",

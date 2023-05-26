@@ -141,7 +141,7 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 Default Keybindings as set by `mini.ai`, `mini.move` and `leap`.
 
-## Screenshot
+## Screenshots
 
 I use two different themes that I have customized to my liking.
 

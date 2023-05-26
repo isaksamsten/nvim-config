@@ -73,8 +73,8 @@ basic.lsp_diagnos = {
     if lsp_comps.check_lsp(bufnr) then
             -- stylua: ignore
             return {
-                { lsp_comps.lsp_error({ format = " " .. icons.diagnostics.error .."%s", show_zero = true }), '' },
-                { lsp_comps.lsp_warning({ format = " " .. icons.diagnostics.warn .. "%s", show_zero = true }), '' },
+                { lsp_comps.lsp_error({ format = " " .. icons.diagnostics.error .." %s", show_zero = true }), '' },
+                { lsp_comps.lsp_warning({ format = " " .. icons.diagnostics.warn .. " %s", show_zero = true }), '' },
             }
     end
     return ""
@@ -155,7 +155,7 @@ basic.git_branch = {
       return {
         { git_comps.git_branch(), hl_list.default, large_width },
         {
-          git_rev_components.git_rev({ format = " %s⇣%s⇡ " }),
+          git_rev_components.git_rev({ format = " %s⇣ %s⇡ " }),
           hl_list.default,
           large_width,
         },
