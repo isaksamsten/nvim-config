@@ -195,8 +195,8 @@ basic.icons = {
     end
     if width > large_width then
       return {
-        { toggle("format", icons.ui.auto_format) },
-        { toggle("conceal", icons.ui.conceal) }, -- TODO: improve
+        { toggle("format", icons.ui.auto_format .. " ") },
+        { toggle("conceal", icons.ui.conceal .. " ") }, -- TODO: improve
       }
     else
       return {}
