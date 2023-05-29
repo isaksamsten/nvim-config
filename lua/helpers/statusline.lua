@@ -96,7 +96,7 @@ basic.file = {
   text = function()
     return {
       { b_components.cache_file_name("", "unique"), "" },
-      { b_components.file_modified(icons.file.modified) },
+      { b_components.file_modified(icons.file.modified .. "  ")},
     }
   end,
 }

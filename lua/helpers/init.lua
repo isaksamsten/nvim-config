@@ -54,4 +54,13 @@ function M.is_remote()
   return os.getenv("SSH_CLIENT") ~= nil or (wez ~= nil and string.match(wez, "wezterm%-mux%-server") ~= nil)
 end
 
+function M.telescope_theme(theme, opts)
+  opts = opts or {}
+  if theme == "cursor" then
+    return require("telescope.themes").get_cursor(vim.tbl_extend("keep", { previewer = false, border = false }, opts))
+  else
+    return {}
+  end
+end
+
 return M

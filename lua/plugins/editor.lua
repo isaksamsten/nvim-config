@@ -1,5 +1,11 @@
 return { -- TODO
   {
+    "simnalamburt/vim-mundo",
+    cmd = "MundoToggle",
+    keys = { { "<leader>ou", "<cmd>MundoToggle<cr>", desc = "Undo history" } },
+  },
+
+  {
     "ggandor/leap.nvim",
     event = "BufReadPost",
     version = false,
@@ -8,6 +14,7 @@ return { -- TODO
       require("leap").add_default_mappings()
     end,
   },
+
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branc for the latest features

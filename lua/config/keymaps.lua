@@ -84,6 +84,7 @@ end, { silent = true, desc = "Show diagnostics" })
 local M = {}
 
 function M.lsp_on_attach(client, bufnr)
+  local telescope_ok, builtin = pcall(require, "telescope.builtin")
   local map = function(m, lhs, rhs, desc)
     vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
   end
@@ -93,7 +94,13 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.definitionProvider then
-    map("n", "gd", "<Cmd>Trouble lsp_definitions<CR>", "Go to definition")
+    local definitionProvider = vim.lsp.buf.definition
+    if telescope_ok then
+      definitionProvider = function()
+        builtin.lsp_definitions(require("helpers").telescope_theme("cursor", { prompt_title = "Definition" }))
+      end
+    end
+    map("n", "gd", definitionProvider, "Go to definition")
   end
 
   if client.server_capabilities.declarationProvider then
@@ -101,15 +108,38 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.implementationProvider then
-    map("n", "gi", "<Cmd>Trouble lsp_implementations<CR>", "Go to implementation")
+    local implementationProvider = vim.lsp.buf.implementation
+    if telescope_ok then
+      implementationProvider = function()
+        builtin.lsp_implementations(require("helpers").telescope_theme("cursor", { prompt_title = "Implementation" }))
+      end
+    end
+    map("n", "gi", implementationProvider, "Go to implementation")
   end
 
   if client.server_capabilities.typeDefinitionProvider then
-    map("n", "go", "<Cmd>Trouble lsp_type_definitions<CR>", "Go to type definition")
+    local typeDefinitionProvider = vim.lsp.buf.type_definition
+    if telescope_ok then
+      typeDefinitionProvider = function()
+        builtin.lsp_type_definitions(require("helpers").telescope_theme("cursor", { prompt_title = "Type definition" }))
+      end
+    end
+    map("n", "go", typeDefinitionProvider, "Go to type definition")
   end
 
   if client.server_capabilities.referencesProvider then
-    map("n", "gr", "<Cmd>Trouble lsp_references<CR>", "Show references")
+    local referencesProvider = vim.lsp.buf.references
+    if telescope_ok then
+      referencesProvider = function()
+        builtin.lsp_references(
+          require("helpers").telescope_theme(
+            "cursor",
+            { prompt_title = "References", include_declaration = false, show_line = false, jump_type = "split" }
+          )
+        )
+      end
+    end
+    map("n", "gr", referencesProvider, "Show references")
   end
 
   if client.server_capabilities.renameProvider then

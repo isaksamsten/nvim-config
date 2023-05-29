@@ -60,6 +60,7 @@
   "toggleterm.nvim": { "branch": "main", "commit": "a44313fb28ed9bc9837c2b99dec1c6eed3a4f47f" },
   "trouble.nvim": { "branch": "main", "commit": "a0f2375117c546fbba217efcfff202553eaed1b8" },
   "vim-fugitive": { "branch": "master", "commit": "96c1009fcf8ce60161cc938d149dd5a66d570756" },
+  "vim-mundo": { "branch": "master", "commit": "2540b4fa4914f0b2433d07eb510f83555ce7a136" },
   "vimtex": { "branch": "master", "commit": "00484c8057d49fffa4524ae5c2c33cda34301666" },
   "which-key.nvim": { "branch": "main", "commit": "e271c28118998c93a14d189af3395812a1aa646c" },
   "windline.nvim": { "branch": "master", "commit": "66badcb002c91f6d4bfc11726c988441a3aada6c" }

@@ -708,7 +708,7 @@ return {
             if opts.kind == "codeaction" then
               return {
                 backend = "telescope",
-                telescope = require("telescope.themes").get_cursor({}),
+                telescope = require("helpers").telescope_theme("cursor", { prompt_title = "Code actions" }),
               }
             end
           end,
@@ -777,6 +777,40 @@ return {
           desc = "Search",
         },
         {
+          "<leader>Sw",
+          function()
+            require("telescope").extensions.live_grep_args.live_grep_args(
+              vertical({ prompt_title = "Search", default_text = vim.fn.expand("<cword>"), preview_title = "" })
+            )
+          end,
+          desc = "Search",
+        },
+
+        {
+          "<leader>Ss",
+          function()
+            require("telescope.builtin").current_buffer_fuzzy_find(
+              vertical({ prompt_title = "Search buffer", preview_title = "" })
+            )
+          end,
+          desc = "Search",
+        },
+        {
+          "<leader>Sb",
+          function()
+            require("telescope.builtin").git_branches(vertical({ prompt_title = "Branches", preview_title = "" }))
+          end,
+          desc = "Search",
+        },
+        {
+          "<leader>x",
+          function()
+            require("telescope").resume()
+          end,
+          desc = "Resume last search",
+        },
+
+        {
           "<leader>d",
           function()
             require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
@@ -829,6 +863,7 @@ return {
     end,
     opts = function()
       -- local icons = require("config.icons")
+      local lga_actions = require("telescope-live-grep-args.actions")
       return {
         defaults = {
           mappings = {
@@ -837,10 +872,23 @@ return {
               ["<C-d>"] = false,
             },
           },
-          selection_caret = "   ",
-          multi_icon = "   ",
-          prompt_prefix = "   ",
-          entry_prefix = "    ",
+          selection_caret = "  ",
+          multi_icon = "  ",
+          prompt_prefix = "  ",
+          entry_prefix = "   ",
+        },
+        extensions = {
+          live_grep_args = {
+            auto_quoting = true,
+            mappings = {
+              i = {
+                ["<C-k>"] = function()
+                  lga_actions.quote_prompt()
+                end,
+                ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+              },
+            },
+          },
         },
       }
     end,
@@ -850,9 +898,9 @@ return {
     },
     config = function(_, opts)
       local telescope = require("telescope")
+      telescope.setup(opts)
       telescope.load_extension("fzf")
       telescope.load_extension("live_grep_args")
-      telescope.setup(opts)
     end,
   },
 
