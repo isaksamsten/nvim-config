@@ -337,17 +337,17 @@ return {
               margin = " ",
             }
           end),
-          line.spacer(),
-          line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-            local hl = win.is_current() and theme.current_tab or theme.tab
-            return {
-              line.sep(icons.space, hl, theme.fill),
-              win.buf_name(),
-              line.sep(icons.space, hl, theme.fill),
-              hl = hl,
-              margin = " ",
-            }
-          end),
+          -- line.spacer(),
+          -- line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+          --   local hl = win.is_current() and theme.current_tab or theme.tab
+          --   return {
+          --     line.sep(icons.space, hl, theme.fill),
+          --     win.buf_name(),
+          --     line.sep(icons.space, hl, theme.fill),
+          --     hl = hl,
+          --     margin = " ",
+          --   }
+          -- end),
           hl = theme.fill,
         }
       end)
