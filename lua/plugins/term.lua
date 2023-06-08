@@ -1,8 +1,9 @@
 return {
   {
     "akinsho/toggleterm.nvim",
+    keys = { [[<c-\>]] },
     version = false,
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     opts = {
       shade_terminals = false,
       open_mapping = [[<c-\>]],

@@ -18,7 +18,7 @@ return { -- TODO
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branc for the latest features
-    event = "VeryLazy",
+    event = { "ModeChanged" },
     opts = {
       keymaps = {
         insert = "<C-g>z",
