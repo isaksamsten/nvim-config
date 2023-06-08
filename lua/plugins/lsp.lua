@@ -250,6 +250,7 @@ return {
           on_attach = function(client, bufnr)
             require("ltex_extra").setup({ path = "~/.ltex/" })
           end,
+          filetypes = { "bib", "gitcommit", "markdown", "org", "plaintex", "rst", "rnoweb", "tex", "pandoc", "mail" },
           settings = {
             ["ltex-ls"] = {
               logLevel = "severe",
@@ -271,6 +272,7 @@ return {
       sources = function(null_ls)
         -- NOTE: formatters are run in the order in which the are defined here.
         return {
+          require("helpers.null-ls-sources").diagnostics.numpydoc_lint,
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.rustfmt,
           null_ls.builtins.formatting.latexindent,
@@ -308,6 +310,7 @@ return {
         local config = opts.servers[server]
         lspconfig[server].setup({
           on_attach = config.on_attach,
+          filetypes = config.filetypes,
           capabilities = vim.tbl_extend("force", capabilities, config.capabilities or {}),
           settings = config.settings or {},
         })

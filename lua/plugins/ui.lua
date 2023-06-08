@@ -1,7 +1,73 @@
 return {
+
+  {
+    "folke/edgy.nvim",
+    event = "VeryLazy",
+    opts = {
+      animate = {
+        enabled = false,
+      },
+      icons = { open = "", closed = "" },
+      wo = { winbar = false },
+      bottom = {
+        -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
+        {
+          title = "Terminal",
+          ft = "toggleterm",
+          size = { height = 0.3 },
+          filter = function(buf, win)
+            return vim.api.nvim_win_get_config(win).relative == ""
+          end,
+        },
+        { title = "Git status", ft = "fugitive", size = { height = 0.3 } },
+        { title = "Test output", ft = "neotest-output-panel", size = { height = 0.3 } },
+        { ft = "qf", title = "QuickFix" },
+        {
+          ft = "help",
+          size = { height = 20 },
+          filter = function(buf)
+            return vim.bo[buf].buftype == "help"
+          end,
+        },
+      },
+      right = {
+        {
+          title = "Testing",
+          ft = "neotest-summary",
+          size = { height = 0.5 },
+        },
+        {
+          title = "Build tasks",
+          ft = "OverseerList",
+        },
+      },
+      left = {
+        {
+          title = "Explorer",
+          ft = "neo-tree",
+          filter = function(buf)
+            return vim.b[buf].neo_tree_source == "filesystem"
+          end,
+          size = { height = 0.5 },
+        },
+        {
+          title = "Symbols",
+          ft = "neo-tree",
+          filter = function(buf)
+            return vim.b[buf].neo_tree_source == "document_symbols"
+          end,
+          -- pinned = true,
+          -- open = "Neotree position=right document_symbols",
+        },
+        -- any other neo-tree windows
+        "neo-tree",
+      },
+    },
+  },
+
   {
     "folke/noice.nvim",
-    -- enabled = false,
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
       "rcarriga/nvim-notify",
@@ -302,7 +368,7 @@ return {
                 "Dap",
                 "neotest", --[[ "Diagnostic" ]]
               },
-              maxwidth = 1,
+              maxwidth = 2,
               colwidth = 2,
               auto = true,
             },
@@ -365,7 +431,7 @@ return {
     "isaksamsten/bufdelete.nvim", -- For with confirm+less noice
     keys = {
       {
-        "<C-q>",
+        "<leader>q",
         function()
           require("bufdelete").bufdelete(0, false)
         end,
@@ -423,6 +489,7 @@ return {
         close_if_last_window = true,
         -- popup_border_style = icons.borders.outer.all,
         use_popups_for_input = false,
+        open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" },
         filesystem = {
           follow_current_file = true,
           hijack_netrw_behavior = "open_current",

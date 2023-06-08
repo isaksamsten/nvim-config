@@ -48,11 +48,15 @@ function Toggle.neotree()
     local current_win = vim.api.nvim_get_current_win()
     local state = Toggle.neotree_current_state or manager.get_state("filesystem")
     manager.navigate(state, nil, nil, function()
-      vim.api.nvim_set_current_win(current_win)
+      if vim.api.nvim_win_is_valid(current_win) then
+        vim.api.nvim_set_current_win(current_win)
+      end
     end, false)
     -- Buffers and git does not seem to use the callback
     -- TODO: fix in the future or report a bug.
-    vim.api.nvim_set_current_win(current_win)
+    if vim.api.nvim_win_is_valid(current_win) then
+      vim.api.nvim_set_current_win(current_win)
+    end
   end
 end
 

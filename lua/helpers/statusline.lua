@@ -20,7 +20,7 @@ local basic = {}
 local small_width = 40
 local medium_width = 88
 local large_width = 100
-local ignore_filetypes = { "neo-tree", "neotest-summary", "OverseerList", "Trouble" }
+local ignore_filetypes = { "neo-tree", "edgy", "neotest-summary", "OverseerList", "Trouble" }
 basic.divider = { b_components.divider, "" }
 
 -- stylua: ignore
@@ -96,7 +96,7 @@ basic.file = {
   text = function()
     return {
       { b_components.cache_file_name("", "unique"), "" },
-      { b_components.file_modified(icons.file.modified .. "  ")},
+      { b_components.file_modified(icons.file.modified .. "  ") },
     }
   end,
 }
@@ -248,7 +248,7 @@ local explorer = {
   filetypes = ignore_filetypes,
   active = {},
   always_active = true,
-  show_last_status = true,
+  show_last_status = false,
 }
 
 local M = {}

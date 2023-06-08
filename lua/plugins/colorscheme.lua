@@ -34,6 +34,7 @@ return {
           local float_bg = colors.mantle
 
           return {
+            ToggleTermNormal = { bg = colors.mantle },
             IndentBlanklineContextChar = { fg = colors.surface1 },
             IndentBlanklineChar = { fg = colors.surface1 },
 
@@ -112,8 +113,8 @@ return {
             DiagnosticFloatingInfo = { fg = fg },
             DiagnosticFloatingError = { fg = fg },
 
-            -- ModeMsg = { fg = fg, bg = float_bg },
-            -- MsgArea = { fg = fg, bg = float_bg },
+            ModeMsg = { fg = fg, bg = colors.mantle },
+            MsgArea = { fg = fg, bg = colors.mantle },
 
             NoiceMini = { link = "NonText" },
             NoiceVirtualText = { link = "NonText" },
@@ -124,6 +125,8 @@ return {
             NoiceConfirm = { link = "PopupNormal" },
             NoiceConfirmBorder = { link = "PopupBorder" },
 
+            EdgyTitle = { fg = colors.text, bg = colors.mantle },
+            Winbar = { bg = colors.mantle },
             AIHighlight = { link = "NonText" },
             AIIndicator = { link = "DiagnosticSignInfo" },
 
@@ -134,7 +137,10 @@ return {
             PmenuBorder = { link = "PopupBorder" },
             PmenuDocBorder = { bg = float_bg, fg = fg_border },
             NormalFloat = { bg = float_bg },
+            FloatNormal = { link = "NormalFloat" },
+            DapUINormalFloat = { link = "FloatNormal" },
             FloatBorder = { bg = float_bg, fg = fg_border },
+            DapUIFloatBorder = { link = "FloatBorder" },
             FloatTitle = { fg = colors.lavender, bg = float_bg },
             BqfPreviewBorder = { link = "PopupBorder" },
             BqfPreviewFloat = { link = "PopupNormal" },

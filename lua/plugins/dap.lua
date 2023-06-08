@@ -5,6 +5,28 @@ return {
     keys = function()
       return {
         {
+          "<F4>",
+          function()
+            require("dapui").float_element("scopes", { enter = true })
+          end,
+          desc = "Open debug interface",
+        },
+        {
+          "<leader>ods",
+          function()
+            require("dapui").toggle({ layout = 1 })
+          end,
+          desc = "Open debug scopes.",
+        },
+        {
+          "<leader>odc",
+          function()
+            require("dapui").toggle({ layout = 2 })
+          end,
+          desc = "Open debug console.",
+        },
+
+        {
           "<F9>",
           function()
             require("dap").toggle_breakpoint()
@@ -60,7 +82,7 @@ return {
         {
           "<F17>", -- SHIFT+F5
           function()
-            require("dap").stop()
+            require("dap").close()
           end,
           desc = "Stop debugging",
         },
@@ -157,7 +179,7 @@ return {
         floating = {
           border = icons.borders.outer.all,
           mappings = {
-            close = { "q", "<Esc>" },
+            close = { "<F4>", "<Esc>", "q" },
           },
         },
         force_buffers = true,
@@ -173,14 +195,6 @@ return {
                 id = "scopes",
                 size = 0.60,
               },
-              {
-                id = "stacks",
-                size = 0.30,
-              },
-              {
-                id = "breakpoints",
-                size = 0.20,
-              },
             },
             position = "left",
             size = 50,
@@ -191,13 +205,9 @@ return {
                 id = "repl",
                 size = 1.0,
               },
-              -- {
-              --   id = "console",
-              --   size = 0.5,
-              -- },
             },
             position = "bottom",
-            size = 20,
+            size = 10,
           },
         },
         mappings = {
@@ -215,29 +225,29 @@ return {
       }
     end,
     config = function(_, opts)
-      local dap = require("dap")
+      -- local dap = require("dap")
       local dapui = require("dapui")
-      local neotree_open = require("helpers.toggle").is_neotree_open()
+      -- local neotree_open = require("helpers.toggle").is_neotree_open()
 
       dapui.setup(opts)
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        if neotree_open then
-          vim.cmd.Neotree("close")
-        end
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-        if neotree_open then
-          vim.cmd.Neotree("show")
-        end
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
-        if neotree_open then
-          vim.cmd.Neotree("show")
-        end
-      end
+      -- dap.listeners.after.event_initialized["dapui_config"] = function()
+      --   if neotree_open then
+      --     vim.cmd.Neotree("close")
+      --   end
+      --   dapui.open()
+      -- end
+      -- dap.listeners.before.event_terminated["dapui_config"] = function()
+      --   dapui.close()
+      --   if neotree_open then
+      --     vim.cmd.Neotree("show")
+      --   end
+      -- end
+      -- dap.listeners.before.event_exited["dapui_config"] = function()
+      --   dapui.close()
+      --   if neotree_open then
+      --     vim.cmd.Neotree("show")
+      --   end
+      -- end
     end,
   },
 

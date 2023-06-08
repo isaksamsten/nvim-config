@@ -4,7 +4,13 @@ return {
     version = false,
     event = "VeryLazy",
     opts = {
+      shade_terminals = false,
       open_mapping = [[<c-\>]],
+      highlights = {
+        Normal = {
+          link = "NormalFloat",
+        },
+      },
       on_create = function(terminal)
         local Python = require("helpers.python")
         if not Python.is_activated then

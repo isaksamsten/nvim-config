@@ -1,3 +1,8 @@
+vim.keymap.set("n", "<Left>", "<C-w>h", { desc = "Go to left window" })
+vim.keymap.set("n", "<Right>", "<C-w>l", { desc = "Go to right window" })
+vim.keymap.set("n", "<Down>", "<C-w>j", { desc = "Go to lower window" })
+vim.keymap.set("n", "<Up>", "<C-w>k", { desc = "Go to upper window" })
+
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
@@ -38,11 +43,16 @@ vim.keymap.set("x", "g/", "<esc>/\\%V", { silent = false, desc = "Search inside 
 vim.keymap.set("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
 vim.keymap.set("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
 
-vim.keymap.set({ "n", "v" }, "<M-]>", "<Esc><Cmd>tabnext<CR>", { desc = "Next tab" })
-vim.keymap.set({ "n", "v" }, "<M-[>", "<Esc><Cmd>tabprev<CR>", { desc = "Previous tab" })
+vim.keymap.set({ "n", "v" }, "]t", "<Esc><Cmd>tabnext<CR>", { desc = "Next tab" })
+vim.keymap.set({ "n", "v" }, "[t", "<Esc><Cmd>tabprev<CR>", { desc = "Previous tab" })
 
-vim.keymap.set({ "n", "v" }, "<M-t>", "<Esc><Cmd>tabnew<CR>", { desc = "New tab" })
-vim.keymap.set({ "n", "v" }, "<M-w>", "<Esc><Cmd>tabclose<CR>", { desc = "Close tab" })
+vim.keymap.set({ "n", "v" }, "<leader>tn", "<Esc><Cmd>tabnew<CR>", { desc = "New tab" })
+vim.keymap.set({ "n", "v" }, "<leader>tc", "<Esc><Cmd>tabclose<CR>", { desc = "Close tab" })
+
+vim.keymap.set({ "n" }, "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix" })
+vim.keymap.set({ "n" }, "]q", "<cmd>cnext<cr>", { desc = "Next quickfix" })
+vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
+vim.keymap.set({ "n" }, "[q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
 
 local Python = require("helpers.python")
 vim.keymap.set("n", "<leader>aA", function()
@@ -75,11 +85,11 @@ local Toggle = require("helpers.toggle")
 vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
 vim.keymap.set("n", "<leader>uc", Toggle.conceal, { desc = "Toggle conceal" })
 
-vim.keymap.set("n", "<C-,>", function()
+vim.keymap.set("n", "g,", function()
   vim.diagnostic.open_float(nil, { scope = "line" })
 end, { silent = true, desc = "Show diagnostics" })
--- vim.keymap.set("n", "[,", vim.diagnostic.goto_prev, { silent = true, desc = "Previous diagnostic" })
--- vim.keymap.set("n", "],", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnostic" })
+vim.keymap.set("n", "[,", vim.diagnostic.goto_prev, { silent = true, desc = "Previous diagnostic" })
+vim.keymap.set("n", "],", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnostic" })
 
 local M = {}
 
@@ -90,7 +100,7 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.hoverProvider then
-    map("n", "K", vim.lsp.buf.hover, "Show information")
+    map({ "n", "v" }, "K", vim.lsp.buf.hover, "Show information")
   end
 
   if client.server_capabilities.definitionProvider then
@@ -143,11 +153,11 @@ function M.lsp_on_attach(client, bufnr)
   end
 
   if client.server_capabilities.renameProvider then
-    map("n", "<C-CR>", vim.lsp.buf.rename, "Rename symbol")
+    map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
   end
 
   if client.server_capabilities.codeActionProvider then
-    map({ "n", "v" }, "<C-.>", vim.lsp.buf.code_action, "Code action")
+    map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
   end
 end
 

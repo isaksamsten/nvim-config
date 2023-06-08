@@ -41,12 +41,12 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 | Keymap       | Action             |
 | ------------ | ------------------ |
-| `<leader>tr` | Run current test   |
-| `<leader>tR` | Run current tests  |
-| `<leader>td` | Debug current test |
+| `<leader>rt` | Run current test   |
+| `<leader>rT` | Run current tests  |
+| `<leader>rd` | Debug current test |
 | `<leader>ot` | Open summary       |
 | `<leader>oT` | Open output        |
-| `<leader>tt` | Reveal output      |
+| `Shift-F4`   | Reveal output      |
 
 ### Debugging
 
@@ -63,22 +63,22 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ### LSP
 
-| Keymap       | Action                |
-| ------------ | --------------------- |
-| `K`          | Hover                 |
-| `gd`         | Go to definition      |
-| `gD`         | Go to declaration     |
-| `gi`         | Go to implementation  |
-| `go`         | Go to type definition |
-| `gr`         | Go to references      |
-| `Ctrl-Enter` | Rename                |
-| `Ctrl-.`     | Code action           |
-| `<leader>F`  | Format document       |
-| `gq`         | Format range          |
-| `Ctrl-,`     | Show diagnostic popup |
-| `[,`         | Previous diagnostic   |
-| `],`         | Next diagnostic       |
-| `<leader>p`  | Find symbol           |
+| Keymap          | Action                |
+| --------------- | --------------------- |
+| `K`             | Hover                 |
+| `gd`            | Go to definition      |
+| `gD`            | Go to declaration     |
+| `gi`            | Go to implementation  |
+| `go`            | Go to type definition |
+| `gr`            | Go to references      |
+| `<leader>Enter` | Rename                |
+| `g.`            | Code action           |
+| `<leader>F`     | Format document       |
+| `gq`            | Format range          |
+| `g,`            | Show diagnostic popup |
+| `[,`            | Previous diagnostic   |
+| `],`            | Next diagnostic       |
+| `<leader>p`     | Find symbol           |
 
 ### Toggle
 
@@ -125,19 +125,19 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 | Keymap             | Action         |
 | ------------------ | -------------- |
-| `C-q`              | Close buffer   |
-| `C-h`              | Left window    |
-| `C-j`              | South window   |
-| `C-k`              | North window   |
-| `C-l`              | Right window   |
+| `<leader>q`        | Close buffer   |
+| `<Left>`           | Left window    |
+| `<Down>`           | South window   |
+| `<Up>`             | North window   |
+| `<Right>`          | Right window   |
 | `<leader><leader>` | Switch buffer  |
-| `<leader>-f`       | Find file      |
-| `<leader>-s`       | Search files   |
-| `<leader>-d`       | Search symbols |
-| `M-[`              | Previous tab   |
-| `M-]`              | Next tab       |
-| `M-w`              | Close tab      |
-| `M-t`              | New tab        |
+| `<leader>f`        | Find file      |
+| `<leader>s`        | Search files   |
+| `<leader>d`        | Search symbols |
+| `[t`               | Previous tab   |
+| `]t`               | Next tab       |
+| `<leader>tc`       | Close tab      |
+| `<leader>tn`       | New tab        |
 
 Default Keybindings as set by `mini.ai`, `mini.move` and `leap`.
 

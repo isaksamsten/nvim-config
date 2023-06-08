@@ -253,21 +253,21 @@ return {
     },
     keys = {
       {
-        "<leader>tr",
+        "<leader>rt",
         function()
           require("neotest").run.run()
         end,
         desc = "Run test",
       },
       {
-        "<leader>tR",
+        "<leader>rT",
         function()
           require("neotest").run.run(vim.fn.expand("%"))
         end,
         desc = "Run all tests",
       },
       {
-        "<leader>td",
+        "<leader>rd",
         function()
           require("neotest").run.run({ strategy = "dap" })
         end,
@@ -295,7 +295,7 @@ return {
         desc = "Test outputs",
       },
       {
-        "<leader>tt",
+        "<F16>", -- Shift-<F4>
         function()
           require("neotest").output.open({ enter = true })
         end,
@@ -332,9 +332,7 @@ return {
           border = icons.borders.outer.all,
         },
         quickfix = {
-          open = function()
-            require("trouble").open("quickfix")
-          end,
+          open = false,
         },
       }
     end,
