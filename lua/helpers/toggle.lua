@@ -26,10 +26,10 @@ function Toggle.diagnostics()
   Toggle.is_diagnostics_active = not Toggle.is_diagnostics_active
 end
 
-local renderer = require("neo-tree.ui.renderer")
-local manager = require("neo-tree.sources.manager")
 Toggle.neotree_current_state = nil
 Toggle.is_neotree_open = function()
+  local renderer = require("neo-tree.ui.renderer")
+  local manager = require("neo-tree.sources.manager")
   for _, source in ipairs(require("neo-tree").config.sources) do
     local state = manager.get_state(source)
     if state and renderer.window_exists(state) then
@@ -41,6 +41,7 @@ Toggle.is_neotree_open = function()
 end
 
 function Toggle.neotree()
+  local manager = require("neo-tree.sources.manager")
   if Toggle.is_neotree_open() then
     vim.cmd.Neotree("close")
   else
@@ -63,6 +64,9 @@ end
 -- Toggle neotree focus.
 Toggle.neotree_current_window = nil
 function Toggle.focus_neotree(source)
+  local manager = require("neo-tree.sources.manager")
+  local renderer = require("neo-tree.ui.renderer")
+
   local state = manager.get_state(source)
   local current_win = vim.api.nvim_get_current_win()
   local window_exists = renderer.window_exists(state)

@@ -120,27 +120,35 @@ return {
       {
         -- "MunifTanjim/nui.nvim",
         "mfussenegger/nvim-dap",
+        version = false,
         dependencies = {
           { "jayp0521/mason-nvim-dap.nvim" },
         },
         opts = function()
           return {
-            adapters = {
-              python = {
-                type = "executable",
-                command = "debugpy-adapter",
-                args = {},
+            defaults = {
+              fallback = {
+                switchbuf = "useopen",
               },
             },
-            configurations = {
-              python = {
-                {
-                  type = "python",
-                  request = "launch",
-                  name = "Launch file",
+            languages = {
+              adapters = {
+                python = {
+                  type = "executable",
+                  command = "debugpy-adapter",
+                  args = {},
+                },
+              },
+              configurations = {
+                python = {
+                  {
+                    type = "python",
+                    request = "launch",
+                    name = "Launch file",
 
-                  program = "${file}",
-                  pythonPath = require("helpers.python").executable,
+                    program = "${file}",
+                    pythonPath = require("helpers.python").executable,
+                  },
                 },
               },
             },
@@ -148,7 +156,8 @@ return {
         end,
         config = function(_, opts)
           local dap = require("dap")
-          for key, options in pairs(opts) do
+          dap.defaults.fallback.switchbuf = opts.defaults.fallback.switchbuf
+          for key, options in pairs(opts.languages) do
             for language, language_config in pairs(options) do
               dap[key][language] = language_config
             end

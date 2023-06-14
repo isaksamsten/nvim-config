@@ -354,6 +354,11 @@ return {
           NeoTreeNormal = { link = "TelescopeNormal" },
           NeoTreeNormalNC = { link = "TelescopeNormal" },
 
+          CursorLineNr = { style = "bold" },
+
+          StatusColumnSeparator = { fg = "${fg_context_char}", bg = "NONE" },
+          SignColumn = { fg = "${float_bg}" },
+          --
           -- Cmp
           CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
           CmpItemMenu = { link = "NonText" },
@@ -408,7 +413,6 @@ return {
           DebugBreakpoint = { fg = "${red}" },
           DebugBreakpointLine = { bg = "${faded_red}" },
           WinSeparator = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
-          StatusColumnSeparator = { fg = "${gray}", bg = "none" },
           TabLineFill = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLine = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLineSel = { bg = "${telescope_prompt}", fg = "${fg}", style = "bold" },

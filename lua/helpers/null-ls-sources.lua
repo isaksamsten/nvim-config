@@ -6,7 +6,7 @@ local numpydoc_lint = h.make_builtin({
   name = "numpydoc-lint",
   meta = {
     url = "https://github.com/isaksamsten/numpydoc-lint/",
-    description = "Lint numpydoc",
+    description = "Find errors in Numpydoc formatted docstrings.",
   },
   method = DIAGNOSTICS,
   filetypes = { "python" },
@@ -29,7 +29,7 @@ local numpydoc_lint = h.make_builtin({
           P = h.diagnostics.severities["information"],
           R = h.diagnostics.severities["information"],
           Y = h.diagnostics.severities["information"],
-          E = h.diagnostics.severities["information"],
+          E = h.diagnostics.severities["warning"],
         },
       }
     ),
