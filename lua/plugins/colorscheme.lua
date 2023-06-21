@@ -364,7 +364,7 @@ return {
           --
           -- Cmp
           CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
-          CmpItemMenu = { link = "NonText" },
+          CmpItemMenu = { fg = "${gray}", bg = "none" },
           CmpItemAbbrMatchFuzzy = { fg = "${blue}", style = "underline" },
 
           -- Neotest
@@ -411,7 +411,7 @@ return {
           PopupBorder = { bg = "${float_bg}", fg = "${fg_border}" },
 
           Pmenu = { link = "PopupNormal" },
-          PmenuSel = { style = "bold" },
+          PmenuSel = { style = "bold", bg = "${cursorline}" },
           PmenuBorder = { link = "PopupBorder" },
           PmenuDocBorder = { bg = "${float_bg}", fg = "${fg_border}" },
 
