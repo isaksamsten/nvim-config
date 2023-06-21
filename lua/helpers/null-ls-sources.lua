@@ -24,12 +24,10 @@ local numpydoc_lint = h.make_builtin({
       { "row", "col", "end_row", "end_col", "code", "severity", "message" },
       {
         severities = {
-          G = h.diagnostics.severities["information"],
-          S = h.diagnostics.severities["information"],
-          P = h.diagnostics.severities["information"],
-          R = h.diagnostics.severities["information"],
-          Y = h.diagnostics.severities["information"],
           E = h.diagnostics.severities["warning"],
+          W = h.diagnostics.severities["information"],
+          I = h.diagnostics.severities["hint"],
+          H = h.diagnostics.severities["hint"],
         },
       }
     ),

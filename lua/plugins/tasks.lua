@@ -1,4 +1,5 @@
 return {
+  -- TODO: Consider removing toggleterm
   {
     "stevearc/overseer.nvim",
     dependencies = { "akinsho/toggleterm.nvim" },

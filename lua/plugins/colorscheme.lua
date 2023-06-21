@@ -2,13 +2,6 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("catppuccin")
-      theme.setup(opts)
-      vim.cmd([[colorscheme catppuccin]])
-    end,
     opts = function()
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
@@ -250,6 +243,13 @@ return {
   },
   {
     "olimorris/onedarkpro.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("onedarkpro")
+      theme.setup(opts)
+      vim.cmd([[colorscheme onedark]])
+    end,
     opts = function()
       local function blend(a, b, amount, theme)
         local Color = require("onedarkpro.lib.color")
@@ -300,7 +300,9 @@ return {
         },
         colors = {
           fg_context_char = "require('onedarkpro.helpers').lighten('bg', 18, 'onedark')",
-          fg_border = "require('onedarkpro.helpers').lighten('bg', 3, 'onedark')",
+          sign_column_border = "require('onedarkpro.helpers').lighten('bg', 12, 'onedark')",
+          surface0 = "require('onedarkpro.helpers').lighten('bg', 22, 'onedark')",
+          fg_border = "require('onedarkpro.helpers').lighten('bg', 2, 'onedark')",
           telescope_prompt = "require('onedarkpro.helpers').darken('bg', 3, 'onedark')",
           telescope_results = "require('onedarkpro.helpers').darken('bg', 4, 'onedark')",
           telescope_preview = "require('onedarkpro.helpers').darken('bg', 6, 'onedark')",
@@ -355,9 +357,10 @@ return {
           NeoTreeNormalNC = { link = "TelescopeNormal" },
 
           CursorLineNr = { style = "bold" },
+          LineNr = { fg = "${surface0}" },
 
-          StatusColumnSeparator = { fg = "${fg_context_char}", bg = "NONE" },
-          SignColumn = { fg = "${float_bg}" },
+          StatusColumnSeparator = { fg = "${sign_column_border}", bg = "NONE" },
+          SignColumn = { fg = "${sign_column_border}" },
           --
           -- Cmp
           CmpItemAbbrMatch = { fg = "${blue}", style = "bold" },
@@ -392,7 +395,13 @@ return {
           DiagnosticFloatingInfo = { fg = "${fg}" },
           DiagnosticFloatingError = { fg = "${fg}" },
 
-          -- ModeMsg = { fg = "${fg}", bg = "${telescope_prompt}" },
+          ModeMsg = { fg = "${fg}", bg = "${telescope_results}" },
+          MsgArea = { fg = "${fg}", bg = "${telescope_results}" },
+
+          StatusLine = { link = "ModeMsg" },
+          StatusLineNC = { fg = "${surface0}", bg = "${telescope_results}" },
+          -- StatusFg = { link = "ModeMsg" },
+
           NoiceMini = { link = "BetterVirtualTextInfo" },
           NoiceVirtualText = { link = "BetterVirtualTextInfo" },
 
@@ -400,44 +409,28 @@ return {
           AIIndicator = { link = "DiagnosticSignInfo" },
           PopupNormal = { bg = "${float_bg}" },
           PopupBorder = { bg = "${float_bg}", fg = "${fg_border}" },
+
           Pmenu = { link = "PopupNormal" },
           PmenuSel = { style = "bold" },
           PmenuBorder = { link = "PopupBorder" },
           PmenuDocBorder = { bg = "${float_bg}", fg = "${fg_border}" },
+
           NormalFloat = { bg = "${float_bg}" },
           FloatBorder = { bg = "${float_bg}", fg = "${fg_border}" },
+
           DebugLogPoint = { fg = "${purple}" },
           DebugStopped = { fg = "${yellow}" },
           DebugStoppedLine = { bg = "${faded_yellow}" },
           DebugBreakpointRejected = { fg = "${purple}" },
           DebugBreakpoint = { fg = "${red}" },
           DebugBreakpointLine = { bg = "${faded_red}" },
+
           WinSeparator = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+
           TabLineFill = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLine = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLineSel = { bg = "${telescope_prompt}", fg = "${fg}", style = "bold" },
           TabLineHead = { bg = "${blue}", fg = "${telescope_prompt}" },
-
-          NotifyERRORBorder = { link = "PopupBorder" },
-          NotifyWARNBorder = { link = "PopupBorder" },
-          NotifyINFOBorder = { link = "PopupBorder" },
-          NotifyDEBUGBorder = { link = "PopupBorder" },
-          NotifyTRACEBorder = { link = "PopupBorder" },
-          NotifyERRORIcon = { link = "DiagnosticSignError" },
-          NotifyWARNIcon = { link = "DiagnosticSignWarn" },
-          NotifyINFOIcon = { link = "DiagnosticSignInfo" },
-          NotifyDEBUGIcon = { link = "DiagnosticSignInfo" },
-          NotifyTRACEIcon = { link = "DiagnosticSignInfo" },
-          NotifyERRORTitle = { fg = "${fg}", style = "bold" },
-          NotifyWARNTitle = { fg = "${fg}", style = "bold" },
-          NotifyINFOTitle = { fg = "${fg}", style = "bold" },
-          NotifyDEBUGTitle = { fg = "${fg}", style = "bold" },
-          NotifyTRACETitle = { fg = "${fg}", style = "bold" },
-          NotifyERRORBody = { link = "NormalFloat" },
-          NotifyWARNBody = { link = "NormalFloat" },
-          NotifyINFOBody = { link = "NormalFloat" },
-          NotifyDEBUGBody = { link = "NormalFloat" },
-          NotifyTRACEBody = { link = "NormalFloat" },
         },
         options = {
           cursorline = false,

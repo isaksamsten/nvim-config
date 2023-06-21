@@ -1,6 +1,154 @@
 return {
 
   {
+    "nvim-lualine/lualine.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    opts = function()
+      local icons = require("config.icons")
+      return {
+        options = {
+          theme = "auto",
+          globalstatus = true,
+          -- disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
+          component_separators = { left = "", right = "" },
+          section_separators = { right = "", left = "" },
+        },
+        sections = {
+          lualine_a = {
+            {
+              "mode",
+              fmt = function(mode)
+                return string.sub(mode, 0, 6)
+              end,
+            },
+          },
+          lualine_b = {
+            { "branch", icon = icons.git.branch, separator = "" },
+            {
+              "diff",
+              symbols = {
+                added = icons.git.add .. " ",
+                modified = icons.git.change .. " ",
+                removed = icons.git.delete .. " ",
+              },
+            },
+          },
+          lualine_c = {
+            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+            {
+              "filename",
+              path = 1,
+              shorting_target = 40,
+              fmt = function(filename)
+                -- Small attempt to workaround https://github.com/nvim-lualine/lualine.nvim/issues/872
+                if #filename > 80 then
+                  filename = vim.fs.basename(filename)
+                end
+
+                if #filename > 80 then
+                  return string.sub(filename, #filename - 80, #filename)
+                end
+                return filename
+              end,
+              symbols = {
+                modified = " " .. icons.file.modified .. " ",
+                readonly = " " .. icons.file.readonly .. " ",
+                unnamed = "",
+                newfile = " " .. icons.file.new .. " ",
+              },
+            },
+            {
+              function()
+                return require("nvim-navic").get_location()
+              end,
+              cond = function()
+                return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+              end,
+            },
+          },
+          lualine_x = {
+            {
+              function()
+                return require("noice").api.status.command.get()
+              end,
+              cond = function()
+                return package.loaded["noice"] and require("noice").api.status.command.has()
+              end,
+            },
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.mode.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+            },
+            -- stylua: ignore
+            {
+              function() return "  " .. require("dap").status() end,
+              cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
+              color = "DiagnosticSignWarn",
+            },
+          },
+          lualine_y = {
+            {
+              "diagnostics",
+              symbols = {
+                error = icons.diagnostics.error,
+                warn = icons.diagnostics.warn,
+                info = icons.diagnostics.info,
+                hint = icons.diagnostics.hint,
+              },
+              cond = function()
+                return require("helpers.toggle").is_diagnostics_active
+              end,
+            },
+            -- {
+            --   function()
+            --     local python = require("helpers.python").python()
+            --     if python then
+            --       return string.format("%s [%s]", python.name, python.version)
+            --     else
+            --       return "[No interpreter]"
+            --     end
+            --   end,
+            --   cond = function()
+            --     return vim.bo.ft == "python"
+            --   end,
+            -- },
+          },
+          lualine_z = {
+            {
+              function()
+                return ""
+              end,
+              cond = function()
+                return vim.b.format_on_save ~= false and require("helpers.format").format_on_save
+              end,
+            },
+            {
+              function()
+                return ""
+              end,
+              cond = function()
+                return require("helpers.toggle").is_conceal_active
+              end,
+            },
+            {
+              function()
+                return require("config.icons").ui.remote
+              end,
+              cond = require("helpers").is_remote,
+            },
+          },
+        },
+        extensions = { "nvim-tree" },
+      }
+    end,
+    config = function(_, opts)
+      local lualine = require("lualine")
+      lualine.setup(opts)
+    end,
+  },
+  {
     "folke/edgy.nvim",
     event = "VeryLazy",
     opts = {
@@ -66,241 +214,6 @@ return {
   },
 
   {
-    "folke/noice.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    dependencies = {
-      "rcarriga/nvim-notify",
-      keys = {
-        {
-          "<leader>un",
-          function()
-            require("notify").dismiss({ silent = true, pending = true })
-          end,
-          desc = "Dismiss notifications",
-        },
-      },
-      opts = function()
-        local helpers = require("helpers.nvim-notify")
-        local icons = require("config.icons")
-        return {
-          icons = {
-            DEBUG = icons.debug.debug,
-            ERROR = icons.diagnostics.error,
-            INFO = icons.diagnostics.info,
-            WARN = icons.diagnostics.warn,
-          },
-          timeout = 2000,
-          render = helpers.render,
-          stages = "static",
-          on_open = function(win)
-            vim.api.nvim_win_set_config(win, { border = require("config.icons").borders.outer.all })
-          end,
-          max_height = function()
-            return math.floor(vim.o.lines * 0.25)
-          end,
-          max_width = function()
-            return math.floor(vim.o.columns * 0.25)
-          end,
-        }
-      end,
-    },
-    opts = function()
-      local icons = require("config.icons").ui
-      local popup_opts = {
-        border = { style = require("config.icons").borders.outer.all, text = { top = "" } },
-      }
-      return {
-        views = {
-          split = {
-            enter = true,
-          },
-          confirm = {
-            border = { style = require("config.icons").borders.outer.all, text = { top = "" } },
-          },
-        },
-        cmdline = {
-          enabled = true, -- enables the Noice cmdline UI
-          -- view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
-          opts = {}, -- global options for the cmdline. See section on views
-          format = {
-            cmdline = {
-              pattern = "^:",
-              icon = icons.cmd,
-              lang = "vim",
-              opts = popup_opts,
-            },
-            search_down = { kind = "search", pattern = "^/", icon = icons.search_down, lang = "regex" },
-            search_up = { kind = "search", pattern = "^%?", icon = icons.search_up, lang = "regex" },
-            filter = {
-              pattern = "^:%s*!",
-              icon = icons.filter,
-              lang = "bash",
-              opts = popup_opts,
-            },
-            lua = {
-              pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" },
-              icon = icons.lua,
-              lang = "lua",
-              opts = popup_opts,
-            },
-            git = {
-              pattern = { "^:%s*G%s+" },
-              icon = icons.git,
-              opts = popup_opts,
-            },
-            help = {
-              pattern = "^:%s*he?l?p?%s+",
-              icon = icons.help,
-              opts = popup_opts,
-            },
-            input = {}, -- Used by input()
-          },
-        },
-        messages = {
-          enabled = true, -- enables the Noice messages UI
-          view = "notify", -- default view for messages
-          view_error = "notify", -- view for errors
-          view_warn = "notify", -- view for warnings
-          view_history = "messages", -- view for :messages
-          view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
-        },
-        popupmenu = { enabled = true, backend = "nui" },
-        redirect = {
-          view = "popup",
-          filter = { event = "msg_show" },
-        },
-        commands = {
-          history = {
-            view = "split",
-            opts = { enter = true, format = "details" },
-            filter = {
-              any = {
-                { event = "notify" },
-                { error = true },
-                { warning = true },
-                { event = "msg_show", kind = { "" } },
-                { event = "lsp", kind = "message" },
-              },
-            },
-          },
-          last = {
-            view = "popup",
-            opts = { enter = true, format = "details" },
-            filter = {
-              any = {
-                { event = "notify" },
-                { error = true },
-                { warning = true },
-                { event = "msg_show", kind = { "" } },
-                { event = "lsp", kind = "message" },
-              },
-            },
-            filter_opts = { count = 1 },
-          },
-          errors = {
-            view = "split",
-            opts = { enter = true, format = "details" },
-            filter = { error = true },
-            filter_opts = { reverse = true },
-          },
-        },
-        notify = {
-          enabled = true,
-          view = "notify",
-        },
-        lsp = {
-          progress = {
-            enabled = false,
-          },
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
-            ["vim.lsp.util.stylize_markdown"] = false,
-            ["cmp.entry.get_documentation"] = false,
-          },
-          hover = { enabled = false },
-          signature = { enabled = false },
-          message = { enabled = false },
-          documentation = { enabled = false },
-        },
-        health = {
-          checker = true, -- Disable if you don't want health checks to run
-        },
-        smart_move = { enabled = false },
-
-        routes = {
-          {
-            filter = {
-              event = "msg_show",
-              find = "^E486",
-            },
-            view = "mini",
-          },
-          {
-            filter = {
-              event = "msg_show",
-              find = "search hit [A-Z]+, continuing at [A-Z]+",
-            },
-            view = "mini",
-          },
-          {
-            filter = {
-              event = "notify",
-              kind = { "info" },
-            },
-            view = "mini",
-          },
-          {
-            filter = {
-              event = "msg_show",
-              find = "%d+L, %d+B",
-            },
-            view = "mini",
-          },
-          {
-            filter = {
-              event = "msg_show",
-              find = ";%s(%a+)%s#(%d+)", -- matches undo messages
-            },
-            view = "mini",
-          },
-          {
-            filter = {
-              event = "msg_show",
-              find = "^%d+.*lines", -- fewer, more yanked etc lines
-            },
-            view = "mini",
-          },
-          {
-            filter = {
-              event = "msg_show",
-              find = "^Already at", -- More undo messages
-            },
-            view = "mini",
-          },
-          {
-            view = "cmdline_output",
-            filter = { cmdline = "^:" },
-          },
-          {
-            filter = {
-              event = "msg_show",
-              kind = "search_count",
-            },
-            opts = { skip = true },
-          },
-        },
-        presets = {
-          bottom_search = true, -- use a classic bottom cmdline for search
-          command_palette = true, -- position the cmdline and popupmenu together
-          long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
-        },
-      }
-    end,
-  },
-  {
     "nanozuki/tabby.nvim",
     event = "TabNew",
     opts = {
@@ -337,22 +250,12 @@ return {
               margin = " ",
             }
           end),
-          -- line.spacer(),
-          -- line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-          --   local hl = win.is_current() and theme.current_tab or theme.tab
-          --   return {
-          --     line.sep(icons.space, hl, theme.fill),
-          --     win.buf_name(),
-          --     line.sep(icons.space, hl, theme.fill),
-          --     hl = hl,
-          --     margin = " ",
-          --   }
-          -- end),
           hl = theme.fill,
         }
       end)
     end,
   },
+
   {
     "luukvbaal/statuscol.nvim",
     event = "VimEnter",
@@ -797,7 +700,7 @@ return {
 
   {
     "nvim-telescope/telescope.nvim",
-    version = "0.1.*",
+    version = false,
     keys = function(_, keys)
       local function vertical(config)
         return require("telescope.themes").get_dropdown(config)
