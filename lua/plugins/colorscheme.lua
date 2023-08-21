@@ -2,6 +2,13 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("catppuccin")
+      theme.setup(opts)
+      vim.cmd([[colorscheme catppuccin]])
+    end,
     opts = function()
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
@@ -106,8 +113,8 @@ return {
             DiagnosticFloatingInfo = { fg = fg },
             DiagnosticFloatingError = { fg = fg },
 
-            ModeMsg = { fg = fg, bg = colors.mantle },
-            MsgArea = { fg = fg, bg = colors.mantle },
+            -- ModeMsg = { fg = fg, bg = colors.mantle },
+            -- MsgArea = { fg = fg, bg = colors.mantle },
 
             NoiceMini = { link = "NonText" },
             NoiceVirtualText = { link = "NonText" },
@@ -243,13 +250,6 @@ return {
   },
   {
     "olimorris/onedarkpro.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("onedarkpro")
-      theme.setup(opts)
-      vim.cmd([[colorscheme onedark]])
-    end,
     opts = function()
       local function blend(a, b, amount, theme)
         local Color = require("onedarkpro.lib.color")

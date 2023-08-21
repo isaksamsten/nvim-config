@@ -1,4 +1,19 @@
 return {
+
+  {
+    "alexghergh/nvim-tmux-navigation",
+    keys = {
+      { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
+      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>" },
+      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>" },
+      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>" },
+    },
+    lazy = false,
+    opts = {
+      disable_when_zoomed = true,
+    },
+  },
+
   {
     "tpope/vim-fugitive",
     cmd = "G",
