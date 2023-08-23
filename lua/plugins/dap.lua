@@ -128,7 +128,7 @@ return {
           return {
             defaults = {
               fallback = {
-                switchbuf = "useopen",
+                switchbuf = "newtab",
               },
             },
             languages = {

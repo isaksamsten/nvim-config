@@ -150,6 +150,7 @@ return {
   },
   {
     "folke/edgy.nvim",
+    enabled = false,
     event = "VeryLazy",
     opts = {
       animate = {
@@ -394,7 +395,7 @@ return {
         use_popups_for_input = false,
         open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" },
         filesystem = {
-          follow_current_file = true,
+          follow_current_file = { enabled = true },
           hijack_netrw_behavior = "open_current",
           use_libuv_file_watcher = true,
         },
