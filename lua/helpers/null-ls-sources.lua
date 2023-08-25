@@ -19,6 +19,8 @@ local numpydoc_lint = h.make_builtin({
     end,
     to_stdin = true,
     ignore_stderr = true,
+    -- src/wildboar/datasets/_repository.py:985:5:985:5: I0009 Summary does not start with a capital letter
+
     on_output = h.diagnostics.from_pattern(
       [[(%d+):(%d+):(%d+):(%d+): ((%u)%w+) (.*)]],
       { "row", "col", "end_row", "end_col", "code", "severity", "message" },

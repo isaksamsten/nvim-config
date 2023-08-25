@@ -15,6 +15,100 @@ return {
   },
 
   {
+    "mhartington/formatter.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = function()
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        group = vim.api.nvim_create_augroup("FormatterNvim", {}),
+        command = "FormatWrite",
+      })
+
+      local opts = {
+        filetype = {
+          lua = { require("formatter.filetypes.lua").stylua },
+          python = {
+            function()
+              local util = require("formatter.util")
+              return {
+                exe = "ruff",
+                args = {
+                  "--fix",
+                  "-e",
+                  "-n",
+                  "--stdin-filename",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+            require("formatter.filetypes.python").black,
+          },
+          latex = { require("formatter.filetypes.latex").latexindent },
+          erlang = {
+            function()
+              return {
+                exe = "erlfmt",
+                args = { "-" },
+                stdin = true,
+              }
+            end,
+          },
+          java = {
+            function()
+              return { exe = "google-java-format", args = { "-" }, stdin = true }
+            end,
+          },
+          rust = {
+            require("formatter.filetypes.rust").rustfmt,
+          },
+        },
+      }
+
+      local prettier = { "markdown", "html", "javascript" }
+      for _, value in ipairs(prettier) do
+        opts.filetype[value] = { require("formatter.defaults.prettier") }
+      end
+
+      return opts
+    end,
+  },
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("lint").linters.numpydoc_lint = {
+        cmd = "numpydoc-lint",
+        stdin = true,
+        stream = "stdout",
+        args = {},
+        ignore_exitcode = true,
+        parser = require("lint.parser").from_pattern(
+          [[(%d+):(%d+):(%d+):(%d+): ((%u)%w+) (.*)]],
+          { "lnum", "col", "end_lnum", "end_col", "code", "severity", "message" },
+          {
+            E = vim.diagnostic.severity.ERROR,
+            W = vim.diagnostic.severity.WARN,
+            I = vim.diagnostic.severity.INFO,
+            H = vim.diagnostic.severity.HINT,
+          },
+          { source = "numpydoc-lint" }
+        ),
+      }
+      require("lint").linters_by_ft = {
+        markdown = { "markdownlint" },
+        python = { "numpydoc_lint" },
+      }
+
+      vim.api.nvim_create_autocmd({ "TextChanged", "BufEnter" }, {
+        callback = function()
+          require("lint").try_lint()
+        end,
+      })
+    end,
+  },
+
+  {
     "hrsh7th/nvim-cmp",
     version = false,
     event = { "BufReadPre" },

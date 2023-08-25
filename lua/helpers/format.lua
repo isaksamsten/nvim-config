@@ -15,13 +15,6 @@ function Format.format(client_id, bufnr, async, on_save)
   if vim.b.format_on_save == false or not Format.format_on_save and on_save then
     return
   end
-
-  vim.lsp.buf.format({
-    id = client_id,
-    bufnr = bufnr,
-    async = async,
-    timeout_ms = 5000,
-  })
 end
 
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {

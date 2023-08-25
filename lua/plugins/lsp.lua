@@ -2,37 +2,39 @@ vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.name == "null-ls" then
-      require("config.keymaps").null_ls_on_attach(client, bufnr)
-      if client.server_capabilities.documentFormattingProvider then
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          buffer = bufnr,
-          group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-          callback = function()
-            require("helpers.format").format(client.id, bufnr, false, true)
-          end,
-        })
-      end
-    else
-      vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-      require("config.keymaps").lsp_on_attach(client, bufnr)
 
-      if client.server_capabilities.documentHighlightProvider then
-        vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-        vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
-        vim.api.nvim_create_autocmd("CursorHold", {
-          callback = vim.lsp.buf.document_highlight,
-          buffer = bufnr,
-          group = "lsp_document_highlight",
-          desc = "Document Highlight",
-        })
-        vim.api.nvim_create_autocmd("CursorMoved", {
-          callback = vim.lsp.buf.clear_references,
-          buffer = bufnr,
-          group = "lsp_document_highlight",
-          desc = "Clear All the References",
-        })
-      end
+    -- TODO: remove null-ls
+    -- if client.name == "null-ls" then
+    --   require("config.keymaps").null_ls_on_attach(client, bufnr)
+    --   if client.server_capabilities.documentFormattingProvider then
+    --     vim.api.nvim_create_autocmd("BufWritePre", {
+    --       buffer = bufnr,
+    --       group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
+    --       callback = function()
+    --         require("helpers.format").format(client.id, bufnr, false, true)
+    --       end,
+    --     })
+    --   end
+    -- else
+    vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+    require("config.keymaps").lsp_on_attach(client, bufnr)
+
+    if client.server_capabilities.documentHighlightProvider then
+      vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
+      vim.api.nvim_create_autocmd("CursorHold", {
+        callback = vim.lsp.buf.document_highlight,
+        buffer = bufnr,
+        group = "lsp_document_highlight",
+        desc = "Document Highlight",
+      })
+      vim.api.nvim_create_autocmd("CursorMoved", {
+        callback = vim.lsp.buf.clear_references,
+        buffer = bufnr,
+        group = "lsp_document_highlight",
+        desc = "Clear All the References",
+      })
+      -- end
     end
   end,
 })
@@ -122,26 +124,10 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "jose-elias-alvarez/null-ls.nvim",
-      "jay-babu/mason-null-ls.nvim",
+      -- "jose-elias-alvarez/null-ls.nvim",
+      -- "jay-babu/mason-null-ls.nvim",
       "hrsh7th/cmp-nvim-lsp",
       "barreiroleo/ltex_extra.nvim",
-
-      -- {
-      --   "j-hui/fidget.nvim",
-      --   opts = {
-      --     text = {
-      --       spinner = "pipe", -- animation shown when tasks are ongoing
-      --       done = "✔", -- character shown when all tasks are complete
-      --       -- commenced = "", -- message shown when task starts
-      --       -- completed = "", -- message shown when task completes
-      --     },
-      --     sources = {
-      --       ltex = { ignore = true },
-      --       ["null-ls"] = { ignore = true },
-      --     },
-      --   },
-      -- },
       {
         "ray-x/lsp_signature.nvim",
         opts = function()
@@ -269,21 +255,22 @@ return {
         texlab = {},
         yamlls = {},
       },
-      sources = function(null_ls)
-        -- NOTE: formatters are run in the order in which the are defined here.
-        return {
-          require("helpers.null-ls-sources").diagnostics.numpydoc_lint,
-          null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.rustfmt,
-          null_ls.builtins.formatting.latexindent,
-          null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
-          null_ls.builtins.formatting.bibclean, -- installed by system
-          null_ls.builtins.formatting.prettier,
-          null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.formatting.google_java_format,
-        }
-      end,
+      -- -- TODO: Remove
+      -- sources = function(null_ls)
+      --   -- NOTE: formatters are run in the order in which the are defined here.
+      --   return {
+      --     require("helpers.null-ls-sources").diagnostics.numpydoc_lint,
+      --     null_ls.builtins.formatting.stylua,
+      --     null_ls.builtins.formatting.rustfmt,
+      --     null_ls.builtins.formatting.latexindent,
+      --     null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
+      --     null_ls.builtins.formatting.bibclean, -- installed by system
+      --     null_ls.builtins.formatting.prettier,
+      --     null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
+      --     null_ls.builtins.formatting.black,
+      --     null_ls.builtins.formatting.google_java_format,
+      --   }
+      -- end,
     },
 
     config = function(_, opts)
@@ -320,15 +307,15 @@ return {
       vim.lsp.handlers["textDocument/hover"] = hover
 
       -- Setup null-ls. We only use null-ls for formatting
-      local null_ls = require("null-ls")
-      null_ls.setup({
-        sources = opts.sources(null_ls),
-      })
-      require("mason-null-ls").setup({
-        ensure_installed = nil,
-        automatic_installation = false,
-        automatic_setup = false,
-      })
+      -- local null_ls = require("null-ls")
+      -- null_ls.setup({
+      --   sources = opts.sources(null_ls),
+      -- })
+      -- require("mason-null-ls").setup({
+      --   ensure_installed = nil,
+      --   automatic_installation = false,
+      --   automatic_setup = false,
+      -- })
     end,
   },
 }

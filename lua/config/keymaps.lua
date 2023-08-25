@@ -52,7 +52,7 @@ vim.keymap.set({ "n", "v" }, "<leader>tc", "<Esc><Cmd>tabclose<CR>", { desc = "C
 vim.keymap.set({ "n" }, "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix" })
 vim.keymap.set({ "n" }, "]q", "<cmd>cnext<cr>", { desc = "Next quickfix" })
 vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
-vim.keymap.set({ "n" }, "[q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
+vim.keymap.set({ "n" }, "[Q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
 
 local Python = require("helpers.python")
 vim.keymap.set("n", "<leader>aA", function()
@@ -161,18 +161,18 @@ function M.lsp_on_attach(client, bufnr)
   end
 end
 
-function M.null_ls_on_attach(client, bufnr)
-  if client.server_capabilities.documentFormattingProvider then
-    vim.keymap.set("n", "<leader>F", function()
-      require("helpers.format").format(client.id, bufnr, true, false)
-    end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
-  end
-
-  if client.server_capabilities.documentRangeFormattingProvider then
-    vim.keymap.set("v", "gq", function()
-      require("helpers.format").format(client.id, bufnr, true, false)
-    end, { remap = false, silent = true, buffer = bufnr, desc = "Format selection" })
-  end
-end
+-- function M.null_ls_on_attach(client, bufnr)
+--   if client.server_capabilities.documentFormattingProvider then
+--     vim.keymap.set("n", "<leader>F", function()
+--       require("helpers.format").format(client.id, bufnr, true, false)
+--     end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
+--   end
+--
+--   if client.server_capabilities.documentRangeFormattingProvider then
+--     vim.keymap.set("v", "gq", function()
+--       require("helpers.format").format(client.id, bufnr, true, false)
+--     end, { remap = false, silent = true, buffer = bufnr, desc = "Format selection" })
+--   end
+-- end
 
 return M
