@@ -10,7 +10,7 @@ return {
       ensure_installed = {
         "bash",
         "erlang",
-        "help",
+        "vimdoc",
         "html",
         "json",
         "java",

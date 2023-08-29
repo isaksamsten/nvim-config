@@ -215,7 +215,7 @@ return {
       servers = {
         bashls = {},
         clangd = {},
-        erlangls = {},
+        -- erlangls = {},
         esbonio = {},
         jdtls = { skip_setup = true },
         jedi_language_server = {
