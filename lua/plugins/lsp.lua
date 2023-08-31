@@ -198,9 +198,15 @@ return {
         better_virtual_text = {
           spacing = 4,
           prefix = function(diagnostic)
+            if diagnostic.source == "LTeX" then
+              return ""
+            end
             return require("config.icons"):get_diagnostic(diagnostic.severity)
           end,
           format = function(diagnostic)
+            if diagnostic.source == "LTeX" then
+              return ""
+            end
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
             local message = diagnostic.message
             if #diagnostic.message > max_width + 1 then

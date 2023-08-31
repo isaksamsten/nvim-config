@@ -82,7 +82,7 @@ end, { desc = "Save virtual environment" })
 
 -- Toggle
 local Toggle = require("helpers.toggle")
-vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
+-- vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
 vim.keymap.set("n", "<leader>uc", Toggle.conceal, { desc = "Toggle conceal" })
 
 vim.keymap.set("n", "g,", function()
@@ -160,19 +160,5 @@ function M.lsp_on_attach(client, bufnr)
     map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
   end
 end
-
--- function M.null_ls_on_attach(client, bufnr)
---   if client.server_capabilities.documentFormattingProvider then
---     vim.keymap.set("n", "<leader>F", function()
---       require("helpers.format").format(client.id, bufnr, true, false)
---     end, { remap = false, silent = true, buffer = bufnr, desc = "Format buffer" })
---   end
---
---   if client.server_capabilities.documentRangeFormattingProvider then
---     vim.keymap.set("v", "gq", function()
---       require("helpers.format").format(client.id, bufnr, true, false)
---     end, { remap = false, silent = true, buffer = bufnr, desc = "Format selection" })
---   end
--- end
 
 return M

@@ -1,18 +1,25 @@
 return { -- TODO
-  -- {
-  --   "ggandor/leap.nvim",
-  --   event = "BufReadPost",
-  --   version = false,
-  --   opts = {},
-  --   config = function(_, opts)
-  --     require("leap").add_default_mappings()
-  --   end,
-  -- },
+  {
+    "ggandor/leap.nvim",
+    event = "VeryLazy",
+    version = false,
+    enabled = false,
+    opts = {},
+    config = function(_, opts)
+      require("leap").add_default_mappings()
+    end,
+  },
   {
     "folke/flash.nvim",
     event = "VeryLazy",
+    enabled = true,
     opts = {
       highlight = { backdrop = false },
+      modes = {
+        char = {
+          enabled = false,
+        },
+      },
     },
     keys = {
       {

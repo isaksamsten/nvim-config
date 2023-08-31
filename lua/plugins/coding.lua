@@ -1,28 +1,13 @@
 vim.g.ai_no_mappings = true
 return {
-  {
-    "aduros/ai.vim",
-    config = function()
-      vim.g.ai_temperature = 0.7
-      vim.g.ai_indicator_text = "󱚠"
-
-      vim.keymap.set("n", "<M-a>", ":AI ", { desc = "AI prompt" })
-      vim.keymap.set("v", "<M-a>", ":AI ", { desc = "AI prompt" })
-      vim.keymap.set("v", "zAc", ":AI Corrects sentences into standard English.<CR>", { desc = "Grammar check" })
-      vim.keymap.set("i", "<M-a>", "<Esc>:AI<CR>a", { desc = "AI prompt" })
-    end,
-    lazy = false,
-  },
 
   {
     "mhartington/formatter.nvim",
     event = { "BufReadPre", "BufNewFile" },
+    keys = {
+      { "<leader>F", "<cmd>Format<cr>", "Format buffer" },
+    },
     opts = function()
-      vim.api.nvim_create_autocmd("BufWritePost", {
-        group = vim.api.nvim_create_augroup("FormatterNvim", {}),
-        command = "FormatWrite",
-      })
-
       local opts = {
         filetype = {
           lua = { require("formatter.filetypes.lua").stylua },
@@ -72,6 +57,13 @@ return {
 
       return opts
     end,
+    config = function(_, opts)
+      require("formatter").setup(opts)
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        group = vim.api.nvim_create_augroup("FormatterNvim", {}),
+        command = "FormatWrite",
+      })
+    end,
   },
   {
     "mfussenegger/nvim-lint",
@@ -100,7 +92,7 @@ return {
         python = { "numpydoc_lint" },
       }
 
-      vim.api.nvim_create_autocmd({ "TextChanged", "BufEnter" }, {
+      vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "BufEnter" }, {
         callback = function()
           require("lint").try_lint()
         end,
