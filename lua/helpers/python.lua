@@ -3,6 +3,7 @@ local get_root = require("helpers").get_root
 
 M.current_conda_env = nil
 M.current_pyright = nil
+M.current_local_venv = nil
 M.is_activated = false
 M.default_env = nil
 
@@ -33,6 +34,24 @@ end
 --- Detect the current virtual environment from pyrightconfig.json
 ---@return table|nil - The python virtualenv specified in pyrightconfig.json
 function M.pyright_venv()
+  if M.current_local_venv then
+    return M.current_local_venv
+  else
+    root = get_root({ ".venv" })
+    if root then
+      local venv_path = vim.fn.simplify(root .. "/.venv")
+      local exe = vim.fn.simplify(venv_path .. "/bin/python")
+      M.current_local_venv = {
+        exe = exe,
+        path = venv_path,
+        type = "venv",
+        name = ".venv",
+        version = python_version(exe),
+      }
+      return M.current_local_venv
+    end
+  end
+
   -- Use the cached virtual environment if we already found it
   if M.current_pyright then
     local cache_mtime = M.current_pyright.mtime
