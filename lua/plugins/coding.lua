@@ -61,7 +61,11 @@ return {
       require("formatter").setup(opts)
       vim.api.nvim_create_autocmd("BufWritePost", {
         group = vim.api.nvim_create_augroup("FormatterNvim", {}),
-        command = "FormatWrite",
+        callback = function()
+          if require("helpers.toggle").format_active() then
+            vim.cmd.FormatWrite()
+          end
+        end,
       })
     end,
   },

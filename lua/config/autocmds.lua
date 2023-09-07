@@ -58,3 +58,15 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "rst", "latex", "txt" },
   command = "setlocal wrap",
 })
+
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+  callback = function(args)
+    local ok, _ = pcall(vim.api.nvim_buf_get_var, args.buf, "is_format_active")
+    if not ok then
+      local root = require("helpers").get_root({ ".git" })
+      local file = vim.fn.simplify(root .. "/.disable-format-on-save")
+      local format_on_save = vim.loop.fs_stat(file) == nil
+      vim.fn.setbufvar(args.buf, "is_format_active", format_on_save)
+    end
+  end,
+})

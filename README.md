@@ -8,6 +8,24 @@ Clone the repository
 
 Start Neovim and sync the plugins with `:Lazy restore`.
 
+## Features
+
+- Automatically format on save. Enabled by default, to default to disable add a
+  file `.disable-auto-format` to the root of your project.
+
+- All LSP features. LSP servers are automatically setup for the
+  languages I use.
+
+- Debug support. Enabled for the languages I use.
+
+- Treesitter syntax higlighting.
+
+- Improved Neotree sidebar toggling.
+
+- Customized catppuccin color scheme.
+
+- Customized gutter with git signs.
+
 ## Keybindings
 
 ### AI

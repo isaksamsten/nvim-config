@@ -121,7 +121,7 @@ return {
                 return ""
               end,
               cond = function()
-                return vim.b.format_on_save ~= false and require("helpers.format").format_on_save
+                return require("helpers.toggle").format_active
               end,
             },
             {
@@ -278,6 +278,7 @@ return {
             },
             click = "v:lua.ScSa",
           },
+          -- { text = { " " } },
           { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
           { text = { " " } },
           {
@@ -754,7 +755,7 @@ return {
               vertical({ prompt_title = "Search", default_text = vim.fn.expand("<cword>"), preview_title = "" })
             )
           end,
-          desc = "Search",
+          desc = "Search word under cursor",
         },
 
         {
@@ -764,20 +765,18 @@ return {
               vertical({ prompt_title = "Search buffer", preview_title = "" })
             )
           end,
-          desc = "Search",
+          desc = "Search in buffer",
         },
         {
           "<leader>Sb",
           function()
             require("telescope.builtin").git_branches(vertical({ prompt_title = "Branches", preview_title = "" }))
           end,
-          desc = "Search",
+          desc = "Search git branches",
         },
         {
           "<leader>x",
-          function()
-            require("telescope").resume()
-          end,
+          "<cmd>Telescope resume<cr>",
           desc = "Resume last search",
         },
 

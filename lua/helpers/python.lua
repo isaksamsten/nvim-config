@@ -37,18 +37,20 @@ function M.pyright_venv()
   if M.current_local_venv then
     return M.current_local_venv
   else
-    root = get_root({ ".venv" })
+    local root = get_root({ ".venv" })
     if root then
       local venv_path = vim.fn.simplify(root .. "/.venv")
       local exe = vim.fn.simplify(venv_path .. "/bin/python")
-      M.current_local_venv = {
-        exe = exe,
-        path = venv_path,
-        type = "venv",
-        name = ".venv",
-        version = python_version(exe),
-      }
-      return M.current_local_venv
+      if vim.loop.fs_stat(exe) then
+        M.current_local_venv = {
+          exe = exe,
+          path = venv_path,
+          type = "venv",
+          name = ".venv",
+          version = python_version(exe),
+        }
+        return M.current_local_venv
+      end
     end
   end
 

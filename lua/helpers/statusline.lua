@@ -83,7 +83,7 @@ basic.lsp_diagnos = {
 local function toggle(name, icon)
   local Toggle = require("helpers.toggle")
   return function()
-    local is_active = Toggle["is_" .. name .. "_active"]
+    local is_active = Toggle[name .. "_active"]()
     if is_active then
       return icon .. " "
     else

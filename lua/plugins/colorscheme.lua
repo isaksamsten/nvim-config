@@ -13,11 +13,11 @@ return {
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
         local function override(colors)
-          local fg_border = lighten(colors.base, 3)
-          local telescope_prompt = darken(colors.base, 3)
-          local telescope_results = darken(colors.base, 4)
-          local telescope_preview = darken(colors.base, 6)
-          local telescope_selection = darken(colors.base, 8)
+          local fg_border = colors.surface0 ---lighten(colors.base, 3)
+          local telescope_prompt = colors.mantle
+          local telescope_results = colors.mantle
+          local telescope_preview = colors.crust
+          local telescope_selection = colors.crust
           local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
           local faded_red = Color.mix(colors.base, colors.red, 0.1)
           local faded_purple = Color.mix(colors.base, colors.mauve, 0.1)

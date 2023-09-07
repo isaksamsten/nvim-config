@@ -3,19 +3,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local bufnr = args.buf
     local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-    -- TODO: remove null-ls
-    -- if client.name == "null-ls" then
-    --   require("config.keymaps").null_ls_on_attach(client, bufnr)
-    --   if client.server_capabilities.documentFormattingProvider then
-    --     vim.api.nvim_create_autocmd("BufWritePre", {
-    --       buffer = bufnr,
-    --       group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-    --       callback = function()
-    --         require("helpers.format").format(client.id, bufnr, false, true)
-    --       end,
-    --     })
-    --   end
-    -- else
     vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
     require("config.keymaps").lsp_on_attach(client, bufnr)
 
