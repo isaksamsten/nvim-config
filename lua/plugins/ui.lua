@@ -150,7 +150,7 @@ return {
   },
   {
     "folke/edgy.nvim",
-    enabled = false,
+    -- enabled = false,
     event = "VeryLazy",
     opts = {
       animate = {
@@ -333,7 +333,7 @@ return {
   "MunifTanjim/nui.nvim",
 
   {
-    "isaksamsten/bufdelete.nvim", -- For with confirm+less noice
+    "famiu/bufdelete.nvim", -- For with confirm+less noice
     keys = {
       {
         "<leader>q",

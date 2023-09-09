@@ -18,6 +18,7 @@ require("lazy").setup({
   ui = {
     border = require("config.icons").borders.outer.all,
   },
+  concurrency = 2,
   performance = {
     rtp = {
       -- disable some rtp plugins

@@ -126,11 +126,11 @@ return {
         },
         opts = function()
           return {
-            defaults = {
-              fallback = {
-                switchbuf = "newtab",
-              },
-            },
+            -- defaults = {
+            --   fallback = {
+            --     switchbuf = "newtab",
+            --   },
+            -- },
             languages = {
               adapters = {
                 python = {
@@ -156,7 +156,7 @@ return {
         end,
         config = function(_, opts)
           local dap = require("dap")
-          dap.defaults.fallback.switchbuf = opts.defaults.fallback.switchbuf
+          -- dap.defaults.fallback.switchbuf = opts.defaults.fallback.switchbuf
           for key, options in pairs(opts.languages) do
             for language, language_config in pairs(options) do
               dap[key][language] = language_config

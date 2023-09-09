@@ -77,7 +77,12 @@ return {
         cmd = "numpydoc-lint",
         stdin = true,
         stream = "stdout",
-        args = {},
+        args = {
+          "--stdin-filename",
+          function()
+            return vim.api.nvim_buf_get_name(0)
+          end,
+        },
         ignore_exitcode = true,
         parser = require("lint.parser").from_pattern(
           [[(%d+):(%d+):(%d+):(%d+): ((%u)%w+) (.*)]],
