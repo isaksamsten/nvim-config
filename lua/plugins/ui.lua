@@ -1,157 +1,36 @@
 return {
-
   {
-    "nvim-lualine/lualine.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    opts = function()
-      local icons = require("config.icons")
-      return {
-        options = {
-          theme = "auto",
-          globalstatus = true,
-          -- disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
-          component_separators = { left = "", right = "" },
-          section_separators = { right = "", left = "" },
-        },
-        sections = {
-          lualine_a = {
-            {
-              "mode",
-              fmt = function(mode)
-                return string.sub(mode, 0, 6)
-              end,
-            },
-          },
-          lualine_b = {
-            { "branch", icon = icons.git.branch, separator = "" },
-            {
-              "diff",
-              symbols = {
-                added = icons.git.add .. " ",
-                modified = icons.git.change .. " ",
-                removed = icons.git.delete .. " ",
-              },
-            },
-          },
-          lualine_c = {
-            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-            {
-              "filename",
-              path = 1,
-              shorting_target = 40,
-              fmt = function(filename)
-                -- Small attempt to workaround https://github.com/nvim-lualine/lualine.nvim/issues/872
-                if #filename > 80 then
-                  filename = vim.fs.basename(filename)
-                end
-
-                if #filename > 80 then
-                  return string.sub(filename, #filename - 80, #filename)
-                end
-                return filename
-              end,
-              symbols = {
-                modified = " " .. icons.file.modified .. " ",
-                readonly = " " .. icons.file.readonly .. " ",
-                unnamed = "",
-                newfile = " " .. icons.file.new .. " ",
-              },
-            },
-            {
-              function()
-                return require("nvim-navic").get_location()
-              end,
-              cond = function()
-                return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-              end,
-            },
-          },
-          lualine_x = {
-            {
-              function()
-                return require("noice").api.status.command.get()
-              end,
-              cond = function()
-                return package.loaded["noice"] and require("noice").api.status.command.has()
-              end,
-            },
-            -- stylua: ignore
-            {
-              function() return require("noice").api.status.mode.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-            },
-            -- stylua: ignore
-            {
-              function() return "  " .. require("dap").status() end,
-              cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
-              color = "DiagnosticSignWarn",
-            },
-          },
-          lualine_y = {
-            {
-              "diagnostics",
-              symbols = {
-                error = icons.diagnostics.error,
-                warn = icons.diagnostics.warn,
-                info = icons.diagnostics.info,
-                hint = icons.diagnostics.hint,
-              },
-              cond = function()
-                return require("helpers.toggle").is_diagnostics_active
-              end,
-            },
-            -- {
-            --   function()
-            --     local python = require("helpers.python").python()
-            --     if python then
-            --       return string.format("%s [%s]", python.name, python.version)
-            --     else
-            --       return "[No interpreter]"
-            --     end
-            --   end,
-            --   cond = function()
-            --     return vim.bo.ft == "python"
-            --   end,
-            -- },
-          },
-          lualine_z = {
-            {
-              function()
-                return ""
-              end,
-              cond = function()
-                return require("helpers.toggle").format_active
-              end,
-            },
-            {
-              function()
-                return ""
-              end,
-              cond = function()
-                return require("helpers.toggle").is_conceal_active
-              end,
-            },
-            {
-              function()
-                return require("config.icons").ui.remote
-              end,
-              cond = require("helpers").is_remote,
-            },
-          },
-        },
-        extensions = { "nvim-tree" },
-      }
-    end,
-    config = function(_, opts)
-      local lualine = require("lualine")
-      lualine.setup(opts)
-    end,
+    "folke/trouble.nvim",
+    cmd = "Trouble",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      win_config = { border = require("config.icons").borders.outer.all },
+      auto_preview = false,
+      group = false, -- group results by file
+      padding = false,
+      mode = "document_diagnostics",
+      use_diagnostic_signs = false,
+    },
   },
   {
     "folke/edgy.nvim",
-    -- enabled = false,
     event = "VeryLazy",
+    keys = {
+      {
+        "<leader>l",
+        function()
+          require("edgy").toggle("right")
+        end,
+        desc = "Toggle status",
+      },
+      {
+        "<leader>j",
+        function()
+          require("edgy").toggle("bottom")
+        end,
+        desc = "Toggle panel",
+      },
+    },
     opts = {
       animate = {
         enabled = false,
@@ -159,20 +38,14 @@ return {
       icons = { open = "", closed = "" },
       wo = { winbar = false },
       bottom = {
-        -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
-        {
-          title = "Terminal",
-          ft = "toggleterm",
-          size = { height = 0.3 },
-          filter = function(buf, win)
-            return vim.api.nvim_win_get_config(win).relative == ""
-          end,
-        },
-        { title = "Git status", ft = "fugitive", size = { height = 0.3 } },
-        { title = "Test output", ft = "neotest-output-panel", size = { height = 0.3 } },
-        { ft = "qf", title = "QuickFix" },
+        { ft = "qf", title = "Quickfix", size = { height = 0.3 } }, -- for some reason this has to go first
+        { ft = "Trouble", title = "Diagnostics", size = { height = 0.3 }, pinned = true, open = "Trouble" },
+        { ft = "fugitive", title = "Git status", size = { height = 0.3 } },
+        { ft = "dap-repl", title = "Debug console", size = { height = 0.3 } },
+        { ft = "neotest-output-panel", title = "Test output", size = { height = 0.3 } },
         {
           ft = "help",
+          title = "Help",
           size = { height = 20 },
           filter = function(buf)
             return vim.bo[buf].buftype == "help"
@@ -180,14 +53,22 @@ return {
         },
       },
       right = {
+        { ft = "dapui_scopes", "Debug scopes", size = { width = 0.3 } },
         {
-          title = "Testing",
+          title = "Test summary",
           ft = "neotest-summary",
-          size = { height = 0.5 },
+          size = { height = 0.5, width = 0.3 },
+          open = function()
+            require("neotest").summary.open()
+          end,
+          pinned = true,
         },
         {
           title = "Build tasks",
           ft = "OverseerList",
+          size = { height = 0.5, width = 0.3 },
+          open = "OverseerOpen right",
+          pinned = true,
         },
       },
       left = {
@@ -197,7 +78,9 @@ return {
           filter = function(buf)
             return vim.b[buf].neo_tree_source == "filesystem"
           end,
-          size = { height = 0.5 },
+          size = { height = 0.5, width = 40 },
+          pinned = true,
+          open = "Neotree focus",
         },
         {
           title = "Symbols",
@@ -205,11 +88,11 @@ return {
           filter = function(buf)
             return vim.b[buf].neo_tree_source == "document_symbols"
           end,
+          size = { height = 0.5, width = 40 },
           -- pinned = true,
           -- open = "Neotree position=right document_symbols",
         },
-        -- any other neo-tree windows
-        "neo-tree",
+        { ft = "neo-tree", size = { height = 0.5, width = 40 } },
       },
     },
   },
@@ -357,15 +240,15 @@ return {
         end,
         desc = "Focus explorer",
       },
+      -- {
+      --   "<leader>Es",
+      --   function()
+      --     require("helpers.toggle").focus_neotree("document_symbols")
+      --   end,
+      --   desc = "Focus symbols",
+      -- },
       {
-        "<leader>os",
-        function()
-          require("helpers.toggle").focus_neotree("document_symbols")
-        end,
-        desc = "Focus symbols",
-      },
-      {
-        "<leader>og",
+        "<leader>gh",
         function()
           require("helpers.toggle").focus_neotree("git_status")
         end,
@@ -613,14 +496,16 @@ return {
       wk.register({
         mode = { "n", "v" },
         ["g"] = { name = "Go to" },
-        ["gA"] = { name = "AI" },
         ["]"] = { name = "Next" },
         ["["] = { name = "Previous" },
         ["<leader>g"] = { name = "Git" },
         ["<leader>t"] = { name = "Test" },
+        ["<leader>T"] = { name = "Tabs" },
         ["<leader>r"] = { name = "Run" },
-        ["<leader>o"] = { name = "Open" },
         ["<leader>u"] = { name = "Toggle" },
+        ["<leader>D"] = { name = "Debug" },
+        ["<leader>S"] = { name = "Search" },
+        ["<leader>a"] = { name = "Activate" },
         ["\\"] = { name = "Mark" },
       })
     end,
@@ -775,7 +660,7 @@ return {
           desc = "Search git branches",
         },
         {
-          "<leader>x",
+          "<leader>'",
           "<cmd>Telescope resume<cr>",
           desc = "Resume last search",
         },

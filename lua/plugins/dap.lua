@@ -12,14 +12,14 @@ return {
           desc = "Open debug interface",
         },
         {
-          "<leader>ods",
+          "<leader>Ds",
           function()
             require("dapui").toggle({ layout = 1 })
           end,
           desc = "Open debug scopes.",
         },
         {
-          "<leader>odc",
+          "<leader>Dc",
           function()
             require("dapui").toggle({ layout = 2 })
           end,
@@ -162,6 +162,37 @@ return {
               dap[key][language] = language_config
             end
           end
+          local debug = require("config.icons").debug
+          vim.fn.sign_define("DapBreakpoint", {
+            text = debug.breakpoint,
+            texthl = "DebugBreakpoint",
+            -- linehl = "DebugBreakpointLine",
+            numhl = "DebugBreakpointLine",
+          })
+          vim.fn.sign_define("DapBreakpointCondition", {
+            text = debug.condition,
+            texthl = "DebugBreakpoint",
+            -- linehl = "DebugBreakpointLine",
+            numhl = "DebugBreakpointLine",
+          })
+          vim.fn.sign_define("DapStopped", {
+            text = debug.stopped,
+            texthl = "DebugStopped",
+            -- linehl = "DebugStoppedLine",
+            numhl = "DebugStoppedLine",
+          })
+          vim.fn.sign_define("DapBreakpointRejected", {
+            text = debug.rejected,
+            texthl = "DebugLogPoint",
+            -- linehl = "DebugLogPointLine",
+            numhl = "DebugLogPointLine",
+          })
+          vim.fn.sign_define("DapLogPoint", {
+            text = debug.log,
+            texthl = "DebugLogPoint",
+            -- linehl = "DebugLogPointLine",
+            numhl = "DebugLogPointLine",
+          })
         end,
       },
     },

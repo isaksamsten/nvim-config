@@ -4,6 +4,9 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = diagnostics.warn, texthl = "Di
 vim.fn.sign_define("DiagnosticSignInfo", { text = diagnostics.info, texthl = "DiagnosticSignInfo", numhl = "" })
 vim.fn.sign_define("DiagnosticSignHint", { text = diagnostics.hint, texthl = "DiagnosticSignHint", numhl = "" })
 
+-- HACK: OK, so to get statuscol to work as expected this sign i suppose needs
+-- to exist before it is loaded. But to get nvim-dap to register it it has to
+-- be loaded after, so my solution is to load it both before and after...
 local debug = require("config.icons").debug
 vim.fn.sign_define("DapBreakpoint", {
   text = debug.breakpoint,

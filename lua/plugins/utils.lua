@@ -4,9 +4,9 @@ return {
     "alexghergh/nvim-tmux-navigation",
     keys = {
       { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
-      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>" },
-      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>" },
-      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>" },
+      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", desc = "Up window" },
+      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", desc = "Down window" },
+      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", desc = "Right window" },
     },
     lazy = false,
     opts = {
@@ -37,50 +37,5 @@ return {
 
       vim.api.nvim_create_autocmd("TextYankPost", { callback = copy })
     end,
-  },
-
-  {
-    "ThePrimeagen/harpoon",
-    keys = {
-      {
-        "\\M",
-        function()
-          require("harpoon.ui").toggle_quick_menu()
-        end,
-        desc = "Show file marks",
-      },
-      {
-        "\\m",
-        function()
-          require("harpoon.mark").add_file()
-        end,
-        desc = "Add file mark",
-      },
-      {
-        "[§",
-        function()
-          require("harpoon.ui").nav_prev()
-        end,
-        desc = "Previous file mark",
-      },
-      {
-        "]§",
-        function()
-          require("harpoon.ui").nav_next()
-        end,
-        desc = "Next file mark",
-      },
-      {
-        "§",
-        function()
-          if vim.v.count == 0 then
-            require("harpoon.ui").nav_file(1)
-          else
-            require("harpoon.ui").nav_file(vim.v.count)
-          end
-        end,
-        desc = "Go to file mark",
-      },
-    },
   },
 }

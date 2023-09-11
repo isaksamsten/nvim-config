@@ -348,53 +348,53 @@ return {
     },
     keys = {
       {
-        "<leader>rt",
+        "<leader>tr",
         function()
           require("neotest").run.run()
         end,
         desc = "Run test",
       },
       {
-        "<leader>rT",
+        "<leader>tR",
         function()
           require("neotest").run.run(vim.fn.expand("%"))
         end,
         desc = "Run all tests",
       },
       {
-        "<leader>rd",
+        "<leader>td",
         function()
           require("neotest").run.run({ strategy = "dap" })
         end,
         desc = "Debug test",
       },
-      -- {
-      --   "<leader>ts",
-      --   function()
-      --     require("neotest").run.stop()
-      --   end,
-      --   desc = "Stop test",
-      -- },
       {
-        "<leader>ot",
+        "<leader>ts",
+        function()
+          require("neotest").run.stop()
+        end,
+        desc = "Stop test",
+      },
+      {
+        "<leader>ts",
         function()
           require("neotest").summary.toggle()
         end,
         desc = "Test summary",
       },
       {
-        "<leader>oT",
+        "<leader>to",
         function()
           require("neotest").output_panel.toggle()
         end,
         desc = "Test outputs",
       },
       {
-        "<F16>", -- Shift-<F4>
+        "<leader>tp", -- Shift-<F4>
         function()
           require("neotest").output.open({ enter = true })
         end,
-        desc = "Reveal test",
+        desc = "Peek test",
       },
     },
     opts = function()

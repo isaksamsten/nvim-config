@@ -13,15 +13,15 @@ return {
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
         local function override(colors)
+          local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
+          local faded_red = Color.mix(colors.base, colors.red, 0.1)
+          local faded_purple = Color.mix(colors.base, colors.mauve, 0.1)
+          local surface00 = colors.surface0 --Color.mix(colors.mantle, colors.text, 0.05)
           local fg_border = colors.surface0 ---lighten(colors.base, 3)
           local telescope_prompt = colors.mantle
           local telescope_results = colors.mantle
           local telescope_preview = colors.crust
-          local telescope_selection = colors.crust
-          local faded_yellow = Color.mix(colors.base, colors.yellow, 0.1)
-          local faded_red = Color.mix(colors.base, colors.red, 0.1)
-          local faded_purple = Color.mix(colors.base, colors.mauve, 0.1)
-          local neotree_cursorline_bg = Color.mix(colors.mantle, colors.text, 0.01)
+          local telescope_selection = surface00
 
           local gray = colors.subtext0
           local fg = colors.text
@@ -69,7 +69,7 @@ return {
             TelescopeSelection = { bg = telescope_selection },
             TelescopePreviewNormal = { bg = telescope_preview },
             TelescopePreviewBorder = { fg = telescope_preview, bg = telescope_preview },
-            NeoTreeCursorLine = { bg = neotree_cursorline_bg, bold = true },
+            NeoTreeCursorLine = { bg = surface00, bold = true },
             NeoTreeTabActive = { bg = colors.mantle, bold = true },
             NeoTreeTabSeparatorActive = { fg = colors.mantle, bg = colors.mantle },
             NeoTreeTabInactive = { bg = colors.mantle, fg = colors.overlay0 },
@@ -78,7 +78,7 @@ return {
             NeoTreeNormalNC = { fg = colors.text, bg = colors.mantle },
             ["@string.documentation.python"] = { fg = colors.green, italic = true },
 
-            LineNr = { fg = colors.overlay0 },
+            LineNr = { fg = colors.surface1 },
             CursorLineNr = { fg = colors.lavender, bold = true },
             -- Cmp
             CmpItemAbbrMatch = { fg = blue, bold = true },
@@ -88,7 +88,7 @@ return {
 
             -- Neotest
             NeotestAdapterName = { fg = purple, bold = true },
-            NeotestFocused = { bold = true },
+            NeotestFocused = { bg = surface00, bold = true },
             NeotestNamespace = { fg = blue, bold = true },
 
             -- Neotree
@@ -102,6 +102,7 @@ return {
 
             -- DAP UI
             DapUIBreakpointsCurrentLine = { fg = yellow, bold = true },
+            DapUINormal = { link = "NeoTreeNormal" },
 
             DiagnosticUnderlineError = { sp = red, undercurl = true },
             DiagnosticUnderlineWarn = { sp = yellow, undercurl = true },
@@ -134,7 +135,7 @@ return {
             PopupNormal = { bg = float_bg },
             PopupBorder = { bg = float_bg, fg = fg_border },
             Pmenu = { link = "PopupNormal" },
-            PmenuSel = { bold = true, bg = "none" },
+            PmenuSel = { bold = false, bg = surface00 },
             PmenuBorder = { link = "PopupBorder" },
             PmenuDocBorder = { bg = float_bg, fg = fg_border },
             NormalFloat = { bg = float_bg },
@@ -160,6 +161,8 @@ return {
             TabLineFill = { bg = colors.base, fg = gray },
             TabLine = { bg = colors.base, fg = gray },
             TabLineSel = { bg = colors.surface0, fg = fg },
+
+            Visual = { bg = colors.surface0, bold = false },
 
             NotifyERRORBorder = { link = "PopupBorder" },
             NotifyWARNBorder = { link = "PopupBorder" },
@@ -228,6 +231,7 @@ return {
           telescope = true,
           notify = false,
           mini = true,
+          flash = true,
           markdown = false,
           headlines = true,
           native_lsp = {
@@ -265,12 +269,12 @@ return {
 
       return {
         styles = {
-          types = "bold",
-          methods = "bold",
+          types = "NONE",
+          methods = "NONE",
           numbers = "NONE",
           strings = "NONE",
           comments = "italic",
-          keywords = "bold",
+          keywords = "NONE",
           constants = "NONE",
           functions = "NONE",
           operators = "NONE",

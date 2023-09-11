@@ -70,3 +70,9 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
     end
   end,
 })
+
+
+vim.cmd([[
+autocmd InsertEnter * :set norelativenumber
+autocmd InsertLeave * :set relativenumber 
+]])

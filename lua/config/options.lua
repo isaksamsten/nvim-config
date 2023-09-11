@@ -14,7 +14,7 @@ opt.clipboard = "unnamedplus" -- sync with system clipboard
 opt.cmdheight = 1
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true
-opt.cursorlineopt = "number"
+-- opt.cursorlineopt = "number"
 -- opt.conceallevel = 3 -- Hide * markup for bold and italic
 opt.confirm = true -- confirm to save changes before exiting modified buffer
 opt.expandtab = true -- Use spaces instead of tabs
@@ -56,10 +56,10 @@ opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- minimum window width
 opt.wrap = false -- Disable line wrap
 opt.linebreak = true
-if vim.fn.has("nvim-0.9.0") == 1 then
-  opt.splitkeep = "screen"
-  opt.shortmess:append({ C = true })
-end
+-- if vim.fn.has("nvim-0.9.0") == 1 then
+opt.splitkeep = "screen"
+opt.shortmess:append({ C = true })
+-- end
 
 -- fix markdown indentation settings
 vim.g.markdown_recommended_style = 0

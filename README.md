@@ -28,14 +28,6 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ## Keybindings
 
-### AI
-
-| Mode    | Keymap | Action                   |
-| ------- | ------ | ------------------------ |
-| `n`,`v` | `M-a`  | Prompt for AI            |
-| `i`     | `M-a`  | Complete using AI        |
-| `v`     | `zAc`  | Correct grammar using AI |
-
 ### Completion
 
 | Keymap        | Action                             |
@@ -59,11 +51,11 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 | Keymap       | Action             |
 | ------------ | ------------------ |
-| `<leader>rt` | Run current test   |
-| `<leader>rT` | Run current tests  |
-| `<leader>rd` | Debug current test |
-| `<leader>ot` | Open summary       |
-| `<leader>oT` | Open output        |
+| `<leader>tr` | Run current test   |
+| `<leader>tR` | Run current tests  |
+| `<leader>td` | Debug current test |
+| `<leader>ts` | Open summary       |
+| `<leader>to` | Open output        |
 | `Shift-F4`   | Reveal output      |
 
 ### Debugging
@@ -108,16 +100,13 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ### Sidebar
 
-| Keymap       | Action                         |
-| ------------ | ------------------------------ |
-| `<leader>e`  | Toggle focus explorer          |
-| `<leader>og` | Toggle focus git               |
-| `<leader>os` | Toggle focus symbols           |
-| `<leader>b`  | Toggle left sidebar visibility |
-| `<leader>od` | Toggle workspace diagnostic    |
-| `<leader>oD` | Toggle document diagnostics    |
-| `<leader>oq` | Toggle quickfix list           |
-| `Ctrl-\`     | Toggle terminal                |
+| Keymap      | Action                         |
+| ----------- | ------------------------------ |
+| `<leader>e` | Toggle focus explorer          |
+| `<leader>b` | Toggle left sidebar visibility |
+| `<leader>P` | Toggle focus symbols           |
+| `<leader>l` | Toggle (left) status           |
+| `<leader>j` | Toggle (bottom) panel          |
 
 ### Git
 
@@ -141,23 +130,30 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 ### Buffers, windows and tabs
 
-| Keymap             | Action         |
-| ------------------ | -------------- |
-| `<leader>q`        | Close buffer   |
-| `<Left>`           | Left window    |
-| `<Down>`           | South window   |
-| `<Up>`             | North window   |
-| `<Right>`          | Right window   |
-| `<leader><leader>` | Switch buffer  |
-| `<leader>f`        | Find file      |
-| `<leader>s`        | Search files   |
-| `<leader>d`        | Search symbols |
-| `[t`               | Previous tab   |
-| `]t`               | Next tab       |
-| `<leader>tc`       | Close tab      |
-| `<leader>tn`       | New tab        |
+| Keymap             | Action                                      |
+| ------------------ | ------------------------------------------- |
+| `<leader>q`        | Close buffer                                |
+| `<C-h>`            | Left window                                 |
+| `<C-j>`            | South window                                |
+| `<C-k>`            | North window                                |
+| `<C-l>`            | Right window                                |
+| `<leader><leader>` | Switch buffer                               |
+| `<leader>f`        | Find file                                   |
+| `<leader>s`        | Search files                                |
+| `<leader>Sw`       | Search files for word under cursor branches |
+| `<leader>Ss`       | Search buffer                               |
+| `<leader>Sb`       | Search git branches                         |
+| `<leader>p`        | Search symbols                              |
+| `[t`               | Previous tab                                |
+| `]t`               | Next tab                                    |
+| `<M-w>`            | Close tab                                   |
+| `<M-t>`            | New tab                                     |
+| `<M-1>`            | Go to tab #1                                |
+| `<M-2>`            | Go to tab #2                                |
+| `<M-3>`            | Go to tab #3                                |
+| `<M-4>`            | Go to tab #4                                |
 
-Default Keybindings as set by `mini.ai`, `mini.move` and `leap`.
+Default Keybindings as set by `mini.ai`, `mini.move` and `flash`.
 
 ## Screenshots
 
