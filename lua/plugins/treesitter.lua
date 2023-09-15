@@ -1,4 +1,6 @@
 return {
+  { "lambdalisue/vim-cython-syntax", lazy = false },
+  -- { "anntzer/vim-cython", lazy = false },
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",

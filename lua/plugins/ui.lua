@@ -38,7 +38,7 @@ return {
       icons = { open = "", closed = "" },
       wo = { winbar = false },
       bottom = {
-        { ft = "qf", title = "Quickfix", size = { height = 0.3 }, pinned=true, open = "copen" }, -- for some reason this has to go first
+        { ft = "qf", title = "Quickfix", size = { height = 0.3 }, pinned = true, open = "copen" }, -- for some reason this has to go first
         -- {
         --   ft = "Trouble",
         --   title = "Diagnostics",
@@ -219,7 +219,25 @@ return {
     opts = {},
   },
 
-  "nvim-tree/nvim-web-devicons",
+  {
+    "nvim-tree/nvim-web-devicons",
+    opts = {
+      override = {
+        ["pyx"] = {
+          icon = "",
+          color = "#C78851",
+          cterm_color = "136",
+          name = "PYX",
+        },
+        ["pxd"] = {
+          icon = "",
+          color = "#52778B",
+          cterm_color = "110",
+          name = "PXD",
+        },
+      },
+    },
+  },
   "MunifTanjim/nui.nvim",
 
   {
