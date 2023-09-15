@@ -76,6 +76,9 @@ return {
             NeoTreeTabSeparatorInactive = { fg = colors.mantle, bg = colors.mantle },
             NeoTreeNormal = { fg = colors.text, bg = colors.mantle },
             NeoTreeNormalNC = { fg = colors.text, bg = colors.mantle },
+
+            TroubleNormal = { link = "NeoTreeNormal" },
+
             ["@string.documentation.python"] = { fg = colors.green, italic = true },
 
             LineNr = { fg = colors.surface1 },
@@ -158,7 +161,7 @@ return {
             SignColumn = { fg = colors.surface0 },
 
             TabLineHead = { bg = blue, fg = colors.base },
-            TabLineFill = { bg = colors.base, fg = gray },
+            TabLineFill = { bg = colors.mantle, fg = gray },
             TabLine = { bg = colors.base, fg = gray },
             TabLineSel = { bg = colors.surface0, fg = fg },
 
@@ -190,7 +193,7 @@ return {
       end
 
       return {
-        flavour = "macchiato", -- latte, frappe, macchiato, mocha
+        flavour = "frappe", -- latte, frappe, macchiato, mocha
         background = { -- :h background
           light = "latte",
           dark = "macchiato",

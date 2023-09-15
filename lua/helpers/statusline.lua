@@ -130,11 +130,11 @@ basic.line_col_right = {
     if width > large_width then
       return {
         { line_col },
-        { spaces },
-        { b_components.file_encoding() },
-        { " " },
-        { line_format() },
-        { " " },
+        -- { spaces },
+        -- { b_components.file_encoding() },
+        -- { " " },
+        -- { line_format() },
+        -- { " " },
       }
     elseif width < small_width then
       return {}

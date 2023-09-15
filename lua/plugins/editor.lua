@@ -19,6 +19,9 @@ return { -- TODO
         char = {
           enabled = false,
         },
+        search = {
+          enabled = false
+        },
       },
     },
     keys = {

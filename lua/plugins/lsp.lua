@@ -208,9 +208,24 @@ return {
       servers = {
         bashls = {},
         clangd = {},
-        -- erlangls = {},
+        erlangls = { skip_install = true },
         esbonio = {},
         jdtls = { skip_setup = true },
+        -- pylsp = {
+        --   settings = {
+        --     pylsp = {
+        --       plugins = {
+        --         -- rope_completion = { enabled = false },
+        --         -- rope_autoimport = { enabled = true },
+        --         autopep8 = { enabled = false },
+        --         mccabe = { enabled = false },
+        --         pycodestyle = { enabled = false },
+        --         yapf = { enabled = false },
+        --         pyflakes = { enabled = false },
+        --         jedi_completion = { enabled = true },
+        --       },
+        --     },
+        --   },
         jedi_language_server = {
           capabilities = {
             textDocument = {
@@ -277,7 +292,9 @@ return {
       local ensure_installed = {}
       local setup_servers = {}
       for server, config in pairs(opts.servers) do
-        table.insert(ensure_installed, server)
+        if config.skip_install ~= true then
+          table.insert(ensure_installed, server)
+        end
         if config.skip_setup ~= true then
           table.insert(setup_servers, server)
         end

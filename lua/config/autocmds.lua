@@ -71,7 +71,14 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   end,
 })
 
-
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function(args)
+    if require("helpers.toggle").format_active() then
+      require("conform").format({ bufnr = args.buf })
+    end
+  end,
+})
 vim.cmd([[
 autocmd InsertEnter * :set norelativenumber
 autocmd InsertLeave * :set relativenumber 

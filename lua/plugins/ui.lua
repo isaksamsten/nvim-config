@@ -1,17 +1,17 @@
 return {
-  {
-    "folke/trouble.nvim",
-    cmd = "Trouble",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      win_config = { border = require("config.icons").borders.outer.all },
-      auto_preview = false,
-      group = false, -- group results by file
-      padding = false,
-      mode = "document_diagnostics",
-      use_diagnostic_signs = false,
-    },
-  },
+  -- {
+  --   "folke/trouble.nvim",
+  --   cmd = "Trouble",
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   opts = {
+  --     win_config = { border = require("config.icons").borders.outer.all },
+  --     auto_preview = false,
+  --     group = false, -- group results by file
+  --     padding = false,
+  --     mode = "document_diagnostics",
+  --     use_diagnostic_signs = false,
+  --   },
+  -- },
   {
     "folke/edgy.nvim",
     event = "VeryLazy",
@@ -38,8 +38,14 @@ return {
       icons = { open = "", closed = "" },
       wo = { winbar = false },
       bottom = {
-        { ft = "qf", title = "Quickfix", size = { height = 0.3 } }, -- for some reason this has to go first
-        { ft = "Trouble", title = "Diagnostics", size = { height = 0.3 }, pinned = true, open = "Trouble" },
+        { ft = "qf", title = "Quickfix", size = { height = 0.3 }, pinned=true, open = "copen" }, -- for some reason this has to go first
+        -- {
+        --   ft = "Trouble",
+        --   title = "Diagnostics",
+        --   size = { height = 0.3 },
+        --   pinned = true,
+        --   open = "Trouble document_diagnostics",
+        -- },
         { ft = "fugitive", title = "Git status", size = { height = 0.3 } },
         { ft = "dap-repl", title = "Debug console", size = { height = 0.3 } },
         { ft = "neotest-output-panel", title = "Test output", size = { height = 0.3 } },
@@ -179,6 +185,7 @@ return {
         ft_ignore = {
           "help",
           "vim",
+          "fugitive",
           "alpha",
           "dashboard",
           "neo-tree",
@@ -391,7 +398,152 @@ return {
       }
     end,
   },
+  {
+    "nvim-lualine/lualine.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    opts = function()
+      local icons = require("config.icons")
+      return {
+        options = {
+          theme = "auto",
+          -- globalstatus = true,
+          disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
+          component_separators = { left = "", right = "" },
+          section_separators = { right = "", left = "" },
+        },
+        sections = {
+          lualine_a = {
+            {
+              "mode",
+              fmt = function(mode)
+                return string.sub(mode, 0, 6)
+              end,
+            },
+          },
+          lualine_b = {
+            { "branch", icon = icons.git.branch, separator = "" },
+            {
+              "diff",
+              symbols = {
+                added = icons.git.add .. " ",
+                modified = icons.git.change .. " ",
+                removed = icons.git.delete .. " ",
+              },
+            },
+          },
+          lualine_c = {
+            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+            {
+              "filename",
+              path = 1,
+              shorting_target = 40,
+              fmt = function(filename)
+                -- Small attempt to workaround https://github.com/nvim-lualine/lualine.nvim/issues/872
+                if #filename > 80 then
+                  filename = vim.fs.basename(filename)
+                end
 
+                if #filename > 80 then
+                  return string.sub(filename, #filename - 80, #filename)
+                end
+                return filename
+              end,
+              symbols = {
+                modified = " " .. icons.file.modified .. " ",
+                readonly = " " .. icons.file.readonly .. " ",
+                unnamed = "",
+                newfile = " " .. icons.file.new .. " ",
+              },
+            },
+            {
+              function()
+                return require("nvim-navic").get_location()
+              end,
+              cond = function()
+                return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+              end,
+            },
+          },
+          lualine_x = {
+            -- {
+            --   function()
+            --     return require("config.icons").debug.debug .. require("dap").status()
+            --   end,
+            --   cond = function()
+            --     return package.loaded["dap"] and require("dap").status() ~= ""
+            --   end,
+            -- },
+            {
+              function()
+                return require("config.icons").debug.debug .. " " .. require("dap").status()
+              end,
+              cond = function()
+                return package.loaded["dap"] and require("dap").status() ~= ""
+              end,
+              -- color = "DiagnosticSignWarn",
+            },
+          },
+          lualine_y = {
+            {
+              "diagnostics",
+              symbols = {
+                error = icons.diagnostics.error,
+                warn = icons.diagnostics.warn,
+                info = icons.diagnostics.info,
+                hint = icons.diagnostics.hint,
+              },
+              cond = function()
+                return require("helpers.toggle").is_diagnostics_active
+              end,
+            },
+            -- {
+            --   function()
+            --     local python = require("helpers.python").python()
+            --     if python then
+            --       return string.format("%s [%s]", python.name, python.version)
+            --     else
+            --       return "[No interpreter]"
+            --     end
+            --   end,
+            --   cond = function()
+            --     return vim.bo.ft == "python"
+            --   end,
+            -- },
+          },
+          lualine_z = {
+            {
+              function()
+                return ""
+              end,
+              cond = function()
+                return require("helpers.toggle").format_active()
+              end,
+            },
+            {
+              function()
+                return ""
+              end,
+              cond = function()
+                return require("helpers.toggle").conceal_active()
+              end,
+            },
+            {
+              function()
+                return require("config.icons").ui.remote
+              end,
+              cond = require("helpers").is_remote,
+            },
+          },
+        },
+        extensions = { "nvim-tree" },
+      }
+    end,
+    config = function(_, opts)
+      local lualine = require("lualine")
+      lualine.setup(opts)
+    end,
+  },
   {
     "windwp/windline.nvim",
     event = "VeryLazy",

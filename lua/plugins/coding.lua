@@ -1,8 +1,75 @@
 vim.g.ai_no_mappings = true
 return {
-
+  {
+    "stevearc/conform.nvim",
+    opts = function()
+      local ruff = {
+        meta = {
+          url = "https://beta.ruff.rs/docs/",
+          description = "An extremely fast Python linter, written in Rust.",
+        },
+        command = "ruff",
+        args = {
+          "--fix",
+          "-e",
+          "-n",
+          "--stdin-filename",
+          "$FILENAME",
+          "-",
+        },
+        stdin = true,
+        cwd = require("conform.util").root_file({
+          "pyproject.toml",
+        }),
+      }
+      local latexindent = {
+        meta = {
+          url = "https://github.com/cmhughes/latexindent.pl",
+          description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
+        },
+        command = "latexindent",
+        args = { "-" },
+        stdin = true,
+      }
+      local erlfmt = {
+        meta = {
+          url = "https://github.com/WhatsApp/erlfmt",
+          description = "An opinionated Erlang code formatter.",
+        },
+        command = "erlfmt",
+        args = { "-" },
+        stdin = true,
+      }
+      local java_google_format = {
+        meta = {
+          url = "https://github.com/google/google-java-format",
+          description = "google-java-format is a program that reformats Java source code to comply with Google Java Style.",
+        },
+        command = "google-java-format",
+        args = { "-" },
+        stdin = true,
+      }
+      return {
+        formatters_by_ft = {
+          python = { "ruff", "black" },
+          tex = { "latexindent" },
+          lua = { "stylua" },
+          erlang = { "erlfmt" },
+          java = { "java_google_format" },
+          markdown = { "prettier" },
+        },
+        formatters = {
+          ruff = ruff,
+          latexindent = latexindent,
+          erlfmt = erlfmt,
+          java_google_format = java_google_format,
+        },
+      }
+    end,
+  },
   {
     "mhartington/formatter.nvim",
+    enabled = false,
     event = { "BufReadPre", "BufNewFile" },
     keys = {
       { "<leader>F", "<cmd>Format<cr>", "Format buffer" },
