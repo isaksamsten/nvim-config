@@ -21,7 +21,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         group = "lsp_document_highlight",
         desc = "Clear All the References",
       })
-      -- end
     end
   end,
 })
@@ -117,6 +116,7 @@ return {
       "barreiroleo/ltex_extra.nvim",
       {
         "ray-x/lsp_signature.nvim",
+        -- enabled = false,
         opts = function()
           local icons = require("config.icons")
           return {
@@ -134,6 +134,7 @@ return {
 
       {
         "isaksamsten/better-virtual-text.nvim",
+        enabled = false,
         opts = {
           highlights = {
             BetterVirtualTextError = { link = "NonText" },

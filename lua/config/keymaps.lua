@@ -87,7 +87,6 @@ end, { desc = "Save virtual environment" })
 -- Toggle
 local Toggle = require("helpers.toggle")
 vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
-vim.keymap.set("n", "<leader>uc", Toggle.conceal, { desc = "Toggle conceal" })
 
 vim.keymap.set("n", "g,", function()
   vim.diagnostic.open_float(nil, { scope = "line" })

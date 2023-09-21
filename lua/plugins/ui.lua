@@ -221,8 +221,21 @@ return {
 
   {
     "nvim-tree/nvim-web-devicons",
+    lazy = false,
     opts = {
       override = {
+        ["ipynb"] = {
+          icon = "",
+          color = "#519aba",
+          cterm_color = "231",
+          name = "ReStructuredText",
+        },
+        ["rst"] = {
+          icon = "",
+          color = "#519aba",
+          cterm_color = "231",
+          name = "ReStructuredText",
+        },
         ["pyx"] = {
           icon = "",
           color = "#C78851",
@@ -536,14 +549,6 @@ return {
               end,
               cond = function()
                 return require("helpers.toggle").format_active()
-              end,
-            },
-            {
-              function()
-                return ""
-              end,
-              cond = function()
-                return require("helpers.toggle").conceal_active()
               end,
             },
             {

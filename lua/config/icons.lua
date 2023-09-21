@@ -10,7 +10,6 @@ local icons = {
     git = " ",
     remote = " ",
     auto_format = "",
-    conceal = "",
   },
   debug = {
     debug = "",

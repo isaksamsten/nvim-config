@@ -20,7 +20,7 @@ return { -- TODO
           enabled = false,
         },
         search = {
-          enabled = false
+          enabled = false,
         },
       },
     },
@@ -86,6 +86,7 @@ return { -- TODO
   {
     "echasnovski/mini.hipatterns",
     version = false,
+    enabled = false,
     event = { "BufReadPre", "BufNewFile" },
     opts = function()
       local function in_comment(marker)

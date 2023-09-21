@@ -1,17 +1,4 @@
 local Toggle = {}
-Toggle.is_conceal_active = vim.g.conceallevel == 3
-Toggle.conceal = function()
-  if Toggle.is_conceal_active then
-    vim.opt_local["conceallevel"] = 0
-  else
-    vim.opt_local["conceallevel"] = 3
-  end
-  Toggle.is_conceal_active = not Toggle.is_conceal_active
-end
-
-Toggle.conceal_active = function()
-  return Toggle.is_conceal_active
-end
 
 Toggle.is_format_active = true
 Toggle.format = function()

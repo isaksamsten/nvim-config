@@ -161,8 +161,8 @@ return {
             SignColumn = { fg = colors.surface0 },
 
             TabLineHead = { bg = blue, fg = colors.base },
-            TabLineFill = { bg = colors.mantle, fg = gray },
             TabLine = { bg = colors.base, fg = gray },
+            TabLineFill = { bg = colors.mantle, fg = gray },
             TabLineSel = { bg = colors.surface0, fg = fg },
 
             Visual = { bg = colors.surface0, bold = false },
@@ -196,7 +196,7 @@ return {
         flavour = "frappe", -- latte, frappe, macchiato, mocha
         background = { -- :h background
           light = "latte",
-          dark = "macchiato",
+          dark = "frappe",
         },
         transparent_background = false,
         dim_inactive = {

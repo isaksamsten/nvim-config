@@ -79,6 +79,27 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end
   end,
 })
+
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   pattern = "*",
+--   callback = function(args)
+--     print("LazyDone")
+--     if vim.loop.os_uname().sysname == "Darwin" then
+--       local command = [[osascript -e 'tell app "System Events" to tell appearance preferences to get dark mode']]
+--       local handle = io.popen(command)
+--       if handle then
+--         local result = handle:read("*l")
+--         handle:close()
+--         if result == "false" then
+--           vim.opt.background = "light"
+--         else
+--           vim.opt.background = "dark"
+--         end
+--       end
+--     end
+--   end,
+-- })
+
 vim.cmd([[
 autocmd InsertEnter * :set norelativenumber
 autocmd InsertLeave * :set relativenumber 

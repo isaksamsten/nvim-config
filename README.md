@@ -95,7 +95,6 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 | Keymap       | Action                |
 | ------------ | --------------------- |
 | `<leader>uf` | Toggle format on save |
-| `<leader>uc` | Toggle conceal        |
 | `<leader>ub` | Toggle Git blame      |
 
 ### Sidebar

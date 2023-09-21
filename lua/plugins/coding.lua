@@ -1,5 +1,227 @@
-vim.g.ai_no_mappings = true
+local function get_openai_key()
+  local handle = io.popen("pass show openai")
+  if handle then
+    local result = handle:read("*l")
+    handle:close()
+    return result
+  end
+  return nil
+end
+local openai_key = get_openai_key()
+
 return {
+  {
+    "robitx/gp.nvim",
+    event = "VeryLazy",
+    -- enabled = false,
+    cond = openai_key ~= nil,
+    config = function()
+      require("gp").setup({
+        openai_api_key = openai_key,
+        cmd_prefix = "AI",
+        hooks = {
+          Paraphrase = function(gp, params)
+            gp.Prompt(
+              params,
+              gp.Target.rewrite,
+              nil, -- command will run directly without any prompting for user input
+              { model = "gpt-3.5-turbo-16k", temperature = 0.5, top_p = 1 },
+              -- gp.config.command_model,
+              [[
+Paraphrase the text using academic and precise language.
+Limit the length of the paraphrased paragraph to the same length of the
+original. Do not repeat words or sentences. Try to make as few adjustments as
+possible. Any {{filetype}} markup in the original must be preserved in the
+result: \n{{selection}} 
+]],
+              "You are an expert academic writer who only repond with paraphrased texts." --gp.config.command_system_prompt
+            )
+          end,
+          RewriteActiveVoice = function(gp, params)
+            gp.Prompt(
+              params,
+              gp.Target.rewrite,
+              nil, -- command will run directly without any prompting for user input
+              gp.config.command_model,
+              [[
+Rewrite the following sentence in active voice:
+
+{{selection}}
+
+Requirements:
+ - Try to make as few adjustments as possible.
+ - Any {{filtype}} markup in the sentence must be preserved.
+]],
+              "You are an expert academic writer" --gp.config.command_system_prompt
+            )
+          end,
+        },
+      })
+    end,
+  },
+  {
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    enabled = false,
+    cmd = {
+      "ChatGPT",
+      "ChatGPTRun",
+      -- "ChatGPTEditWithInstructions",
+      "ChatGPT",
+    },
+    keys = {
+      { "Zp", "<Cmd>ChatGPTRun paraphrase<cr>", mode = "v", desc = "Paraphrase" },
+      { "Za", "<Cmd>ChatGPTRun rewrite_active<cr>", mode = "v", desc = "Rewrite in active voice" },
+      { "<leader>cc", "<Cmd>ChatGPT<cr>", desc = "Discuss" },
+    },
+    opts = {
+      api_key_cmd = "pass show openai",
+      yank_register = "+",
+      edit_with_instructions = {
+        diff = false,
+        keymaps = {
+          close = "<C-c>",
+          accept = "<C-y>",
+          toggle_diff = "<C-d>",
+          toggle_settings = "<C-o>",
+          cycle_windows = "<Tab>",
+          use_output_as_input = "<C-i>",
+        },
+      },
+      chat = {
+        welcome_message = "Please talk to me!",
+        loading_text = "Loading, please wait ...",
+        question_sign = "",
+        answer_sign = "ﮧ",
+        max_line_length = 88,
+        sessions_window = {
+          border = {
+            style = require("config.icons").borders.empty,
+            text = {
+              top = " Sessions ",
+            },
+          },
+          win_options = {
+            winhighlight = "FloatNormal:FloatNormal,FloatBorder:FloatBorder",
+          },
+        },
+        keymaps = {
+          close = { "<C-c>" },
+          yank_last = "<C-y>",
+          yank_last_code = "<C-k>",
+          scroll_up = "<C-u>",
+          scroll_down = "<C-d>",
+          new_session = "<C-n>",
+          cycle_windows = "<Tab>",
+          cycle_modes = "<C-f>",
+          select_session = "<Space>",
+          rename_session = "r",
+          delete_session = "d",
+          draft_message = "<C-d>",
+          toggle_settings = "<C-o>",
+          toggle_message_role = "<C-r>",
+          toggle_system_role_open = "<C-s>",
+          stop_generating = "<C-x>",
+        },
+      },
+      popup_layout = {
+        default = "center",
+        center = {
+          width = "50%",
+          height = "80%",
+        },
+        right = {
+          width = "30%",
+          width_settings_open = "50%",
+        },
+      },
+      popup_window = {
+        border = {
+          highlight = "FloatBorder",
+          style = require("config.icons").borders.empty,
+          text = {
+            top = "🤖",
+            title = "Display",
+          },
+        },
+        win_options = {
+          wrap = true,
+          linebreak = true,
+          foldcolumn = "1",
+          winhighlight = "TelescopePreviewNormal:TelescopePreviewNormal,TelescopePreviewNormal:TelescopePreviewNormal",
+        },
+        buf_options = {
+          filetype = "markdown",
+        },
+      },
+      system_window = {
+        border = {
+          highlight = "FloatBorder",
+          style = require("config.icons").borders.empty,
+          text = {
+            top = " SYSTEM ",
+          },
+        },
+        win_options = {
+          wrap = true,
+          linebreak = true,
+          foldcolumn = "2",
+          -- winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+          winhighlight = "TelescopePreviewNormal:TelescopePreviewNormal,TelescopePreviewNormal:TelescopePreviewNormal",
+        },
+      },
+      popup_input = {
+        prompt = "  ",
+        border = {
+          highlight = "FloatBorder",
+          style = require("config.icons").borders.empty,
+        },
+        win_options = {
+          winhighlight = "TelescopePromptNormal:TelescopePromptNormal,FloatBorder:FloatBorder",
+        },
+        submit = "<C-Enter>",
+        submit_n = "<Enter>",
+        max_visible_lines = 20,
+      },
+      settings_window = {
+        border = {
+          style = require("config.icons").borders.empty,
+          text = {
+            top = " Settings ",
+          },
+        },
+        win_options = {
+          winhighlight = "FloatNormal:FloatNormal,FloatBorder:FloatBorder",
+        },
+      },
+      openai_params = {
+        model = "gpt-3.5-turbo",
+        frequency_penalty = 0,
+        presence_penalty = 0,
+        max_tokens = 900,
+        temperature = 0,
+        top_p = 1,
+        n = 1,
+      },
+      openai_edit_params = {
+        model = "code-davinci-edit-001",
+        temperature = 0,
+        top_p = 1,
+        n = 1,
+      },
+      actions_paths = { "~/.config/nvim/ai/actions.json" },
+      show_quickfixes_cmd = "copen",
+      predefined_chat_gpt_prompts = nil, --"https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv",
+    },
+    config = function(_, opts)
+      require("chatgpt").setup(opts)
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+  },
   {
     "stevearc/conform.nvim",
     opts = function()
@@ -28,7 +250,7 @@ return {
           description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
         },
         command = "latexindent",
-        args = { "-" },
+        args = { "-", "-m", "-l" },
         stdin = true,
       }
       local erlfmt = {
@@ -57,6 +279,7 @@ return {
           erlang = { "erlfmt" },
           java = { "java_google_format" },
           markdown = { "prettier" },
+          json = { "prettier" },
         },
         formatters = {
           ruff = ruff,
@@ -65,114 +288,6 @@ return {
           java_google_format = java_google_format,
         },
       }
-    end,
-  },
-  {
-    "mhartington/formatter.nvim",
-    enabled = false,
-    event = { "BufReadPre", "BufNewFile" },
-    keys = {
-      { "<leader>F", "<cmd>Format<cr>", "Format buffer" },
-    },
-    opts = function()
-      local opts = {
-        filetype = {
-          lua = { require("formatter.filetypes.lua").stylua },
-          python = {
-            function()
-              local util = require("formatter.util")
-              return {
-                exe = "ruff",
-                args = {
-                  "--fix",
-                  "-e",
-                  "-n",
-                  "--stdin-filename",
-                  util.escape_path(util.get_current_buffer_file_path()),
-                  "-",
-                },
-                stdin = true,
-              }
-            end,
-            require("formatter.filetypes.python").black,
-          },
-          latex = { require("formatter.filetypes.latex").latexindent },
-          erlang = {
-            function()
-              return {
-                exe = "erlfmt",
-                args = { "-" },
-                stdin = true,
-              }
-            end,
-          },
-          java = {
-            function()
-              return { exe = "google-java-format", args = { "-" }, stdin = true }
-            end,
-          },
-          rust = {
-            require("formatter.filetypes.rust").rustfmt,
-          },
-        },
-      }
-
-      local prettier = { "markdown", "html", "javascript" }
-      for _, value in ipairs(prettier) do
-        opts.filetype[value] = { require("formatter.defaults.prettier") }
-      end
-
-      return opts
-    end,
-    config = function(_, opts)
-      require("formatter").setup(opts)
-      vim.api.nvim_create_autocmd("BufWritePost", {
-        group = vim.api.nvim_create_augroup("FormatterNvim", {}),
-        callback = function()
-          if require("helpers.toggle").format_active() then
-            vim.cmd.FormatWrite()
-          end
-        end,
-      })
-    end,
-  },
-  {
-    "mfussenegger/nvim-lint",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("lint").linters.numpydoc_lint = {
-        cmd = "numpydoc-lint",
-        stdin = true,
-        stream = "stdout",
-        args = {
-          "--stdin-filename",
-          function()
-            return vim.api.nvim_buf_get_name(0)
-          end,
-        },
-        ignore_exitcode = true,
-        parser = require("lint.parser").from_pattern(
-          [[(%d+):(%d+):(%d+):(%d+): ((%u)%w+) (.*)]],
-          { "lnum", "col", "end_lnum", "end_col", "code", "severity", "message" },
-          {
-            E = vim.diagnostic.severity.ERROR,
-            W = vim.diagnostic.severity.WARN,
-            I = vim.diagnostic.severity.INFO,
-            H = vim.diagnostic.severity.HINT,
-          },
-          { source = "numpydoc-lint" }
-        ),
-      }
-      require("lint").linters_by_ft = {
-        markdown = { "markdownlint" },
-        python = { "numpydoc_lint" },
-      }
-
-      vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "BufEnter" }, {
-        callback = function()
-          require("lint").try_lint()
-        end,
-      })
     end,
   },
 
