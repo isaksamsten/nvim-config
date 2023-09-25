@@ -2,13 +2,6 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("catppuccin")
-      theme.setup(opts)
-      vim.cmd([[colorscheme catppuccin]])
-    end,
     opts = function()
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
@@ -258,6 +251,13 @@ return {
   },
   {
     "olimorris/onedarkpro.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      local theme = require("onedarkpro")
+      theme.setup(opts)
+      vim.cmd([[colorscheme onedark]])
+    end,
     opts = function()
       local function blend(a, b, amount, theme)
         local Color = require("onedarkpro.lib.color")
@@ -367,7 +367,7 @@ return {
           CursorLineNr = { style = "bold" },
           LineNr = { fg = "${surface0}" },
 
-          StatusColumnSeparator = { fg = "${sign_column_border}", bg = "NONE" },
+          StatusColumnSeparator = { fg = "${white}", bg = "NONE" },
           SignColumn = { fg = "${sign_column_border}" },
           --
           -- Cmp
@@ -403,11 +403,12 @@ return {
           DiagnosticFloatingInfo = { fg = "${fg}" },
           DiagnosticFloatingError = { fg = "${fg}" },
 
-          ModeMsg = { fg = "${fg}", bg = "${telescope_results}" },
-          MsgArea = { fg = "${fg}", bg = "${telescope_results}" },
+          -- ModeMsg = { fg = "${fg}", bg = "${telescope_results}" },
+          StatusLine = { fg = "${fg}", bg = "${telescope_results}" },
+          StatusLineNC = { fg = "${telescope_results}", bg = "${telescope_results}" },
 
-          StatusLine = { link = "ModeMsg" },
-          StatusLineNC = { fg = "${surface0}", bg = "${telescope_results}" },
+          -- StatusLine = { link = "ModeMsg" },
+          -- StatusLineNC = { fg = "${surface0}", bg = "${telescope_results}" },
           -- StatusFg = { link = "ModeMsg" },
 
           NoiceMini = { link = "BetterVirtualTextInfo" },
@@ -441,7 +442,7 @@ return {
           TabLineHead = { bg = "${blue}", fg = "${telescope_prompt}" },
         },
         options = {
-          cursorline = false,
+          cursorline = true,
           highlight_inactive_windows = false,
         },
       }

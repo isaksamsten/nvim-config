@@ -1,6 +1,8 @@
 return {
+  { "tpope/vim-dispatch", event = "VeryLazy" },
   {
     "stevearc/overseer.nvim",
+    enabled = false,
     opts = {
       form = {
         border = require("config.icons").borders.outer.all,

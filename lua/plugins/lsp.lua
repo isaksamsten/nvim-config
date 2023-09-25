@@ -110,13 +110,11 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      -- "jose-elias-alvarez/null-ls.nvim",
-      -- "jay-babu/mason-null-ls.nvim",
       "hrsh7th/cmp-nvim-lsp",
       "barreiroleo/ltex_extra.nvim",
       {
         "ray-x/lsp_signature.nvim",
-        -- enabled = false,
+        version = false,
         opts = function()
           local icons = require("config.icons")
           return {
@@ -134,7 +132,6 @@ return {
 
       {
         "isaksamsten/better-virtual-text.nvim",
-        enabled = false,
         opts = {
           highlights = {
             BetterVirtualTextError = { link = "NonText" },
@@ -264,22 +261,6 @@ return {
         texlab = {},
         yamlls = {},
       },
-      -- -- TODO: Remove
-      -- sources = function(null_ls)
-      --   -- NOTE: formatters are run in the order in which the are defined here.
-      --   return {
-      --     require("helpers.null-ls-sources").diagnostics.numpydoc_lint,
-      --     null_ls.builtins.formatting.stylua,
-      --     null_ls.builtins.formatting.rustfmt,
-      --     null_ls.builtins.formatting.latexindent,
-      --     null_ls.builtins.formatting.erlfmt, -- build and install to mason/bin
-      --     null_ls.builtins.formatting.bibclean, -- installed by system
-      --     null_ls.builtins.formatting.prettier,
-      --     null_ls.builtins.formatting.ruff, -- we only use null-ls for formatting
-      --     null_ls.builtins.formatting.black,
-      --     null_ls.builtins.formatting.google_java_format,
-      --   }
-      -- end,
     },
 
     config = function(_, opts)
@@ -316,17 +297,6 @@ return {
 
       local hover = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
       vim.lsp.handlers["textDocument/hover"] = hover
-
-      -- Setup null-ls. We only use null-ls for formatting
-      -- local null_ls = require("null-ls")
-      -- null_ls.setup({
-      --   sources = opts.sources(null_ls),
-      -- })
-      -- require("mason-null-ls").setup({
-      --   ensure_installed = nil,
-      --   automatic_installation = false,
-      --   automatic_setup = false,
-      -- })
     end,
   },
 }
