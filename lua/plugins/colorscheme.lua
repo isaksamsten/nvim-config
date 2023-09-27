@@ -404,7 +404,7 @@ return {
           DiagnosticFloatingError = { fg = "${fg}" },
 
           -- ModeMsg = { fg = "${fg}", bg = "${telescope_results}" },
-          StatusLine = { fg = "${fg}", bg = "${telescope_results}" },
+          StatusLine = { fg = "${telescope_results}", bg = "${telescope_results}" },
           StatusLineNC = { fg = "${telescope_results}", bg = "${telescope_results}" },
 
           -- StatusLine = { link = "ModeMsg" },
