@@ -80,27 +80,20 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- vim.api.nvim_create_autocmd("VimEnter", {
---   pattern = "*",
---   callback = function(args)
---     print("LazyDone")
---     if vim.loop.os_uname().sysname == "Darwin" then
---       local command = [[osascript -e 'tell app "System Events" to tell appearance preferences to get dark mode']]
---       local handle = io.popen(command)
---       if handle then
---         local result = handle:read("*l")
---         handle:close()
---         if result == "false" then
---           vim.opt.background = "light"
---         else
---           vim.opt.background = "dark"
---         end
---       end
---     end
---   end,
--- })
-
-vim.cmd([[
-autocmd InsertEnter * :set norelativenumber
-autocmd InsertLeave * :set relativenumber 
-]])
+local ignore_filetypes = { "neo-tree", "alpha", "neotest-summary", "TelescopePrompt" }
+vim.api.nvim_create_autocmd("InsertEnter", {
+  pattern = "*",
+  callback = function(args)
+    if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
+      vim.cmd(":setlocal norelativenumber")
+    end
+  end,
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
+  pattern = "*",
+  callback = function(args)
+    if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
+      vim.cmd(":setlocal relativenumber")
+    end
+  end,
+})
