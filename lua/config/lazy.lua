@@ -14,9 +14,12 @@ require("lazy").setup({
     lazy = true, -- every plugin is lazy-loaded by default
     version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "catppuccin", "onedark" } },
+  install = { colorscheme = { "catppuccin", "onedark", "melange" } },
   ui = {
     border = require("config.icons").borders.outer.all,
+  },
+  change_detection = {
+    notify = false, -- I find the config changed notification super annoying
   },
   concurrency = 2,
   performance = {

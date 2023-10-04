@@ -6,6 +6,7 @@ vim.g.cmp_completion_max_width = 30
 vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
+vim.opt.fillchars = { eob = " " }
 opt.title = true
 -- opt.titlestring = "%<%t%="
 opt.selection = "exclusive"

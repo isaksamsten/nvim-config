@@ -1,7 +1,17 @@
 return {
   {
+    "isaksamsten/melange-nvim",
+    lazy = false,
+    priority = 1000,
+    config = function(_, opts)
+      vim.cmd([[colorscheme melange]])
+    end,
+    -- dir = "~/Projects/melange-nvim/",
+  },
+  {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = true,
     opts = function()
       local Color = require("helpers.color")
       local overrides = function(lighten, darken)
@@ -136,8 +146,8 @@ return {
             PmenuDocBorder = { bg = float_bg, fg = fg_border },
             NormalFloat = { bg = float_bg },
             FloatNormal = { link = "NormalFloat" },
-            DapUINormalFloat = { link = "FloatNormal" },
             FloatBorder = { bg = float_bg, fg = fg_border },
+            DapUINormalFloat = { link = "FloatNormal" },
             DapUIFloatBorder = { link = "FloatBorder" },
             FloatTitle = { fg = colors.lavender, bg = float_bg },
             BqfPreviewBorder = { link = "PopupBorder" },
@@ -251,13 +261,13 @@ return {
   },
   {
     "olimorris/onedarkpro.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function(_, opts)
-      local theme = require("onedarkpro")
-      theme.setup(opts)
-      vim.cmd([[colorscheme onedark]])
-    end,
+    lazy = true,
+    -- priority = 1000,
+    -- config = function(_, opts)
+    --   local theme = require("onedarkpro")
+    --   theme.setup(opts)
+    --   vim.cmd([[colorscheme onedark]])
+    -- end,
     opts = function()
       local function blend(a, b, amount, theme)
         local Color = require("onedarkpro.lib.color")
@@ -321,6 +331,7 @@ return {
         highlights = {
           IndentBlanklineContextChar = { fg = "${fg_context_char}" },
           IndentBlanklineChar = { fg = "${fg_context_char}" },
+          MiniIndentscopeSymbol = { fg = "${fg_context_char}" },
           ["@include.python"] = { fg = "${purple}", style = "bold" },
           ["@variable"] = { fg = "${fg}" },
           ["@lsp.type.function"] = { link = "@function" },
@@ -367,7 +378,7 @@ return {
           CursorLineNr = { style = "bold" },
           LineNr = { fg = "${surface0}" },
 
-          StatusColumnSeparator = { fg = "${white}", bg = "NONE" },
+          -- StatusColumnSeparator = { fg = "${white}", bg = "NONE" },
           SignColumn = { fg = "${sign_column_border}" },
           --
           -- Cmp
@@ -403,7 +414,7 @@ return {
           DiagnosticFloatingInfo = { fg = "${fg}" },
           DiagnosticFloatingError = { fg = "${fg}" },
 
-          -- ModeMsg = { fg = "${fg}", bg = "${telescope_results}" },
+          ModeMsg = { fg = "${fg}", bg = "${telescope_results}" },
           StatusLine = { fg = "${telescope_results}", bg = "${telescope_results}" },
           StatusLineNC = { fg = "${telescope_results}", bg = "${telescope_results}" },
 
@@ -434,7 +445,7 @@ return {
           DebugBreakpoint = { fg = "${red}" },
           DebugBreakpointLine = { bg = "${faded_red}" },
 
-          WinSeparator = { fg = "${telescope_prompt}", bg = "${telescope_prompt}" },
+          WinSeparator = { fg = "${telescope_results}", bg = "${telescope_results}" },
 
           TabLineFill = { bg = "${telescope_prompt}", fg = "${gray}" },
           TabLine = { bg = "${telescope_prompt}", fg = "${gray}" },

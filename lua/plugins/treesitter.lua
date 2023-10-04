@@ -24,6 +24,8 @@ return {
         "regex",
         "rst",
         "yaml",
+        "bibtex",
+        "latex",
       },
       additional_vim_regex_highlighting = false,
       highlight = { enable = true, disable = { "latex" } },

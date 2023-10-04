@@ -1,6 +1,15 @@
 return {
   {
     "stevearc/conform.nvim",
+    keys = {
+      {
+        "<leader>F",
+        function()
+          require("conform").format()
+        end,
+        desc = "Format",
+      },
+    },
     opts = function()
       local ruff = {
         meta = {
@@ -27,7 +36,11 @@ return {
           description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
         },
         command = "latexindent",
-        args = { "-", "-m", "-l" },
+        args = {
+          "-m",
+          "-l",
+          "-",
+        },
         stdin = true,
       }
       local erlfmt = {

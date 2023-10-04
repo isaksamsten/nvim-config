@@ -121,7 +121,7 @@ return {
               colwidth = 1,
               auto = false,
               fillchar = require("config.icons").statuscol,
-              -- fillcharhl = "StatusColumnSeparator",
+              fillcharhl = "StatusColumnSeparator",
             },
             click = "v:lua.ScSa",
           },
@@ -230,7 +230,7 @@ return {
       --   desc = "Focus symbols",
       -- },
       {
-        "<c-_>",
+        "_",
         function()
           require("helpers.toggle").neotree()
         end,
@@ -251,7 +251,7 @@ return {
       return {
         close_if_last_window = true,
         -- popup_border_style = icons.borders.outer.all,
-        use_popups_for_input = false,
+        -- use_popups_for_input = false,
         open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" },
         filesystem = {
           follow_current_file = { enabled = true },
@@ -733,16 +733,34 @@ return {
       telescope.load_extension("live_grep_args")
     end,
   },
-
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPre", "BufNewFile" },
+    main = "ibl",
     opts = {
-      char = "", --require("config.icons").indent.dotted_marker,
-      indent_blankline_context_char = require("config.icons").indent.marker,
-      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
-      show_trailing_blankline_indent = false,
-      show_current_context = true,
+      indent = { char = require("config.icons").statuscol, highlight = "IndentBlanklineChar" },
+      scope = { enabled = false },
     },
+    config = function(_, opts)
+      require("ibl").setup(opts)
+      local hooks = require("ibl.hooks")
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+    end,
+  },
+  {
+    "echasnovski/mini.indentscope",
+    enabled = false,
+    version = false,
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("mini.indentscope").setup({
+        draw = {
+          enabled = false,
+          delay = 0,
+          animation = require("mini.indentscope").gen_animation.none(),
+        },
+        symbol = require("config.icons").statuscol,
+      })
+    end,
   },
 }
