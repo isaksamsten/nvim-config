@@ -152,30 +152,12 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 | `<M-3>`            | Go to tab #3                                |
 | `<M-4>`            | Go to tab #4                                |
 
-Default Keybindings as set by `mini.ai`, `mini.move` and `flash`.
+Default Keybindings most of the remaining plugins.
 
 ## Screenshots
 
-I use two different themes that I have customized to my liking.
+- Color scheme: [Melange](https://github.com/savq/melange-nvim),
+- Terminal: [Alacritty](https://github.com/alacritty/alacritty)
+- Font: Jetbrains Mono
 
-### OneDark
-
-Color scheme: [OneDark Pro](https://github.com/olimorris/onedarkpro.nvim),
-Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
-macOS title bar](https://github.com/isaksamsten/kitty), Font: SF Mono
-
-![Dark](./assets/onedark/dark.png)
-
-### Catppuccin
-
-Color scheme: [Catppuccin](https://github.com/catppuccin/nvim),
-Terminal: [Kitty](https://github.com/kovidgoyal/kitty) forked with [better
-macOS title bar](https://github.com/isaksamsten/kitty), Font: SF Mono
-
-#### Dark
-
-![Dark](./assets/catppuccin/dark.png)
-
-#### Light
-
-![Light](./assets/catppuccin/light.png)
+![Screenshot](./assets/screen.png)
