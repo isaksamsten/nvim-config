@@ -14,7 +14,7 @@ require("lazy").setup({
     lazy = true, -- every plugin is lazy-loaded by default
     version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "catppuccin", "onedark", "melange" } },
+  install = { colorscheme = { "melange", "catppuccin", "onedark" } },
   ui = {
     border = require("config.icons").borders.outer.all,
   },

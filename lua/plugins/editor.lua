@@ -2,10 +2,8 @@ return { -- TODO
   { "romainl/vim-cool", event = { "BufReadPre", "BufNewFile" } },
   { "tpope/vim-surround", event = { "ModeChanged" } },
   { "tpope/vim-commentary", event = { "BufReadPre", "BufNewFile" } },
-  -- { "tpope/vim-vinegar", event = "VeryLazy" },
   { "tpope/vim-repeat", event = "VeryLazy" },
   { "tpope/vim-unimpaired", event = "VeryLazy" },
-
   {
     "echasnovski/mini.move",
     event = "BufReadPost",

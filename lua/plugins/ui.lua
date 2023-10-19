@@ -368,16 +368,6 @@ return {
   },
 
   {
-    "windwp/windline.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    version = false,
-    config = function()
-      require("helpers.statusline")
-    end,
-  },
-
-  {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = function()

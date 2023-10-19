@@ -63,6 +63,7 @@ return {
       }
       return {
         formatters_by_ft = {
+          ["*"] = { "trim_whitespace", "trim_newline" },
           python = { "ruff", "black" },
           tex = { "latexindent" },
           lua = { "stylua" },
@@ -107,8 +108,23 @@ return {
           { source = "numpydoc-lint" }
         ),
       }
+      require("lint").linters.cython_lint = {
+        cmd = "cython-lint",
+        stdin = false,
+        args = {},
+        ignore_exitcode = true,
+        parser = require("lint.parser").from_pattern(
+          [[(%d+):(%d+): ((%u)%w+) (.*)]],
+          { "lnum", "col", "code", "severity", "message" },
+          {
+            E = vim.diagnostic.severity.ERROR,
+            W = vim.diagnostic.severity.WARN,
+          }
+        ),
+      }
       require("lint").linters_by_ft = {
         python = { "numpydoc_lint" },
+        cython = { "cython_lint" },
       }
 
       vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {

@@ -6,7 +6,6 @@ return {
     config = function(_, opts)
       vim.cmd([[colorscheme melange]])
     end,
-    -- dir = "~/Projects/melange-nvim/",
   },
   {
     "catppuccin/nvim",

@@ -29,13 +29,16 @@ return {
       },
       additional_vim_regex_highlighting = false,
       highlight = { enable = true, disable = { "latex" } },
-      indent = { enable = true },
-      incremental_selection = {
+      indent = {
         enable = true,
-        keymaps = {
-          init_selection = "<c-space>",
-          node_incremental = "<c-space>",
-          node_decremental = "<c-bs>",
+        disable = { "python" },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<c-space>",
+            node_incremental = "<c-space>",
+            node_decremental = "<c-bs>",
+          },
         },
       },
     },
