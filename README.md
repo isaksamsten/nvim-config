@@ -22,8 +22,6 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 
 - Improved Neotree sidebar toggling.
 
-- Customized catppuccin color scheme.
-
 - Customized gutter with git signs.
 
 ## Keybindings
