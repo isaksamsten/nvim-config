@@ -9,7 +9,7 @@ local opt = vim.opt
 vim.opt.fillchars = { eob = " " }
 opt.title = true
 -- opt.titlestring = "%<%t%="
-opt.selection = "exclusive"
+-- opt.selection = "exclusive"
 opt.autowrite = true -- enable auto write
 opt.clipboard = "unnamedplus" -- sync with system clipboard
 opt.cmdheight = 1
