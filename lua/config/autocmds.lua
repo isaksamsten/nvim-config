@@ -80,7 +80,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-local ignore_filetypes = { "neo-tree", "alpha", "neotest-summary", "TelescopePrompt" }
+local ignore_filetypes = { "neo-tree", "minifiles", "alpha", "neotest-summary", "TelescopePrompt" }
 vim.api.nvim_create_autocmd("InsertEnter", {
   pattern = "*",
   callback = function(args)
@@ -95,5 +95,17 @@ vim.api.nvim_create_autocmd("InsertLeave", {
     if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
       vim.cmd(":setlocal relativenumber")
     end
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesBufferCreate",
+  callback = function(args)
+    local buf_id = args.data.buf_id
+    vim.keymap.set("n", "<ESC>", function()
+      require("mini.files").close()
+    end, { buffer = buf_id })
+    vim.keymap.set("n", "g.", require("helpers.files").toggle_dotfiles, { buffer = buf_id })
+    vim.keymap.set("n", "gi", require("helpers.files").toggle_gitignore, { buffer = buf_id })
   end,
 })

@@ -1,97 +1,5 @@
 return {
   {
-    "folke/edgy.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    keys = {
-      {
-        "<leader>l",
-        function()
-          require("edgy").toggle("right")
-        end,
-        desc = "Toggle status",
-      },
-      {
-        "<leader>j",
-        function()
-          require("edgy").toggle("bottom")
-        end,
-        desc = "Toggle panel",
-      },
-    },
-    opts = {
-      animate = {
-        enabled = false,
-      },
-      icons = { open = "", closed = "" },
-      wo = { winbar = false },
-      bottom = {
-        { ft = "qf", title = "Quickfix", size = { height = 0.3 }, open = "copen" }, -- for some reason this has to go first
-        -- {
-        --   ft = "Trouble",
-        --   title = "Diagnostics",
-        --   size = { height = 0.3 },
-        --   pinned = true,
-        --   open = "Trouble document_diagnostics",
-        -- },
-        { ft = "fugitive", title = "Git status", size = { height = 0.3 } },
-        { ft = "dap-repl", title = "Debug console", size = { height = 0.3 } },
-        { ft = "neotest-output-panel", title = "Test output", size = { height = 0.3 } },
-        {
-          ft = "help",
-          title = "Help",
-          size = { height = 20 },
-          filter = function(buf)
-            return vim.bo[buf].buftype == "help"
-          end,
-        },
-      },
-      right = {
-        { ft = "dapui_scopes", "Debug scopes", size = { width = 0.3 } },
-        {
-          title = "Test summary",
-          ft = "neotest-summary",
-          size = { height = 0.5, width = 0.3 },
-          open = function()
-            require("neotest").summary.open()
-          end,
-          pinned = true,
-        },
-        {
-          title = "Build tasks",
-          ft = "OverseerList",
-          size = { height = 0.5, width = 0.3 },
-          open = "OverseerOpen right",
-          pinned = true,
-        },
-      },
-      left = {
-        {
-          title = "Explorer",
-          ft = "neo-tree",
-          filter = function(buf)
-            return vim.b[buf].neo_tree_source == "filesystem"
-          end,
-          size = { height = 0.5, width = 40 },
-          pinned = true,
-          open = "Neotree focus",
-        },
-        {
-          title = "Symbols",
-          ft = "neo-tree",
-          filter = function(buf)
-            return vim.b[buf].neo_tree_source == "document_symbols"
-          end,
-          size = { height = 0.5, width = 40 },
-          -- pinned = true,
-          -- open = "Neotree position=right document_symbols",
-        },
-        { ft = "neo-tree", size = { height = 0.5, width = 40 } },
-      },
-    },
-  },
-
-  {
     "luukvbaal/statuscol.nvim",
     event = "VimEnter",
     opts = function()
@@ -212,159 +120,40 @@ return {
   },
 
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "main",
-    cmd = "Neotree",
+    "echasnovski/mini.nvim",
     keys = {
       {
         "-",
         function()
-          require("helpers.toggle").focus_neotree("filesystem")
+          local minifiles = require("mini.files")
+          if vim.bo.ft == "minifiles" then
+            minifiles.close()
+          else
+            local file = vim.api.nvim_buf_get_name(0)
+            local file_exists = vim.fn.filereadable(file) ~= 0
+            minifiles.open(file_exists and file or nil)
+            minifiles.reveal_cwd()
+          end
         end,
         desc = "Focus explorer",
       },
-      -- {
-      --   "<leader>Es",
-      --   function()
-      --     require("helpers.toggle").focus_neotree("document_symbols")
-      --   end,
-      --   desc = "Focus symbols",
-      -- },
       {
         "_",
         function()
-          require("helpers.toggle").neotree()
+          require("mini.files").close()
         end,
         desc = "Toggle explorer",
       },
     },
-    init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
-    end,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
+    opts = {
+      content = {
+        filter = require("helpers.files").filter_show_default,
+        sort = require("helpers.files").sort_filter_gitignore,
+      },
     },
-    opts = function()
-      local icons = require("config.icons")
-
-      return {
-        close_if_last_window = true,
-        -- popup_border_style = icons.borders.outer.all,
-        -- use_popups_for_input = false,
-        open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" },
-        filesystem = {
-          follow_current_file = { enabled = true },
-          hijack_netrw_behavior = "open_current",
-          use_libuv_file_watcher = true,
-        },
-        sources = {
-          "filesystem",
-          -- "buffers",
-          "git_status",
-          "document_symbols",
-        },
-        source_selector = {
-          -- winbar = true,
-          -- statusline = true, -- toggle to show selector on statusline
-          content_layout = "center",
-          tabs_layout = "equal",
-          sources = {
-            { source = "filesystem", display_name = "" },
-            -- { source = "buffers", display_name = "" },
-            { source = "git_status", display_name = "" },
-            {
-              source = "document_symbols",
-              display_name = "",
-              server_filter = {
-                fn = function(name)
-                  return name ~= "null-ls"
-                end,
-              },
-            },
-          },
-        },
-        window = {
-          mappings = {
-            ["<space>"] = "none",
-            ["<tab>"] = "toggle_node",
-          },
-        },
-        default_component_configs = {
-          container = {
-            enable_character_fade = true,
-          },
-          indent = {
-            indent_size = 2,
-            padding = 1, -- extra padding on left hand side
-            -- indent guides
-            with_markers = true,
-            indent_marker = icons.indent.marker,
-            last_indent_marker = icons.indent.last,
-            highlight = "NeoTreeIndentMarker",
-            -- expander config, needed for nesting files
-            with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-            expander_collapsed = icons.folder.collapsed,
-            expander_expanded = icons.folder.expanded,
-            expander_highlight = "NeoTreeExpander",
-          },
-          icon = {
-            folder_closed = icons.folder.closed,
-            folder_open = icons.folder.open,
-            folder_empty = icons.folder.empty,
-            default = "*",
-            highlight = "NeoTreeFileIcon",
-          },
-          modified = {
-            symbol = icons.file.modified,
-            highlight = "NeoTreeModified",
-          },
-          name = {
-            trailing_slash = false,
-            use_git_status_colors = true,
-            highlight = "NeoTreeFileName",
-          },
-          git_status = {
-            symbols = {
-              -- Change type
-              added = icons.git.add,
-              modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
-              deleted = icons.git.delete, -- this can only be used in the git_status source
-              renamed = icons.git.renamed, -- this can only be used in the git_status source
-              -- Status type
-              untracked = icons.git.untracked,
-              ignored = icons.git.ignored,
-              unstaged = icons.git.unstaged,
-              staged = icons.git.staged,
-              conflict = icons.git.conflict,
-            },
-          },
-        },
-        document_symbols = {
-          kinds = {
-            File = { icon = icons.kinds.File, hl = "Tag" },
-            Namespace = { icon = icons.kinds.Namespace, hl = "Include" },
-            Package = { icon = icons.kinds.Package, hl = "Label" },
-            Class = { icon = icons.kinds.Class, hl = "Include" },
-            Property = { icon = icons.kinds.Property, hl = "@property" },
-            Enum = { icon = icons.kinds.Enum, hl = "@lsp.type.enum" },
-            EnumMember = { icon = icons.kinds.Enum, hl = "@lsp.type.enumMember" },
-            Event = { icon = icons.kinds.Enum, hl = "@number" },
-            Function = { icon = icons.kinds.Function, hl = "Function" },
-            String = { icon = icons.kinds.String, hl = "String" },
-            Number = { icon = icons.kinds.Number, hl = "Number" },
-            Array = { icon = icons.kinds.Array, hl = "Type" },
-            Object = { icon = icons.kinds.Object, hl = "Type" },
-            Key = { icon = icons.kinds.Key, hl = "" },
-            Struct = { icon = icons.kinds.Struct, hl = "Type" },
-            Operator = { icon = icons.kinds.Operator, hl = "Operator" },
-            TypeParameter = { icon = icons.kinds.TypeParameter, hl = "Type" },
-            StaticMethod = { icon = icons.kinds.StaticMethod, hl = "Function" },
-            Constant = { icon = icons.kinds.Constant, hl = "Constant" },
-          },
-        },
-      }
+    version = false,
+    config = function(_, opts)
+      require("mini.files").setup(opts)
     end,
   },
 
