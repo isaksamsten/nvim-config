@@ -258,7 +258,7 @@ return {
           end,
         },
         rust_analyzer = { skip_setup = true },
-        texlab = {},
+        -- texlab = {},
         yamlls = {},
       },
     },

@@ -28,6 +28,7 @@ opt.ignorecase = true -- Ignore case
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.joinspaces = false -- No double spaces with join after a dot
 opt.laststatus = 0
+vim.opt.statusline = "%#WinSeparator#%{%v:lua.string.rep('—', v:lua.vim.fn.winwidth(0))%}"
 opt.foldenable = false
 -- opt.list = true -- Show some invisible characters (tabs...
 opt.mouse = "a" -- enable mouse mode

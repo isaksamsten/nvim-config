@@ -144,6 +144,7 @@ return {
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-omni",
       "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
       {
@@ -256,7 +257,7 @@ return {
         },
         formatting = {
           fields = { "kind", "abbr", "menu" },
-          format = function(_, item)
+          format = function(entry, item)
             local label = item.abbr
             local max_width = vim.g.cmp_completion_max_width or 30
             local truncated_label = vim.fn.strcharpart(label, 0, max_width - 1) -- 1 character for the elipsis
@@ -268,7 +269,12 @@ return {
             end
             item.abbr = " " .. item.abbr
             item.menu = item.kind
-            item.kind = (icons.kinds[item.kind] or icons.kinds.Unknown)
+            if entry.source.name == "omni" then
+              item.kind = icons.kinds["Function"]
+              item.menu = "Function"
+            else
+              item.kind = (icons.kinds[item.kind] or icons.kinds.Unknown)
+            end
             return item
           end,
         },
@@ -330,6 +336,7 @@ return {
           { name = "path" },
           { name = "nvim_lsp", keyword_length = 1 },
           { name = "buffer", keyword_length = 3 },
+          { name = "omni", filetypes = { "tex" } },
           { name = "luasnip", keyword_length = 2 },
         }),
       }
