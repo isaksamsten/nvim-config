@@ -1,6 +1,5 @@
 return {
   { "lambdalisue/vim-cython-syntax", lazy = false },
-  -- { "anntzer/vim-cython", lazy = false },
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -33,12 +32,7 @@ return {
         enable = true,
         disable = { "python" },
         incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<c-space>",
-            node_incremental = "<c-space>",
-            node_decremental = "<c-bs>",
-          },
+          enable = false,
         },
       },
     },

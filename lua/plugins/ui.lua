@@ -269,6 +269,7 @@ return {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
+    branch = "master",
     opts = function()
       -- local function is_neotree(opts)
       --   return string.match(opts.prompt, '^Enter new name for "%w+"')
