@@ -297,6 +297,16 @@ return {
 
       local hover = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
       vim.lsp.handlers["textDocument/hover"] = hover
+
+      local manager = require("lspconfig.manager")
+      local _start_new_client = manager._start_new_client
+      function manager:_start_new_client(_, new_config, ...)
+        local bin = new_config and new_config.cmd and new_config.cmd[1]
+        if bin and vim.fn.executable(bin) == 0 then
+          return
+        end
+        return _start_new_client(self, _, new_config, ...)
+      end
     end,
   },
 }

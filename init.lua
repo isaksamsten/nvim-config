@@ -3,6 +3,7 @@ vim.cmd([[
   command! -nargs=+ -complete=file LGrep noautocmd silent lgrep! <args> | copen
 ]])
 
+vim.cmd.colorscheme("dragon")
 require("config.options")
 require("config.lazy")
 require("config.keymaps")

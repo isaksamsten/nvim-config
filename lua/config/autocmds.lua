@@ -100,5 +100,5 @@ vim.api.nvim_create_autocmd("User", {
 
 vim.api.nvim_create_autocmd("BufEnter", {
   pattern = { "*.md", "*.tex" },
-  command = "setlocal wrap breakindent",
+  command = "setlocal wrap breakindent conceallevel=0",
 })

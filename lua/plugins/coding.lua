@@ -138,7 +138,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = { "BufReadPre" },
+    event = { "CmdlineEnter", "InsertEnter" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
@@ -247,7 +247,7 @@ return {
           },
 
           documentation = {
-            winhighlight = "Normal:Pmenu,FloatBorder:PmenuDocBorder,CursorLine:PmenuSel,Search:None",
+            winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,CursorLine:PmenuSel,Search:None",
             border = icons.borders.outer.all,
             side_padding = 0,
             scrollbar = false,

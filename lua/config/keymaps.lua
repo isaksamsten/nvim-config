@@ -23,6 +23,8 @@ vim.keymap.set("v", ">", ">gv")
 -- Navigate according to displayed lines, not physical lines
 vim.keymap.set({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 vim.keymap.set({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
+vim.keymap.set({ "n", "x" }, "$", [[v:count == 0 ? 'g$' : '$']], { expr = true })
+vim.keymap.set({ "n", "x" }, "0", [[v:count == 0 ? 'g0' : '0']], { expr = true })
 
 -- Save using ctrl-s
 vim.keymap.set("n", "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })

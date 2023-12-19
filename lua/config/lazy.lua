@@ -6,15 +6,25 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
-require("lazy").setup({
+local spec = {
+  { import = "plugins" },
+}
+
+if vim.g.vscode then
   spec = {
-    { import = "plugins" },
-  },
+    { import = "plugins.treesitter" },
+    { import = "plugins.editor" },
+    { import = "plugins.coding" },
+  }
+end
+
+require("lazy").setup({
+  spec = spec,
   defaults = {
     lazy = true, -- every plugin is lazy-loaded by default
     version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "melange", "catppuccin", "onedark" } },
+  install = { colorscheme = { "dragon" } },
   ui = {
     border = require("config.icons").borders.outer.all,
   },
