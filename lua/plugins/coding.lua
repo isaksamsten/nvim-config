@@ -5,7 +5,7 @@ return {
       {
         "<leader>F",
         function()
-          require("conform").format()
+          require("conform").format({})
         end,
         desc = "Format",
       },

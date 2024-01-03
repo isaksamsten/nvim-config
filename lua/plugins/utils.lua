@@ -1,8 +1,6 @@
 return {
   {
-    -- "s1m0n38/dante.nvim",
     "isaksamsten/dante.nvim", -- use my fork with some QOL changes
-    -- dir = "~/Projects/dante.nvim/",
     cmd = {
       "Dante",
     },
@@ -67,5 +65,10 @@ return {
 
       vim.api.nvim_create_autocmd("TextYankPost", { callback = copy })
     end,
+  },
+  {
+    "HakonHarnes/img-clip.nvim",
+    opts = {},
+    cmd = { "PasteImage" },
   },
 }

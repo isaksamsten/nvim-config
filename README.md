@@ -158,4 +158,5 @@ Default Keybindings most of the remaining plugins.
 - Terminal: [Alacritty](https://github.com/alacritty/alacritty)
 - Font: Jetbrains Mono
 
-![Screenshot](./assets/screen.png)
+![Light](assets/screen-light.png)
+![Dark](assets/screen-dark.png)
