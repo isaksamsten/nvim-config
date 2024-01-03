@@ -154,7 +154,7 @@ Default Keybindings most of the remaining plugins.
 
 ## Screenshots
 
-- Color scheme: [Melange](https://github.com/savq/melange-nvim),
+- Color scheme: [Dragon](https://github.com/Bekaboo/nvim),
 - Terminal: [Alacritty](https://github.com/alacritty/alacritty)
 - Font: Jetbrains Mono
 
