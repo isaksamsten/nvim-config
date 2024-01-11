@@ -8,6 +8,11 @@ Toggle.format = function()
   else
     Toggle.is_format_active = not Toggle.is_format_active
   end
+  if Toggle.is_format_active then
+    vim.notify("Format on save is on")
+  else
+    vim.notify("Format on save is off")
+  end
 end
 
 Toggle.format_active = function()

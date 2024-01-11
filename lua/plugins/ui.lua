@@ -261,7 +261,8 @@ return {
         ["<leader>D"] = { name = "Debug" },
         ["<leader>S"] = { name = "Search" },
         ["<leader>a"] = { name = "Activate" },
-        ["\\"] = { name = "Mark" },
+        ["<leader>m"] = { name = "Make" },
+        ["\\"] = { name = "Local leader" },
       })
     end,
   },

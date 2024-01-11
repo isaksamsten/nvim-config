@@ -143,12 +143,12 @@ Start Neovim and sync the plugins with `:Lazy restore`.
 | `<leader>p`        | Search symbols                              |
 | `[t`               | Previous tab                                |
 | `]t`               | Next tab                                    |
-| `<M-w>`            | Close tab                                   |
-| `<M-t>`            | New tab                                     |
-| `<M-1>`            | Go to tab #1                                |
-| `<M-2>`            | Go to tab #2                                |
-| `<M-3>`            | Go to tab #3                                |
-| `<M-4>`            | Go to tab #4                                |
+| `<leader>Tx`       | Close tab                                   |
+| `<leader>Tc`       | New tab                                     |
+| `<leader>1`        | Go to tab #1                                |
+| `<leader>2`        | Go to tab #2                                |
+| `<leader>3`        | Go to tab #3                                |
+| `<leader>4`        | Go to tab #4                                |
 
 Default Keybindings most of the remaining plugins.
 

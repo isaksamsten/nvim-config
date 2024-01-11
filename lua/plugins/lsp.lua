@@ -209,32 +209,18 @@ return {
         erlangls = { skip_install = true },
         esbonio = {},
         jdtls = { skip_setup = true },
-        -- pylsp = {
-        --   settings = {
-        --     pylsp = {
-        --       plugins = {
-        --         -- rope_completion = { enabled = false },
-        --         -- rope_autoimport = { enabled = true },
-        --         autopep8 = { enabled = false },
-        --         mccabe = { enabled = false },
-        --         pycodestyle = { enabled = false },
-        --         yapf = { enabled = false },
-        --         pyflakes = { enabled = false },
-        --         jedi_completion = { enabled = true },
+        pylance = { skip_install = true },
+        -- jedi_language_server = {
+        --   capabilities = {
+        --     textDocument = {
+        --       completion = {
+        --         completionItem = {
+        --           snippetSupport = false,
+        --         },
         --       },
         --     },
         --   },
-        jedi_language_server = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = false,
-                },
-              },
-            },
-          },
-        },
+        -- },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -258,7 +244,6 @@ return {
           end,
         },
         rust_analyzer = { skip_setup = true },
-        -- texlab = {},
         yamlls = {},
       },
     },

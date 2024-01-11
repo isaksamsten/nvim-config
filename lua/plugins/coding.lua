@@ -333,9 +333,10 @@ return {
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = "path" },
+          { name = "otter" },
           { name = "nvim_lsp", keyword_length = 1 },
           { name = "buffer", keyword_length = 3 },
+          { name = "path" },
           { name = "omni", filetypes = { "tex" } },
           { name = "luasnip", keyword_length = 2 },
         }),

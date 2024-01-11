@@ -1,3 +1,4 @@
+local obsidian_valult = vim.fn.expand("~") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
 return {
   {
     "isaksamsten/dante.nvim", -- use my fork with some QOL changes
@@ -66,9 +67,33 @@ return {
       vim.api.nvim_create_autocmd("TextYankPost", { callback = copy })
     end,
   },
+
   {
     "HakonHarnes/img-clip.nvim",
     opts = {},
     cmd = { "PasteImage" },
+  },
+
+  {
+    "quarto-dev/quarto-nvim",
+    ft = "quarto",
+    dependencies = {
+      {
+        "jmbuhr/otter.nvim",
+        lsp = {
+          hover = {
+            border = require("config.icons").borders.outer.all,
+          },
+        },
+        buffers = {
+          set_filetype = true,
+        },
+      },
+    },
+    opts = {
+      lspFeatures = {
+        languages = { "python", "bash" },
+      },
+    },
   },
 }

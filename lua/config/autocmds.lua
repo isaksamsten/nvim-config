@@ -69,23 +69,24 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 local ignore_filetypes = { "neo-tree", "minifiles", "alpha", "neotest-summary", "TelescopePrompt" }
-vim.api.nvim_create_autocmd("InsertEnter", {
-  pattern = "*",
-  callback = function(args)
-    if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
-      vim.cmd(":setlocal norelativenumber")
-    end
-  end,
-})
-vim.api.nvim_create_autocmd("InsertLeave", {
-  pattern = "*",
-  callback = function(args)
-    if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
-      vim.cmd(":setlocal relativenumber")
-    end
-  end,
-})
-
+if not vim.g.vscode then
+  vim.api.nvim_create_autocmd("InsertEnter", {
+    pattern = "*",
+    callback = function(args)
+      if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
+        vim.cmd(":setlocal norelativenumber")
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    pattern = "*",
+    callback = function(args)
+      if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
+        vim.cmd(":setlocal relativenumber")
+      end
+    end,
+  })
+end
 vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesBufferCreate",
   callback = function(args)
