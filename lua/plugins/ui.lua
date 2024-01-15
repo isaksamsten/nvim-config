@@ -74,7 +74,7 @@ return {
 
   {
     "nvim-tree/nvim-web-devicons",
-    lazy = false,
+    event = "VimEnter",
     opts = {
       override = {
         ["ipynb"] = {
@@ -120,7 +120,7 @@ return {
   },
 
   {
-    "echasnovski/mini.nvim",
+    "echasnovski/mini.files",
     keys = {
       {
         "-",

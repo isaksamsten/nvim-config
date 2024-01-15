@@ -209,18 +209,18 @@ return {
         erlangls = { skip_install = true },
         esbonio = {},
         jdtls = { skip_setup = true },
-        pylance = { skip_install = true },
-        -- jedi_language_server = {
-        --   capabilities = {
-        --     textDocument = {
-        --       completion = {
-        --         completionItem = {
-        --           snippetSupport = false,
-        --         },
-        --       },
-        --     },
-        --   },
-        -- },
+        -- pylance = { skip_install = true },
+        jedi_language_server = {
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          },
+        },
         lua_ls = {},
         jsonls = {},
         marksman = {},
