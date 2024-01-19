@@ -125,6 +125,8 @@ return {
       require("lint").linters_by_ft = {
         python = { "numpydoc_lint" },
         cython = { "cython_lint" },
+        -- tex = { "vale" },
+        -- markdown = { "vale" },
       }
 
       vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
@@ -337,7 +339,6 @@ return {
           { name = "nvim_lsp", keyword_length = 1 },
           { name = "buffer", keyword_length = 3 },
           { name = "path" },
-          { name = "omni", filetypes = { "tex" } },
           { name = "luasnip", keyword_length = 2 },
         }),
       }
@@ -361,13 +362,24 @@ return {
         }),
       })
 
+      require("cmp_git").setup()
       cmp.setup.filetype("gitcommit", {
         mapping = opts.mapping,
         sources = {
           { name = "git" },
         },
       })
-      require("cmp_git").setup()
+      cmp.setup.cmdline("@", { enabled = false })
+      cmp.setup.cmdline(">", { enabled = false })
+      cmp.setup.cmdline("-", { enabled = false })
+      cmp.setup.cmdline("=", { enabled = false })
+
+      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+        enabled = true,
+        sources = {
+          { name = "dap" },
+        },
+      })
     end,
   },
 

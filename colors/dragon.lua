@@ -383,7 +383,6 @@ local hlgroups = {
   -- LSP {{{2
   LspCodeLens = { fg = c_dragonAsh },
   LspInfoBorder = { link = "FloatBorder" },
-  LspInlayHint = { link = "DiagnosticVirtualTextHint" },
   LspReferenceRead = { link = "LspReferenceText" },
   LspReferenceText = { bg = c_winterYellow },
   LspReferenceWrite = { bg = c_winterYellow },
