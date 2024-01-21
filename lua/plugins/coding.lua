@@ -11,38 +11,38 @@ return {
       },
     },
     opts = function()
-      local ruff = {
-        meta = {
-          url = "https://beta.ruff.rs/docs/",
-          description = "An extremely fast Python linter, written in Rust.",
-        },
-        command = "ruff",
-        args = {
-          "--fix",
-          "-e",
-          "-n",
-          "--stdin-filename",
-          "$FILENAME",
-          "-",
-        },
-        stdin = true,
-        cwd = require("conform.util").root_file({
-          "pyproject.toml",
-        }),
-      }
-      local latexindent = {
-        meta = {
-          url = "https://github.com/cmhughes/latexindent.pl",
-          description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
-        },
-        command = "latexindent",
-        args = {
-          "-m",
-          "-l",
-          "-",
-        },
-        stdin = true,
-      }
+      -- local ruff = {
+      --   meta = {
+      --     url = "https://beta.ruff.rs/docs/",
+      --     description = "An extremely fast Python linter, written in Rust.",
+      --   },
+      --   command = "ruff",
+      --   args = {
+      --     "--fix",
+      --     "-e",
+      --     "-n",
+      --     "--stdin-filename",
+      --     "$FILENAME",
+      --     "-",
+      --   },
+      --   stdin = true,
+      --   cwd = require("conform.util").root_file({
+      --     "pyproject.toml",
+      --   }),
+      -- }
+      -- local latexindent = {
+      --   meta = {
+      --     url = "https://github.com/cmhughes/latexindent.pl",
+      --     description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
+      --   },
+      --   command = "latexindent",
+      --   args = {
+      --     "-m",
+      --     "-l",
+      --     "-",
+      --   },
+      --   stdin = true,
+      -- }
       local erlfmt = {
         meta = {
           url = "https://github.com/WhatsApp/erlfmt",
@@ -64,7 +64,7 @@ return {
       return {
         formatters_by_ft = {
           ["*"] = { "trim_whitespace", "trim_newline" },
-          python = { "ruff", "black" },
+          python = { "ruff_fix", "ruff_format" },
           tex = { "latexindent" },
           lua = { "stylua" },
           erlang = { "erlfmt" },
@@ -73,8 +73,6 @@ return {
           json = { "prettier" },
         },
         formatters = {
-          ruff = ruff,
-          latexindent = latexindent,
           erlfmt = erlfmt,
           java_google_format = java_google_format,
         },
