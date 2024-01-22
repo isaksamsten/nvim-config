@@ -98,7 +98,7 @@ return {
           enable = true,
           border = "solid",
           peek_definition_code = {
-            ["<C-k>"] = "@function.outer",
+            ["<leader>k"] = "@function.outer",
           },
         },
       },

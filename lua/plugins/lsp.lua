@@ -111,7 +111,7 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
-      -- "barreiroleo/ltex_extra.nvim",
+      "barreiroleo/ltex_extra.nvim",
       {
         "ray-x/lsp_signature.nvim",
         version = false,
@@ -183,13 +183,13 @@ return {
         better_virtual_text = {
           spacing = 4,
           prefix = function(diagnostic)
-            if diagnostic.source == "vale-ls" then
+            if diagnostic.source == "LTeX" then
               return ""
             end
             return require("config.icons"):get_diagnostic(diagnostic.severity)
           end,
           format = function(diagnostic)
-            if diagnostic.source == "vale-ls" then
+            if diagnostic.source == "LTeX" then
               return ""
             end
             local max_width = vim.g.max_width_diagnostic_virtual_text or 40
@@ -224,32 +224,20 @@ return {
         lua_ls = {},
         jsonls = {},
         marksman = {},
-        vale_ls = {
-          filetypes = { "markdown", "tex", "markdown", "mail", "gitcommit" },
+        ltex = {
+          on_attach = function(client, bufnr)
+            require("ltex_extra").setup({ path = "~/.ltex/" })
+          end,
+          filetypes = { "bib", "gitcommit", "markdown", "org", "plaintex", "rst", "rnoweb", "tex", "pandoc", "mail" },
           settings = {
-            init_options = {
-              installVale = false,
-              syncOnStartup = false,
+            ["ltex-ls"] = {
+              logLevel = "severe",
+            },
+            additionalRules = {
+              motherTongue = "sv",
             },
           },
-          root_dir = function(_)
-            return vim.fn.getcwd()
-          end,
         },
-        -- ltex = {
-        --   on_attach = function(client, bufnr)
-        --     require("ltex_extra").setup({ path = "~/.ltex/" })
-        --   end,
-        --   filetypes = { "bib", "gitcommit", "markdown", "org", "plaintex", "rst", "rnoweb", "tex", "pandoc", "mail" },
-        --   settings = {
-        --     ["ltex-ls"] = {
-        --       logLevel = "severe",
-        --     },
-        --     additionalRules = {
-        --       motherTongue = "sv",
-        --     },
-        --   },
-        -- },
         ruff_lsp = {
           on_attach = function(client, bufnr)
             client.server_capabilities.hoverProvider = false
