@@ -206,7 +206,18 @@ return {
       servers = {
         bashls = {},
         clangd = {},
-        erlangls = { skip_install = true },
+        erlangls = {
+          skip_install = true,
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          },
+        },
         esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},

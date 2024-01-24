@@ -61,7 +61,7 @@ vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
 vim.keymap.set({ "n" }, "[Q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
 
 local Python = require("helpers.python")
-vim.keymap.set("n", "<leader>aA", function()
+vim.keymap.set("n", "<leader>AA", function()
   Python.select_conda({
     callback = function(env)
       if Python.activate(env) then
@@ -71,11 +71,11 @@ vim.keymap.set("n", "<leader>aA", function()
   })
 end, { desc = "Select Conda environment", silent = false })
 
-vim.keymap.set("n", "<leader>aa", function()
+vim.keymap.set("n", "<leader>Aa", function()
   Python.activate()
 end, { desc = "Activate Python environment", silent = false })
 
-vim.keymap.set("n", "<leader>as", function()
+vim.keymap.set("n", "<leader>As", function()
   Python.select_conda({
     callback = function(env)
       if env then

@@ -333,8 +333,13 @@ return {
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = "otter" },
-          { name = "nvim_lsp", keyword_length = 1 },
+          {
+            name = "nvim_lsp",
+            keyword_length = 1,
+            entry_filter = function(entry)
+              return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+            end,
+          },
           { name = "buffer", keyword_length = 3 },
           { name = "path" },
           { name = "luasnip", keyword_length = 2 },

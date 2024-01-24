@@ -73,27 +73,4 @@ return {
     opts = {},
     cmd = { "PasteImage" },
   },
-
-  {
-    "quarto-dev/quarto-nvim",
-    ft = "quarto",
-    dependencies = {
-      {
-        "jmbuhr/otter.nvim",
-        lsp = {
-          hover = {
-            border = require("config.icons").borders.outer.all,
-          },
-        },
-        buffers = {
-          set_filetype = true,
-        },
-      },
-    },
-    opts = {
-      lspFeatures = {
-        languages = { "python", "bash" },
-      },
-    },
-  },
 }

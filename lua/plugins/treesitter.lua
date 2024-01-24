@@ -31,7 +31,7 @@ return {
       highlight = { enable = true, disable = { "latex" } },
       indent = {
         enable = true,
-        disable = { "python" },
+        disable = { "python", "erlang" },
         incremental_selection = {
           enable = false,
         },
