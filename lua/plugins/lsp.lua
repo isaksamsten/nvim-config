@@ -235,20 +235,20 @@ return {
         lua_ls = {},
         jsonls = {},
         marksman = {},
-        ltex = {
-          on_attach = function(client, bufnr)
-            require("ltex_extra").setup({ path = "~/.ltex/" })
-          end,
-          filetypes = { "bib", "gitcommit", "markdown", "org", "plaintex", "rst", "rnoweb", "tex", "pandoc", "mail" },
-          settings = {
-            ["ltex-ls"] = {
-              logLevel = "severe",
-            },
-            additionalRules = {
-              motherTongue = "sv",
-            },
-          },
-        },
+        -- ltex = {
+        --   on_attach = function(client, bufnr)
+        --     require("ltex_extra").setup({ path = "~/.ltex/" })
+        --   end,
+        --   filetypes = { "bib", "gitcommit", "markdown", "org", "plaintex", "rst", "rnoweb", "tex", "pandoc", "mail" },
+        --   settings = {
+        --     ["ltex-ls"] = {
+        --       logLevel = "severe",
+        --     },
+        --     additionalRules = {
+        --       motherTongue = "sv",
+        --     },
+        --   },
+        -- },
         ruff_lsp = {
           on_attach = function(client, bufnr)
             client.server_capabilities.hoverProvider = false
