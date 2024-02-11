@@ -218,7 +218,7 @@ return {
             },
           },
         },
-        esbonio = {},
+        -- esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},
         jedi_language_server = {
