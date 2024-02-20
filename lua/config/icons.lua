@@ -135,6 +135,7 @@ local icons = {
     Unknown = "",
   },
   statuscol = "▏",
+  indentline = "│",
   borders = {
     inner = {
       all = { " ", "▁", " ", "▏", " ", "▔", " ", "▕" },
