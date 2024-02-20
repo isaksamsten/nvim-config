@@ -86,24 +86,6 @@ return {
   },
 
   {
-    "simrat39/rust-tools.nvim",
-    dependencies = { "neovim/nvim-lspconfig" },
-    ft = "rust",
-    opts = {
-      server = {
-        on_attach = function(_, bufnr)
-          vim.keymap.set("n", "<leader>cc", function()
-            require("rust-tools").hover_actions.hover_actions()
-          end, { buffer = bufnr })
-          vim.keymap.set("n", "<Leader>ca", function()
-            require("rust-tools").code_action_group.code_action_group()
-          end, { buffer = bufnr })
-        end,
-      },
-    },
-  },
-
-  {
     "neovim/nvim-lspconfig",
     version = false,
     event = { "BufReadPre", "BufNewFile" },

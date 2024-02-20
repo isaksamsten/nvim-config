@@ -540,20 +540,4 @@ return {
       -- hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
     end,
   },
-  {
-    "echasnovski/mini.indentscope",
-    enabled = false,
-    version = false,
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("mini.indentscope").setup({
-        draw = {
-          enabled = false,
-          delay = 0,
-          animation = require("mini.indentscope").gen_animation.none(),
-        },
-        symbol = require("config.icons").statuscol,
-      })
-    end,
-  },
 }
