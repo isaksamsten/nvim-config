@@ -43,13 +43,25 @@ local function get_git_dict(bufnr)
   return nil
 end
 
+local function get_commits_since_last_push()
+  local current_branch = vim.trim(vim.fn.system("git branch --show-current"))
+  local tracking_branch = "origin/" .. current_branch
+  local result = vim.fn.system(string.format("git rev-list --count %s..HEAD", tracking_branch))
+
+  if vim.v.shell_error ~= 0 then
+    return
+  end
+
+  return vim.trim(result)
+end
+
 local function git_branch(opts)
   opts = opts or {}
   return function()
     local icon = opts.icon or icons.git.branch .. " "
     local git_dict = get_git_dict(0)
     if git_dict then
-      return { { icon .. git_dict.head } }
+      return { { icon .. git_dict.head .. " " .. get_commits_since_last_push() .. "" } }
     else
       return nil
     end
