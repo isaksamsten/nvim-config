@@ -40,7 +40,7 @@ return {
               maxwidth = 1,
               colwidth = 1,
               auto = false,
-              fillchar = require("config.icons").statuscol,
+              fillchar = " ",
               fillcharhl = "StatusColumnSeparator",
             },
             click = "v:lua.ScSa",

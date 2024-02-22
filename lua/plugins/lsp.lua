@@ -105,6 +105,7 @@ return {
             floating_window = true,
             doc_lines = 2,
             transparency = 20,
+            cursorhold_update = false,
             handler_opts = {
               border = icons.borders.outer.all,
             },
