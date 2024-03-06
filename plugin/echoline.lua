@@ -80,7 +80,7 @@ local function git_changes(opts)
       local part = {}
       for _, component in ipairs(components) do
         local count = git_dict[component]
-        if count > 0 then
+        if count and count > 0 then
           table.insert(part, { icon[component] .. " " .. count .. " ", hl_group[component] })
         end
       end
