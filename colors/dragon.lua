@@ -87,7 +87,7 @@ if vim.go.bg == 'dark' then
   c_dragonRed     = '#c4746e'
   c_dragonTeal    = '#949fb5'
   c_dragonViolet  = '#8992a7'
-  c_dragonFg0     = '#b4b8b4'
+  c_dragonFg0     = '#c5c9c5'
   c_dragonFg1     = '#b4b3a7'
   c_dragonFg2     = '#a09f95'
   c_katanaGray    = '#717c7c'
