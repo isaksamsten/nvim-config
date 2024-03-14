@@ -597,6 +597,22 @@ local hlgroups = {
   DapUIWatchesError = { fg = c_lotusRed0 },
   DapUIWatchesValue = { fg = c_dragonFg0 },
 
+  NeotestPassed = { fg = c_dragonGreen1 },
+  NeotestRunning = { fg = c_carpYellow },
+  NeotestFailed = { fg = c_lotusRed0 },
+  NeotestSkipped = { fg = c_roninYellow },
+  NeotestNamespace = { link = "Keyword" },
+  NeotestFile = { link = "Normal" },
+  NeotestDir = { link = "Directory" },
+  NeotestIndent = { link = "WinSeparator" },
+  NeotestExpandMarker = { link = "NeotestIndent" },
+  NeotestWinSelect = { fg = c_dragonBlue0, bold = true },
+  NeotestFocused = { bold = true },
+  NeotestAdapterName = { fg = c_autumnGreen, bold = true },
+  NeotestMarked = { fg = c_dragonBlue0, bold = true },
+  NeotestTarget = { fg = c_dragonRed },
+  NeotestWatching = { link = "NeotestSkipped" },
+
   -- lazy.nvimo
   LazyProgressTodo = { fg = c_dragonBg5 },
 
@@ -642,8 +658,8 @@ if vim.go.bg == "light" then
   hlgroups.TelescopePreviewNormal = { bg = c_dragonBg2 }
   hlgroups.TelescopePreviewBorder = { fg = c_dragonBg2, bg = c_dragonBg2 }
 
-  hlgroups.MiniFilesTitleFocused = { fg = c_autumnGreen, bg = c_dragonBg0 }
-  hlgroups.MiniFilesTitle = { fg = c_dragonBlue0, bg = c_dragonBg0 }
+  hlgroups.MiniFilesTitleFocused = { fg = c_autumnGreen, bg = c_dragonBg0, bold = true }
+  hlgroups.MiniFilesTitle = { fg = c_dragonBlue0, bg = c_dragonBg0, bold = true }
   hlgroups.MiniFilesNormal = { fg = c_dragonFg0, bg = c_dragonBg0 }
 
   -- hlgroups.GlanceListCursorLine = { bg = c_dragonBg1 }

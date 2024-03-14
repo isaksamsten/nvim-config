@@ -409,6 +409,13 @@ return {
         desc = "Run all tests",
       },
       {
+        "<leader>tl",
+        function()
+          require("neotest").run.run_last()
+        end,
+        desc = "Run last test",
+      },
+      {
         "<leader>td",
         function()
           require("neotest").run.run({ strategy = "dap" })
@@ -416,7 +423,7 @@ return {
         desc = "Debug test",
       },
       {
-        "<leader>ts",
+        "<leader>tS",
         function()
           require("neotest").run.stop()
         end,
@@ -427,21 +434,35 @@ return {
         function()
           require("neotest").summary.toggle()
         end,
-        desc = "Test summary",
+        desc = "Toggle test summary panel",
       },
       {
         "<leader>to",
         function()
           require("neotest").output_panel.toggle()
         end,
-        desc = "Test outputs",
+        desc = "Toggle test output panel",
       },
       {
-        "<leader>tp", -- Shift-<F4>
+        "<leader>tp",
         function()
           require("neotest").output.open({ enter = true })
         end,
         desc = "Peek test",
+      },
+      {
+        "[n",
+        function()
+          require("neotest").jump.prev({ status = "failed" })
+        end,
+        desc = "Previous failed test",
+      },
+      {
+        "]n",
+        function()
+          require("neotest").jump.next({ status = "failed" })
+        end,
+        desc = "Next failed test",
       },
     },
     opts = function()
@@ -475,6 +496,9 @@ return {
         },
         quickfix = {
           open = false,
+        },
+        summary = {
+          mappings = { expand = { "<CR>", "l" }, jumpto = { "i", "L" } },
         },
       }
     end,
