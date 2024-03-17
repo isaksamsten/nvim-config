@@ -71,6 +71,7 @@ return {
           java = { "java_google_format" },
           markdown = { "prettier" },
           json = { "prettier" },
+          c = { "clang_format" },
         },
         formatters = {
           erlfmt = erlfmt,

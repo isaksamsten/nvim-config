@@ -30,7 +30,13 @@ return {
     },
   },
   {
+    "knubie/vim-kitty-navigator",
+    lazy = false,
+    build = "cp ./*.py ~/.config/kitty/",
+  },
+  {
     "alexghergh/nvim-tmux-navigation",
+    enabled = false,
     keys = {
       { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
       { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", desc = "Up window" },
