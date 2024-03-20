@@ -10,39 +10,9 @@ return {
         desc = "Format",
       },
     },
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
     opts = function()
-      -- local ruff = {
-      --   meta = {
-      --     url = "https://beta.ruff.rs/docs/",
-      --     description = "An extremely fast Python linter, written in Rust.",
-      --   },
-      --   command = "ruff",
-      --   args = {
-      --     "--fix",
-      --     "-e",
-      --     "-n",
-      --     "--stdin-filename",
-      --     "$FILENAME",
-      --     "-",
-      --   },
-      --   stdin = true,
-      --   cwd = require("conform.util").root_file({
-      --     "pyproject.toml",
-      --   }),
-      -- }
-      -- local latexindent = {
-      --   meta = {
-      --     url = "https://github.com/cmhughes/latexindent.pl",
-      --     description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
-      --   },
-      --   command = "latexindent",
-      --   args = {
-      --     "-m",
-      --     "-l",
-      --     "-",
-      --   },
-      --   stdin = true,
-      -- }
       local erlfmt = {
         meta = {
           url = "https://github.com/WhatsApp/erlfmt",
@@ -71,7 +41,7 @@ return {
           java = { "java_google_format" },
           markdown = { "prettier" },
           json = { "prettier" },
-          c = { "clang_format" },
+          c = { "clangd_format" },
         },
         formatters = {
           erlfmt = erlfmt,

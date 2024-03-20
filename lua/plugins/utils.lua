@@ -1,4 +1,3 @@
-local obsidian_valult = vim.fn.expand("~") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
 return {
   {
     "isaksamsten/dante.nvim", -- use my fork with some QOL changes
