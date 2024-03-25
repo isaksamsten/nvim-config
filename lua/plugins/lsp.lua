@@ -22,6 +22,26 @@ vim.api.nvim_create_autocmd("LspAttach", {
         desc = "Clear All the References",
       })
     end
+    if client.server_capabilities.inlayHintProvider and not vim.g.disable_inlay_hints then
+      vim.lsp.inlay_hint.enable(bufnr, true)
+      vim.api.nvim_create_augroup("lsp_inlay_hints", { clear = true })
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_inlay_hints" })
+
+      vim.api.nvim_create_autocmd("InsertEnter", {
+        callback = function(inner_args)
+          vim.lsp.inlay_hint.enable(inner_args.buf, false)
+        end,
+        group = "lsp_inlay_hints",
+        buffer = bufnr,
+      })
+      vim.api.nvim_create_autocmd("InsertLeave", {
+        callback = function(inner_args)
+          vim.lsp.inlay_hint.enable(inner_args.buf, true)
+        end,
+        group = "lsp_inlay_hints",
+        buffer = bufnr,
+      })
+    end
   end,
 })
 
@@ -204,17 +224,34 @@ return {
         -- esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},
-        jedi_language_server = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = false,
-                },
+        basedpyright = {
+          skip_install = true,
+          settings = {
+            verboseOutput = false,
+            autoImportCompletion = true,
+            basedpyright = {
+              disableOrganizeImports = true,
+              analysis = {
+                typeCheckingMode = "standard",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+                indexing = true,
               },
             },
           },
         },
+        -- jedi_language_server = {
+        --   capabilities = {
+        --     textDocument = {
+        --       completion = {
+        --         completionItem = {
+        --           snippetSupport = false,
+        --         },
+        --       },
+        --     },
+        --   },
+        -- },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -232,11 +269,12 @@ return {
         --     },
         --   },
         -- },
-        ruff_lsp = {
-          on_attach = function(client, bufnr)
-            client.server_capabilities.hoverProvider = false
-          end,
-        },
+        -- ruff_lsp = {
+        --   on_attach = function(client, bufnr)
+        --     client.server_capabilities.hoverProvider = false
+        --     client.server_capabilities.diagnosticProvider = false
+        --   end,
+        -- },
         rust_analyzer = { skip_setup = true },
         yamlls = {},
       },
