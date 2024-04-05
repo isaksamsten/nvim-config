@@ -275,7 +275,7 @@ return {
         --     client.server_capabilities.diagnosticProvider = false
         --   end,
         -- },
-        rust_analyzer = { skip_setup = true },
+        rust_analyzer = { skip_setup = false },
         yamlls = {},
       },
     },

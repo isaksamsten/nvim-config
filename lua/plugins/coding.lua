@@ -42,6 +42,7 @@ return {
           markdown = { "prettier" },
           json = { "prettier" },
           c = { "clangd_format" },
+          rust = { "rustfmt" },
         },
         formatters = {
           erlfmt = erlfmt,
