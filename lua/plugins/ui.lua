@@ -1,5 +1,19 @@
 return {
   {
+    "romainl/vim-qf",
+    event = "VeryLazy",
+    config = function()
+      vim.cmd([[
+        let g:qf_mapping_ack_style = 1
+        nmap <C-Q> <Plug>qf_qf_toggle
+        nmap <C-q> <Plug>qf_qf_switch
+
+        nmap [q <Plug>qf_qf_previous
+        nmap ]q  <Plug>qf_qf_next
+      ]])
+    end,
+  },
+  {
     "luukvbaal/statuscol.nvim",
     event = "VimEnter",
     opts = function()
@@ -271,6 +285,7 @@ return {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
     branch = "master",
+    enabled = false,
     opts = function()
       -- local function is_neotree(opts)
       --   return string.match(opts.prompt, '^Enter new name for "%w+"')
@@ -287,18 +302,6 @@ return {
             conf.title_pos = "center"
             if conf.title then
               conf.title = string.gsub(conf.title, ":$", "")
-
-              -- Replace the title of Neotree popups
-              if string.match(conf.title, "^Enter new name for") then
-                conf.title = "New name"
-                -- conf.border = "rounded"
-              elseif string.match(conf.title, "Are you sure you want to delete") then
-                conf.title = "Delete (y/n)"
-              elseif string.match(conf.title, "^Enter name for new file or directory") then
-                conf.title = "New file or directory"
-              elseif string.match(conf.title, "^Enter name for new directory") then
-                conf.title = "New directory"
-              end
             end
           end,
           -- get_config = function(opts)

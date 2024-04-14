@@ -275,7 +275,11 @@ return {
         --     client.server_capabilities.diagnosticProvider = false
         --   end,
         -- },
-        rust_analyzer = { skip_setup = false },
+        rust_analyzer = {
+          -- settings = {
+          --   ["rust-analyzer"] = { completion = { autoimport = { enable = false } } },
+          -- },
+        },
         yamlls = {},
       },
     },

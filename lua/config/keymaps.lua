@@ -55,10 +55,10 @@ vim.keymap.set({ "n", "v" }, "<leader>4", "<Esc><Cmd>tabnext 4<CR>", { desc = "N
 vim.keymap.set({ "n", "v" }, "<leader>Tc", "<Esc><Cmd>tabnew<CR>", { desc = "New tab" })
 vim.keymap.set({ "n", "v" }, "<leader>Tx", "<Esc><Cmd>tabclose<CR>", { desc = "Close tab" })
 
-vim.keymap.set({ "n" }, "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix" })
-vim.keymap.set({ "n" }, "]q", "<cmd>cnext<cr>", { desc = "Next quickfix" })
-vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
-vim.keymap.set({ "n" }, "[Q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
+-- vim.keymap.set({ "n" }, "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix" })
+-- vim.keymap.set({ "n" }, "]q", "<cmd>cnext<cr>", { desc = "Next quickfix" })
+-- vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
+-- vim.keymap.set({ "n" }, "[Q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
 
 local Python = require("helpers.python")
 vim.keymap.set("n", "<leader>AA", function()
@@ -100,6 +100,7 @@ local M = {}
 
 function M.lsp_on_attach(client, bufnr)
   local telescope_ok, builtin = pcall(require, "telescope.builtin")
+  telescope_ok = false
   local map = function(m, lhs, rhs, desc)
     vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
   end

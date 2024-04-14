@@ -117,6 +117,7 @@ return {
       }
     end,
     dependencies = {
+      "nvim-neotest/nvim-nio",
       {
         -- "MunifTanjim/nui.nvim",
         "mfussenegger/nvim-dap",
@@ -138,6 +139,14 @@ return {
                   command = "debugpy-adapter",
                   args = {},
                 },
+                codelldb = {
+                  type = "server",
+                  port = "${port}",
+                  executable = {
+                    command = "codelldb",
+                    args = { "--port", "${port}" },
+                  },
+                },
               },
               configurations = {
                 python = {
@@ -148,6 +157,19 @@ return {
 
                     program = "${file}",
                     pythonPath = require("helpers.python").executable,
+                  },
+                },
+                rust = {
+                  {
+                    name = "Rust debug",
+                    type = "codelldb",
+                    request = "launch",
+                    program = function()
+                      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+                    end,
+                    cwd = "${workspaceFolder}",
+                    showDisassembly = "never",
+                    stopOnEntry = true,
                   },
                 },
               },
@@ -304,7 +326,7 @@ return {
       },
     },
     opts = {
-      ensure_installed = { "debugpy" },
+      ensure_installed = { "debugpy", "codelldb" },
     },
   },
 }

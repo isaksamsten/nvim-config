@@ -1,6 +1,6 @@
 vim.cmd([[
   command! -nargs=+ -complete=file Grep noautocmd silent grep! <args> | copen
-  command! -nargs=+ -complete=file LGrep noautocmd silent lgrep! <args> | copen
+  command! -nargs=+ -complete=file LGrep noautocmd silent lgrep! <args> | lopen
 ]])
 
 vim.cmd.colorscheme("dragon")

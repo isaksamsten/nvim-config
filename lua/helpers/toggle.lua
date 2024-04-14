@@ -19,7 +19,7 @@ Toggle.format_active = function()
   if vim.b.is_format_active == false or not Toggle.is_format_active then
     return false
   else
-    return true
+    return true and vim.bo.filetype ~= "mail"
   end
 end
 
