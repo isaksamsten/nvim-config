@@ -364,6 +364,7 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/neotest-python",
+      "rouge8/neotest-rust",
     },
     keys = {
       {
@@ -447,6 +448,7 @@ return {
             runner = "pytest",
             python = require("helpers.python").executable,
           }),
+          require("neotest-rust"),
         },
         icons = {
           child_indent = icons.indent.marker,
@@ -467,7 +469,7 @@ return {
           border = icons.borders.outer.all,
         },
         quickfix = {
-          open = false,
+          open = true,
         },
         summary = {
           mappings = { expand = { "<CR>", "l" }, jumpto = { "i", "L" } },

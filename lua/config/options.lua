@@ -1,3 +1,149 @@
+local namespace = vim.api.nvim_create_namespace("iqf")
+
+function _G.quickfixtextfunc(info)
+  local items, list
+  if info.quickfix > 0 then
+    list = vim.fn.getqflist({ id = info.id, items = 0, qfbufnr = 1 })
+  else
+    list = vim.fn.getloclist(info.winid, { id = info.id, items = 0, qfbufnr = 1 })
+  end
+  items = list.items
+
+  local max_width = vim.api.nvim_get_option("columns")
+  local function get_item_fname(item)
+    local fname = item.bufnr > 0 and vim.fn.bufname(item.bufnr) or ""
+
+    if fname == "" then
+      fname = "[No Name]"
+    else
+      fname = vim.fn.fnamemodify(fname, ":p:~:.")
+    end
+
+    local len = vim.fn.strchars(fname)
+    if len > 20 then
+      fname = "…" .. vim.fn.strpart(fname, len - 20, len, true)
+    end
+
+    return fname
+  end
+
+  local fname_limit = 1
+  local lnum_limit = 1
+  local col_limit = 1
+
+  for _, item in ipairs(items) do
+    local fname = get_item_fname(item)
+    local lnum = "" .. item.lnum
+    local col = "" .. item.col
+
+    if #fname > fname_limit then
+      fname_limit = #fname
+    end
+    if #lnum > lnum_limit then
+      lnum_limit = #lnum
+    end
+    if #col > col_limit then
+      col_limit = #col
+    end
+  end
+
+  local function type_to_value(type)
+    if type == "E" then
+      return "error"
+    elseif type == "W" then
+      return "warning"
+    elseif type == "N" then
+      return "note"
+    elseif type == "I" then
+      return "info"
+    end
+    return type
+  end
+
+  local highlights = {}
+  local counter = 0
+  local function format_item(item)
+    if item.valid == 1 then
+      local fname = get_item_fname(item)
+      local extension = vim.fn.fnamemodify(fname, ":t:e")
+      local icon, icon_hl = require("nvim-web-devicons").get_icon(fname, extension)
+      if not icon or icon == "nil" then
+        icon = ""
+      else
+        table.insert(highlights, { line = counter, group = icon_hl })
+      end
+      counter = counter + 1
+
+      local lnum = "" .. item.lnum
+      local col = "" .. item.col
+
+      return ("%s  %s | %s col %s%s | %s"):format(
+        icon,
+        fname .. string.rep(" ", fname_limit - #fname),
+        string.rep(" ", lnum_limit - #lnum) .. lnum,
+        col .. string.rep(" ", col_limit - #col),
+        item.type == "" and "" or " " .. type_to_value(item.type),
+        item.text:gsub("^%s+", ""):gsub("\n", " ")
+      )
+    else
+      return item.text
+    end
+  end
+  vim.schedule(function()
+    local id = list.qfbufnr
+    for _, hl in ipairs(highlights) do
+      vim.highlight.range(id, namespace, hl.group, { hl.line, 0 }, { hl.line, 2 })
+    end
+  end)
+  return vim.tbl_map(format_item, vim.list_slice(items, info.start_idx, info.end_idx))
+end
+
+_G.skip_foldexpr = {} ---@type table<number,boolean>
+local skip_check = assert(vim.uv.new_check())
+
+function _G.foldexpr()
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- still in the same tick and no parser
+  if _G.skip_foldexpr[buf] then
+    return "0"
+  end
+
+  -- don't use treesitter folds for non-file buffers
+  if vim.bo[buf].buftype ~= "" then
+    return "0"
+  end
+
+  -- as long as we don't have a filetype, don't bother
+  -- checking if treesitter is available (it won't)
+  if vim.bo[buf].filetype == "" then
+    return "0"
+  end
+
+  local ok = pcall(vim.treesitter.get_parser, buf)
+
+  if ok then
+    return vim.treesitter.foldexpr()
+  end
+
+  -- no parser available, so mark it as skip
+  -- in the next tick, all skip marks will be reset
+  _G.skip_foldexpr[buf] = true
+  skip_check:start(function()
+    _G.skip_foldexpr = {}
+    skip_check:stop()
+  end)
+  return "0"
+end
+
+vim.o.quickfixtextfunc = [[{info -> v:lua.quickfixtextfunc(info)}]]
+vim.o.foldtext = ""
+vim.o.foldexpr = "v:lua.foldexpr()"
+vim.o.foldmethod = "expr"
+vim.o.foldenable = false
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+
 vim.o.exrc = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -6,7 +152,7 @@ vim.g.cmp_completion_max_width = 30
 vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
-vim.opt.fillchars = { eob = " " }
+vim.opt.fillchars = { eob = " ", fold = ".", foldopen = "", foldclose = "", foldsep = " " }
 opt.title = true
 -- opt.titlestring = "%<%t%="
 -- opt.selection = "exclusive"

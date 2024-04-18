@@ -249,7 +249,7 @@ local hlgroups = {
   PmenuThumb = { bg = c_dragonBg5 },
   PmenuBorder = { link = "FloatBorder" },
   Question = { link = "MoreMsg" },
-  QuickFixLine = { bg = c_dragonBg3 },
+  QuickFixLine = { bg = "NONE", bold = true },
   Search = { bg = c_dragonBg4 },
   SignColumn = { fg = c_dragonGray2 },
   SpellBad = { undercurl = true, sp = c_dragonRed },
@@ -643,6 +643,7 @@ local hlgroups = {
 -- Highlight group overrides {{{1
 if vim.go.bg == "light" then
   hlgroups.CursorLine = { bg = c_dragonBg0 }
+  hlgroups.QuickFixLine = { bg = "NONE", bold = true }
   hlgroups.FloatBorder = { bg = c_dragonBg0, fg = c_dragonBg0 }
   hlgroups.NormalFloat = { bg = c_dragonBg0 }
   hlgroups.DiagnosticSignWarn = { fg = c_autumnYellow }

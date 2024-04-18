@@ -51,6 +51,31 @@ vim.api.nvim_create_autocmd("FileType", {
   command = "setlocal wrap",
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("SetNoNumber", { clear = true }),
+  pattern = { "qf" },
+  command = "setlocal norelativenumber nonumber nospell",
+})
+
+local blend_cursor = { "qf", "neotest-summary" }
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+  group = vim.api.nvim_create_augroup("BlendCursor", { clear = true }),
+  nested = true,
+  pattern = "*",
+  callback = function(args)
+    local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
+    if vim.tbl_contains(blend_cursor, vim.bo[args.buf].filetype) then
+      hl.blend = 100
+      vim.api.nvim_set_hl(0, "Cursor", hl)
+      vim.opt.guicursor:append("a:Cursor/lCursor")
+    elseif hl.blend == 100 then
+      hl.blend = nil
+      vim.api.nvim_set_hl(0, "Cursor", hl)
+      vim.opt.guicursor:remove("a:Cursor/lCursor")
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   callback = function(args)
     local ok, _ = pcall(vim.api.nvim_buf_get_var, args.buf, "is_format_active")
@@ -72,7 +97,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-local ignore_filetypes = { "neo-tree", "minifiles", "alpha", "neotest-summary", "TelescopePrompt" }
+local ignore_filetypes = { "neo-tree", "minifiles", "alpha", "neotest-summary", "TelescopePrompt", "gf" }
 if not vim.g.vscode then
   vim.api.nvim_create_autocmd("InsertEnter", {
     pattern = "*",

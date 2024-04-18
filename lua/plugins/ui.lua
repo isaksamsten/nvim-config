@@ -1,11 +1,12 @@
 return {
+  -- { "yorickpeterse/nvim-pqf", event = "VeryLazy", opts = {} },
   {
     "romainl/vim-qf",
     event = "VeryLazy",
     config = function()
       vim.cmd([[
         let g:qf_mapping_ack_style = 1
-        nmap <C-Q> <Plug>qf_qf_toggle
+        nmap <C-S-q> <Plug>qf_qf_toggle
         nmap <C-q> <Plug>qf_qf_switch
 
         nmap [q <Plug>qf_qf_previous
@@ -369,6 +370,14 @@ return {
           end,
           desc = "Search buffers",
         },
+        {
+          "<leader>r",
+          function()
+            require("telescope.builtin").oldfiles(ivy({}))
+          end,
+          desc = "Recent files",
+        },
+
         -- {
         --   "<leader>o",
         --   function()
