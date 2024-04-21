@@ -490,6 +490,7 @@ return {
       local lga_actions = require("telescope-live-grep-args.actions")
       return {
         defaults = {
+          path_display = { "filename_first" },
           mappings = {
             i = {
               ["<C-u>"] = false,

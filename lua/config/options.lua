@@ -12,19 +12,22 @@ function _G.quickfixtextfunc(info)
   local max_width = vim.api.nvim_get_option("columns")
   local function get_item_fname(item)
     local fname = item.bufnr > 0 and vim.fn.bufname(item.bufnr) or ""
+    local display = nil
+    local style = nil
 
     if fname == "" then
-      fname = "[No Name]"
+      display = "[No Name]"
     else
       fname = vim.fn.fnamemodify(fname, ":p:~:.")
+      display, style = require("telescope.utils").transform_path({ path_display = { "filename_first" } }, fname)
     end
 
-    local len = vim.fn.strchars(fname)
-    if len > 20 then
-      fname = "…" .. vim.fn.strpart(fname, len - 20, len, true)
-    end
+    -- local len = vim.fn.strchars(fname)
+    -- if len > 20 then
+    --   fname = "…" .. vim.fn.strpart(fname, len - 20, len, true)
+    -- end
 
-    return fname
+    return fname, display, style
   end
 
   local fname_limit = 1
@@ -32,12 +35,13 @@ function _G.quickfixtextfunc(info)
   local col_limit = 1
 
   for _, item in ipairs(items) do
-    local fname = get_item_fname(item)
+    local fname, display, style = get_item_fname(item)
+    item._file = { filename = fname, display = display, style = style }
     local lnum = "" .. item.lnum
     local col = "" .. item.col
 
-    if #fname > fname_limit then
-      fname_limit = #fname
+    if #display > fname_limit then
+      fname_limit = #display
     end
     if #lnum > lnum_limit then
       lnum_limit = #lnum
@@ -64,7 +68,8 @@ function _G.quickfixtextfunc(info)
   local counter = 0
   local function format_item(item)
     if item.valid == 1 then
-      local fname = get_item_fname(item)
+      local fname = item._file.filename
+      local display = item._file.display --get_item_fname(item)
       local extension = vim.fn.fnamemodify(fname, ":t:e")
       local icon, icon_hl = require("nvim-web-devicons").get_icon(fname, extension)
       if not icon or icon == "nil" then
@@ -72,6 +77,11 @@ function _G.quickfixtextfunc(info)
       else
         table.insert(highlights, { line = counter, group = icon_hl })
       end
+      local highlight = item._file.style[1]
+      table.insert(
+        highlights,
+        { line = counter, col = highlight[1][1] + 5, end_col = highlight[1][2] + 5, group = highlight[2] }
+      )
       counter = counter + 1
 
       local lnum = "" .. item.lnum
@@ -79,7 +89,7 @@ function _G.quickfixtextfunc(info)
 
       return ("%s  %s | %s col %s%s | %s"):format(
         icon,
-        fname .. string.rep(" ", fname_limit - #fname),
+        display .. string.rep(" ", fname_limit - #fname),
         string.rep(" ", lnum_limit - #lnum) .. lnum,
         col .. string.rep(" ", col_limit - #col),
         item.type == "" and "" or " " .. type_to_value(item.type),
@@ -92,7 +102,9 @@ function _G.quickfixtextfunc(info)
   vim.schedule(function()
     local id = list.qfbufnr
     for _, hl in ipairs(highlights) do
-      vim.highlight.range(id, namespace, hl.group, { hl.line, 0 }, { hl.line, 2 })
+      local col = hl.col or 0
+      local end_col = hl.end_col or 2
+      vim.highlight.range(id, namespace, hl.group, { hl.line, col }, { hl.line, end_col })
     end
   end)
   return vim.tbl_map(format_item, vim.list_slice(items, info.start_idx, info.end_idx))
