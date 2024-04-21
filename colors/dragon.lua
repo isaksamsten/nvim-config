@@ -230,7 +230,7 @@ local hlgroups = {
   FloatFooter = { bg = c_dragonBg3, fg = c_dragonBg5 },
   FloatTitle = { bg = c_dragonBg3, fg = c_dragonGray2, bold = true },
   FoldColumn = { fg = c_dragonBg5 },
-  Folded = { bg = c_dragonBg2, fg = c_lotusGray },
+  Folded = { bg = c_dragonBg2, fg = c_dragonAsh },
   Ignore = { link = "NonText" },
   IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
   LineNr = { fg = c_dragonBg5 },

@@ -6,21 +6,21 @@ local function get_toggles(opts)
   return function()
     local messages = {}
     if toggle.format_active() then
-      table.insert(messages, { " ", "Normal" })
+      table.insert(messages, { "  ", "Normal" })
     else
-      table.insert(messages, { " ", "Normal" })
+      table.insert(messages, { "  ", "Normal" })
     end
 
     local conceal_value = vim.api.nvim_win_get_option(0, "conceallevel")
     if conceal_value > 0 then
-      table.insert(messages, { " ", "Normal" })
+      table.insert(messages, { "  ", "Normal" })
     else
-      table.insert(messages, { " ", "Normal" })
+      table.insert(messages, { "  ", "Normal" })
     end
 
     local wrap = vim.api.nvim_win_get_option(0, "wrap")
     if wrap then
-      table.insert(messages, { " ", "Normal" })
+      table.insert(messages, { "  ", "Normal" })
     end
 
     return messages
@@ -397,4 +397,4 @@ vim.keymap.set("n", "<C-g>", function()
     end, 2000)
   end
 end, { noremap = true, silent = true })
-vim.o.rulerformat = "%50(%= %-t%#Comment# Ln: %l, Col: %c%V%)"
+vim.o.rulerformat = "%50(%=%-t%#Comment# Ln: %l, Col: %c%V%)"
