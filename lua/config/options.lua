@@ -69,7 +69,7 @@ function _G.quickfixtextfunc(info)
   local function format_item(item)
     if item.valid == 1 then
       local fname = item._file.filename
-      local display = item._file.display --get_item_fname(item)
+      local display = item._file.display
       local extension = vim.fn.fnamemodify(fname, ":t:e")
       local icon, icon_hl = require("nvim-web-devicons").get_icon(fname, extension)
       if not icon or icon == "nil" then
