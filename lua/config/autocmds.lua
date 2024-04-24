@@ -57,22 +57,58 @@ vim.api.nvim_create_autocmd("FileType", {
   command = "setlocal norelativenumber nonumber nospell",
 })
 
-local blend_cursor = { "qf", "neotest-summary" }
+local CursorBlend = {}
+
+CursorBlend.ft = { "qf", "neotest-summary" }
+CursorBlend.hidden = false
+
+function CursorBlend.hide()
+  local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
+  hl.blend = 100
+  vim.api.nvim_set_hl(0, "Cursor", hl)
+  vim.opt.guicursor:append("a:Cursor/lCursor")
+  CursorBlend.hidden = true
+end
+
+function CursorBlend.show()
+  local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
+  hl.blend = nil
+  vim.api.nvim_set_hl(0, "Cursor", hl)
+  vim.opt.guicursor:remove("a:Cursor/lCursor")
+  CursorBlend.hidden = false
+end
+
+function CursorBlend.toggle(ft)
+  if not CursorBlend.hidden and vim.tbl_contains(CursorBlend.ft, ft) then
+    CursorBlend.hide()
+  elseif not vim.tbl_contains(CursorBlend.ft, ft) then
+    CursorBlend.show()
+  end
+end
+
 vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
   group = vim.api.nvim_create_augroup("BlendCursor", { clear = true }),
   nested = true,
   pattern = "*",
   callback = function(args)
-    local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
-    if vim.tbl_contains(blend_cursor, vim.bo[args.buf].filetype) then
-      hl.blend = 100
-      vim.api.nvim_set_hl(0, "Cursor", hl)
-      vim.opt.guicursor:append("a:Cursor/lCursor")
-    elseif hl.blend == 100 then
-      hl.blend = nil
-      vim.api.nvim_set_hl(0, "Cursor", hl)
-      vim.opt.guicursor:remove("a:Cursor/lCursor")
-    end
+    CursorBlend.toggle(vim.bo[args.buf].filetype)
+  end,
+})
+vim.api.nvim_create_autocmd({ "CmdwinEnter", "CmdlineEnter" }, {
+  group = vim.api.nvim_create_augroup("BlendCursorCmd", { clear = true }),
+  nested = true,
+  pattern = "*",
+  callback = function(args)
+    CursorBlend.show()
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "CmdwinLeave", "CmdlineLeave" }, {
+  group = vim.api.nvim_create_augroup("BlendCursorCmdLeave", { clear = true }),
+  nested = true,
+  pattern = "*",
+  callback = function(args)
+    CursorBlend.toggle(vim.bo[args.buf].filetype)
   end,
 })
 

@@ -74,14 +74,17 @@ function _G.quickfixtextfunc(info)
       local icon, icon_hl = require("nvim-web-devicons").get_icon(fname, extension)
       if not icon or icon == "nil" then
         icon = ""
+        table.insert(highlights, { line = counter, group = "Comment", col = 0, end_col = 5 + #display })
       else
         table.insert(highlights, { line = counter, group = icon_hl })
       end
-      local highlight = item._file.style[1]
-      table.insert(
-        highlights,
-        { line = counter, col = highlight[1][1] + 5, end_col = highlight[1][2] + 5, group = highlight[2] }
-      )
+      if item._file.style then
+        local highlight = item._file.style[1]
+        table.insert(
+          highlights,
+          { line = counter, col = highlight[1][1] + 5, end_col = highlight[1][2] + 5, group = highlight[2] }
+        )
+      end
       counter = counter + 1
 
       local lnum = "" .. item.lnum
@@ -89,13 +92,14 @@ function _G.quickfixtextfunc(info)
 
       return ("%s  %s | %s col %s%s | %s"):format(
         icon,
-        display .. string.rep(" ", fname_limit - #fname),
+        display .. string.rep(" ", fname_limit - #display),
         string.rep(" ", lnum_limit - #lnum) .. lnum,
         col .. string.rep(" ", col_limit - #col),
         item.type == "" and "" or " " .. type_to_value(item.type),
         item.text:gsub("^%s+", ""):gsub("\n", " ")
       )
     else
+      counter = counter + 1
       return item.text
     end
   end
