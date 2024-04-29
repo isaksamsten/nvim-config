@@ -30,12 +30,13 @@ return {
   },
   {
     "knubie/vim-kitty-navigator",
+    cond = vim.env.KITTY_PID ~= nil,
     lazy = false,
     build = "cp ./*.py ~/.config/kitty/",
   },
   {
     "alexghergh/nvim-tmux-navigation",
-    enabled = false,
+    cond = vim.env.TMUX ~= nil and vim.env.KITTY_PID == nil,
     keys = {
       { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
       { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", desc = "Up window" },
@@ -50,14 +51,15 @@ return {
 
   {
     "tpope/vim-fugitive",
-    cmd = "G",
+    cmd = { "G", "Git" },
     keys = { { "<leader>gg", "<cmd>G <CR>", desc = "Git status" } },
   },
 
   {
     "ojroques/nvim-osc52",
     event = "VeryLazy",
-    cond = require("helpers").is_remote,
+    enabled = false,
+    -- cond = require("helpers").is_remote,
     opts = {
       silent = true,
     },

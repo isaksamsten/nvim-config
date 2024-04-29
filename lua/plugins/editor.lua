@@ -6,7 +6,7 @@ return { -- TODO
   { "tpope/vim-unimpaired", event = { "BufReadPre", "BufNewFile" } },
   {
     "echasnovski/mini.move",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     version = false,
     opts = {},
     config = function(_, opts)
@@ -16,7 +16,7 @@ return { -- TODO
 
   {
     "echasnovski/mini.ai",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     version = false,
     opts = {},
     config = function(_, opts)

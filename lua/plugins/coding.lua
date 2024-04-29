@@ -317,11 +317,17 @@ return {
           { name = "luasnip", keyword_length = 2 },
         }),
         enabled = function()
-          local context = require("cmp.config.context")
           if vim.api.nvim_get_mode().mode == "c" then
             return true
           else
-            return not context.in_treesitter_capture("comment") and not context.in_syntax_group("Comment")
+            local context = require("cmp.config.context")
+            local disabled = false
+            disabled = disabled or (vim.api.nvim_buf_get_option(0, "buftype") == "prompt")
+            disabled = disabled or (vim.fn.reg_recording() ~= "")
+            disabled = disabled or (vim.fn.reg_executing() ~= "")
+            disabled = disabled or (context.in_treesitter_capture("comment") or context.in_syntax_group("Comment"))
+            return not disabled
+            -- return not context.in_treesitter_capture("comment") and not context.in_syntax_group("Comment")
           end
         end,
       }

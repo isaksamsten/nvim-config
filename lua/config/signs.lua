@@ -1,8 +1,20 @@
 local diagnostics = require("config.icons").diagnostics
-vim.fn.sign_define("DiagnosticSignError", { text = diagnostics.error, texthl = "DiagnosticSignError", numhl = "" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = diagnostics.warn, texthl = "DiagnosticSignWarn", numhl = "" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = diagnostics.info, texthl = "DiagnosticSignInfo", numhl = "" })
-vim.fn.sign_define("DiagnosticSignHint", { text = diagnostics.hint, texthl = "DiagnosticSignHint", numhl = "" })
+vim.fn.sign_define(
+  "DiagnosticSignError",
+  { text = diagnostics.error, texthl = "DiagnosticSignError", numhl = "DiagnosticSignError" }
+)
+vim.fn.sign_define(
+  "DiagnosticSignWarn",
+  { text = diagnostics.warn, texthl = "DiagnosticSignWarn", numhl = "DiagnosticSignWarn" }
+)
+vim.fn.sign_define(
+  "DiagnosticSignInfo",
+  { text = diagnostics.info, texthl = "DiagnosticSignInfo", numhl = "DiagnosticSignInfo" }
+)
+vim.fn.sign_define(
+  "DiagnosticSignHint",
+  { text = diagnostics.hint, texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint" }
+)
 
 -- HACK: OK, so to get statuscol to work as expected this sign i suppose needs
 -- to exist before it is loaded. But to get nvim-dap to register it it has to

@@ -397,4 +397,3 @@ vim.keymap.set("n", "<C-g>", function()
     end, 2000)
   end
 end, { noremap = true, silent = true })
-vim.o.rulerformat = "%50(%=%-t%#Comment# Ln: %l, Col: %c%V%)"

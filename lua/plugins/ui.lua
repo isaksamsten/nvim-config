@@ -27,7 +27,7 @@ return {
             sign = {
               name = {
                 "Dap",
-                "neotest", --[[ "Diagnostic" ]]
+                "neotest",
               },
               maxwidth = 2,
               colwidth = 2,

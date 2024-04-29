@@ -13,7 +13,7 @@ local icons = {
   },
   debug = {
     debug = "",
-    breakpoint = "",
+    breakpoint = "⚫︎",
     condition = "",
     stopped = "",
     rejected = "",

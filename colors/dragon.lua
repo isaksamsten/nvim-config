@@ -1,4 +1,4 @@
--- Name:         dragon
+-- Name:         dragondrago
 -- Description:  Colorscheme inspired by kanagawa-dragon @rebelot and mellifluous @ramojus
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
@@ -155,10 +155,10 @@ else
   c_waveBlue0     = '#223249'
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
-  c_winterBlue    = '#d4d4f0'
-  c_winterGreen   = '#d5dcd2'
-  c_winterRed     = '#e6c2c7'
-  c_winterYellow  = '#e2dcd4'
+  c_winterBlue    = '#f2f2fa'
+  c_winterGreen   = '#eaede8'
+  c_winterRed     = '#f2e0e3'
+  c_winterYellow  = '#f0ede9'
 end
 -- stylua: ignore end
 -- }}}
@@ -230,7 +230,7 @@ local hlgroups = {
   FloatFooter = { bg = c_dragonBg3, fg = c_dragonBg5 },
   FloatTitle = { bg = c_dragonBg3, fg = c_dragonGray2, bold = true },
   FoldColumn = { fg = c_dragonBg5 },
-  Folded = { bg = c_dragonBg2, fg = c_dragonAsh },
+  Folded = { bg = c_winterBlue, fg = c_dragonAsh },
   Ignore = { link = "NonText" },
   IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
   LineNr = { fg = c_dragonBg5 },
@@ -401,10 +401,10 @@ local hlgroups = {
   DiagnosticFloatingHint = { fg = c_dragonAqua },
   DiagnosticFloatingOk = { fg = c_dragonGreen1 },
   DiagnosticFloatingSuffix = { fg = c_dragonFg2 },
-  DiagnosticSignError = { fg = c_dragonRed },
-  DiagnosticSignHint = { fg = c_dragonAqua },
-  DiagnosticSignInfo = { fg = c_dragonBlue1 },
-  DiagnosticSignWarn = { fg = c_carpYellow },
+  DiagnosticSignError = { fg = c_dragonRed, bold = true },
+  DiagnosticSignHint = { fg = c_dragonAqua, bold = true },
+  DiagnosticSignInfo = { fg = c_dragonBlue1, bold = true },
+  DiagnosticSignWarn = { fg = c_carpYellow, bold = true },
   DiagnosticUnderlineError = { sp = c_dragonRed, undercurl = true },
   DiagnosticUnderlineHint = { sp = c_dragonAqua, undercurl = true },
   DiagnosticUnderlineInfo = { sp = c_dragonBlue1, undercurl = true },

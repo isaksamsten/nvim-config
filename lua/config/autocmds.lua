@@ -57,60 +57,60 @@ vim.api.nvim_create_autocmd("FileType", {
   command = "setlocal norelativenumber nonumber nospell",
 })
 
-local CursorBlend = {}
+-- local CursorBlend = {}
 
-CursorBlend.ft = { "qf", "neotest-summary" }
-CursorBlend.hidden = false
+-- CursorBlend.ft = { "qf", "neotest-summary" }
+-- CursorBlend.hidden = false
 
-function CursorBlend.hide()
-  local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
-  hl.blend = 100
-  vim.api.nvim_set_hl(0, "Cursor", hl)
-  vim.opt.guicursor:append("a:Cursor/lCursor")
-  CursorBlend.hidden = true
-end
+-- function CursorBlend.hide()
+--   local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
+--   hl.blend = 100
+--   vim.api.nvim_set_hl(0, "Cursor", hl)
+--   vim.opt.guicursor:append("a:Cursor/lCursor")
+--   CursorBlend.hidden = true
+-- end
 
-function CursorBlend.show()
-  local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
-  hl.blend = nil
-  vim.api.nvim_set_hl(0, "Cursor", hl)
-  vim.opt.guicursor:remove("a:Cursor/lCursor")
-  CursorBlend.hidden = false
-end
+-- function CursorBlend.show()
+--   local hl = vim.api.nvim_get_hl_by_name("Cursor", true)
+--   hl.blend = nil
+--   vim.api.nvim_set_hl(0, "Cursor", hl)
+--   vim.opt.guicursor:remove("a:Cursor/lCursor")
+--   CursorBlend.hidden = false
+-- end
 
-function CursorBlend.toggle(ft)
-  if not CursorBlend.hidden and vim.tbl_contains(CursorBlend.ft, ft) then
-    CursorBlend.hide()
-  elseif not vim.tbl_contains(CursorBlend.ft, ft) then
-    CursorBlend.show()
-  end
-end
+-- function CursorBlend.toggle(ft)
+--   if not CursorBlend.hidden and vim.tbl_contains(CursorBlend.ft, ft) then
+--     CursorBlend.hide()
+--   elseif not vim.tbl_contains(CursorBlend.ft, ft) then
+--     CursorBlend.show()
+--   end
+-- end
 
-vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
-  group = vim.api.nvim_create_augroup("BlendCursor", { clear = true }),
-  nested = true,
-  pattern = "*",
-  callback = function(args)
-    CursorBlend.toggle(vim.bo[args.buf].filetype)
-  end,
-})
-vim.api.nvim_create_autocmd({ "CmdwinEnter", "CmdlineEnter" }, {
-  group = vim.api.nvim_create_augroup("BlendCursorCmd", { clear = true }),
-  nested = true,
-  pattern = "*",
-  callback = function(args)
-    CursorBlend.show()
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+--   group = vim.api.nvim_create_augroup("BlendCursor", { clear = true }),
+--   nested = true,
+--   pattern = "*",
+--   callback = function(args)
+--     CursorBlend.toggle(vim.bo[args.buf].filetype)
+--   end,
+-- })
+-- vim.api.nvim_create_autocmd({ "CmdwinEnter", "CmdlineEnter" }, {
+--   group = vim.api.nvim_create_augroup("BlendCursorCmd", { clear = true }),
+--   nested = true,
+--   pattern = "*",
+--   callback = function(args)
+--     CursorBlend.show()
+--   end,
+-- })
 
-vim.api.nvim_create_autocmd({ "CmdwinLeave", "CmdlineLeave" }, {
-  group = vim.api.nvim_create_augroup("BlendCursorCmdLeave", { clear = true }),
-  nested = true,
-  pattern = "*",
-  callback = function(args)
-    CursorBlend.toggle(vim.bo[args.buf].filetype)
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "CmdwinLeave", "CmdlineLeave" }, {
+--   group = vim.api.nvim_create_augroup("BlendCursorCmdLeave", { clear = true }),
+--   nested = true,
+--   pattern = "*",
+--   callback = function(args)
+--     CursorBlend.toggle(vim.bo[args.buf].filetype)
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   callback = function(args)
@@ -133,25 +133,26 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-local ignore_filetypes = { "neo-tree", "minifiles", "alpha", "neotest-summary", "TelescopePrompt", "gf" }
-if not vim.g.vscode then
-  vim.api.nvim_create_autocmd("InsertEnter", {
-    pattern = "*",
-    callback = function(args)
-      if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
-        vim.cmd(":setlocal norelativenumber")
-      end
-    end,
-  })
-  vim.api.nvim_create_autocmd("InsertLeave", {
-    pattern = "*",
-    callback = function(args)
-      if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
-        vim.cmd(":setlocal relativenumber")
-      end
-    end,
-  })
-end
+-- local ignore_filetypes = { "neo-tree", "minifiles", "alpha", "neotest-summary", "TelescopePrompt", "gf" }
+-- if not vim.g.vscode then
+--   vim.api.nvim_create_autocmd("InsertEnter", {
+--     pattern = "*",
+--     callback = function(args)
+--       if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
+--         vim.cmd(":setlocal norelativenumber")
+--       end
+--     end,
+--   })
+--   vim.api.nvim_create_autocmd("InsertLeave", {
+--     pattern = "*",
+--     callback = function(args)
+--       if not vim.tbl_contains(ignore_filetypes, vim.bo[args.buf].filetype) then
+--         vim.cmd(":setlocal relativenumber")
+--       end
+--     end,
+--   })
+-- end
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesBufferCreate",
   callback = function(args)

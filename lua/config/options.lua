@@ -114,48 +114,33 @@ function _G.quickfixtextfunc(info)
   return vim.tbl_map(format_item, vim.list_slice(items, info.start_idx, info.end_idx))
 end
 
-_G.skip_foldexpr = {} ---@type table<number,boolean>
-local skip_check = assert(vim.uv.new_check())
-
-function _G.foldexpr()
-  local buf = vim.api.nvim_get_current_buf()
-
-  -- still in the same tick and no parser
-  if _G.skip_foldexpr[buf] then
-    return "0"
+function Update_titlestring(max_size)
+  local fname = vim.fn.expand("%:t")
+  if fname then
+    if max_size and #fname > max_size - 2 then
+      fname = fname:sub(0, max_size - 2) .. "⋯"
+    end
+    return fname
+  else
+    return ""
   end
-
-  -- don't use treesitter folds for non-file buffers
-  if vim.bo[buf].buftype ~= "" then
-    return "0"
-  end
-
-  -- as long as we don't have a filetype, don't bother
-  -- checking if treesitter is available (it won't)
-  if vim.bo[buf].filetype == "" then
-    return "0"
-  end
-
-  local ok = pcall(vim.treesitter.get_parser, buf)
-
-  if ok then
-    return vim.treesitter.foldexpr()
-  end
-
-  -- no parser available, so mark it as skip
-  -- in the next tick, all skip marks will be reset
-  _G.skip_foldexpr[buf] = true
-  skip_check:start(function()
-    _G.skip_foldexpr = {}
-    skip_check:stop()
-  end)
-  return "0"
 end
 
+vim.g.disable_codelens = true
+
+vim.o.rulerformat = "%50(%=%{v:lua.Update_titlestring(22)}%#Comment# Ln: %l, Col: %c%V%)"
+vim.o.titlestring = "nvim %{v:lua.Update_titlestring(22)}"
 vim.o.quickfixtextfunc = [[{info -> v:lua.quickfixtextfunc(info)}]]
-vim.o.foldtext = ""
-vim.o.foldexpr = "v:lua.foldexpr()"
-vim.o.foldmethod = "expr"
+
+if vim.fn.has("nvim-0.10") == 1 then
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "v:lua.require'helpers'.foldexpr()"
+  vim.opt.foldtext = ""
+  vim.opt.fillchars = "fold: "
+else
+  vim.opt.foldmethod = "indent"
+end
+
 vim.o.foldenable = false
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
@@ -168,12 +153,19 @@ vim.g.cmp_completion_max_width = 30
 vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
-vim.opt.fillchars = { eob = " ", fold = ".", foldopen = "", foldclose = "", foldsep = " " }
+vim.opt.fillchars = { eob = " ", fold = " ", foldopen = "", foldclose = "", foldsep = " " }
 opt.title = true
--- opt.titlestring = "%<%t%="
+-- opt.titlestring = "nvim %<%t%="
+-- opt.titlestring = "{ %!v:lua._titlestring() }"
 -- opt.selection = "exclusive"
 opt.autowrite = true -- enable auto write
-opt.clipboard = "unnamedplus" -- sync with system clipboard
+
+if not vim.env.SSH_TTY then
+  -- only set clipboard if not in ssh, to make sure the OSC 52
+  -- integration works automatically. Requires Neovim >= 0.10.0
+  opt.clipboard = "unnamedplus" -- Sync with system clipboard
+end
+
 opt.cmdheight = 1
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true

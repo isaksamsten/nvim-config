@@ -89,6 +89,7 @@ end, { desc = "Save virtual environment" })
 -- Toggle
 local Toggle = require("helpers.toggle")
 vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
+vim.keymap.set("n", "<leader>ud", Toggle.virtual_text, { desc = "Toggle inline diagnostics" })
 
 vim.keymap.set("n", "g,", function()
   vim.diagnostic.open_float(nil, { scope = "line" })
@@ -164,6 +165,10 @@ function M.lsp_on_attach(client, bufnr)
 
   if client.server_capabilities.codeActionProvider then
     map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
+  end
+
+  if client.server_capabilities.codeLensProvider and not vim.g.disable_codelens then
+    map({ "n", "v" }, "ga", vim.lsp.codelens.run, "Code lens")
   end
 end
 

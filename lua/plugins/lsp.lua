@@ -42,6 +42,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
         buffer = bufnr,
       })
     end
+
+    if client.server_capabilities.codeLensProvider and vim.lsp.codelens and not vim.g.disable_codelens then
+      vim.lsp.codelens.refresh()
+      vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+        buffer = bufnr,
+        callback = vim.lsp.codelens.refresh,
+      })
+    end
   end,
 })
 
@@ -157,7 +165,7 @@ return {
         max_height = 25,
       },
       diagnostic = {
-        signs = false,
+        signs = true,
         virtual_text = false,
         update_in_insert = false,
         underline = true,
@@ -183,26 +191,7 @@ return {
             return diag.message
           end,
         },
-        better_virtual_text = {
-          spacing = 4,
-          prefix = function(diagnostic)
-            if diagnostic.source == "LTeX" then
-              return ""
-            end
-            return require("config.icons"):get_diagnostic(diagnostic.severity)
-          end,
-          format = function(diagnostic)
-            if diagnostic.source == "LTeX" then
-              return ""
-            end
-            local max_width = vim.g.max_width_diagnostic_virtual_text or 40
-            local message = diagnostic.message
-            if #diagnostic.message > max_width + 1 then
-              message = string.sub(diagnostic.message, 1, max_width) .. "…"
-            end
-            return message
-          end,
-        },
+        better_virtual_text = false,
         severity_sort = true,
       },
 
