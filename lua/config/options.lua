@@ -76,21 +76,25 @@ function _G.quickfixtextfunc(info)
         icon = ""
         table.insert(highlights, { line = counter, group = "Comment", col = 0, end_col = 5 + #display })
       else
-        table.insert(highlights, { line = counter, group = icon_hl })
+        -- print(#icon)
+        table.insert(highlights, { line = counter, group = icon_hl, col = 0, end_col = #icon })
       end
+
       if item._file.style then
         local highlight = item._file.style[1]
-        table.insert(
-          highlights,
-          { line = counter, col = highlight[1][1] + 5, end_col = highlight[1][2] + 5, group = highlight[2] }
-        )
+        table.insert(highlights, {
+          line = counter,
+          col = highlight[1][1] + #icon + 1,
+          end_col = highlight[1][2] + #icon + 1,
+          group = highlight[2],
+        })
       end
       counter = counter + 1
 
       local lnum = "" .. item.lnum
       local col = "" .. item.col
 
-      return ("%s  %s | %s col %s%s | %s"):format(
+      return ("%s %s | %s col %s%s | %s"):format(
         icon,
         display .. string.rep(" ", fname_limit - #display),
         string.rep(" ", lnum_limit - #lnum) .. lnum,
@@ -106,8 +110,8 @@ function _G.quickfixtextfunc(info)
   vim.schedule(function()
     local id = list.qfbufnr
     for _, hl in ipairs(highlights) do
-      local col = hl.col or 0
-      local end_col = hl.end_col or 2
+      local col = hl.col
+      local end_col = hl.end_col
       vim.highlight.range(id, namespace, hl.group, { hl.line, col }, { hl.line, end_col })
     end
   end)
@@ -126,6 +130,7 @@ function Update_titlestring(max_size)
   end
 end
 
+vim.g.disable_iterm2_integration = true
 vim.g.disable_codelens = true
 
 vim.o.rulerformat = "%50(%=%{v:lua.Update_titlestring(22)}%#Comment# Ln: %l, Col: %c%V%)"

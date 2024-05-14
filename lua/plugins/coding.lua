@@ -31,6 +31,9 @@ return {
         args = { "-" },
         stdin = true,
       }
+      require("conform").formatters.latexindent = {
+        prepend_args = { "-m", "-l" },
+      }
       return {
         formatters_by_ft = {
           ["*"] = { "trim_whitespace", "trim_newline" },
@@ -343,6 +346,8 @@ return {
         },
       })
       cmp.setup.cmdline(":", {
+        enabled = false,
+        -- completion = { autocomplete = false },
         mapping = opts.mapping,
         sources = cmp.config.sources({
           { name = "cmdline" },

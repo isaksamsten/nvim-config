@@ -257,7 +257,7 @@ return {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {
-      plugins = { spelling = true },
+      plugins = {},
       key_labels = { ["<leader>"] = "SPC" },
     },
     config = function(_, opts)

@@ -58,8 +58,8 @@ return {
   {
     "ojroques/nvim-osc52",
     event = "VeryLazy",
-    enabled = false,
-    -- cond = require("helpers").is_remote,
+    -- enabled = false,
+    cond = require("helpers").is_remote,
     opts = {
       silent = true,
     },

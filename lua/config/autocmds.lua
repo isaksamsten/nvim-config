@@ -57,6 +57,38 @@ vim.api.nvim_create_autocmd("FileType", {
   command = "setlocal norelativenumber nonumber nospell",
 })
 
+if vim.g.disable_iterm2_integration == nil and vim.env.ITERM_PROFILE ~= nil then
+  local function set_iterm2_current_filename(string)
+    io.write(("\x1b]1337;SetUserVar=nvim_current_file=%s\x07]"):format(vim.base64.encode(string)))
+  end
+
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.api.nvim_create_augroup("iterm2", {}),
+    pattern = "*",
+    callback = function(args)
+      local bufname = vim.fn.bufname(args.buf)
+      local filename = vim.fn.fnamemodify(bufname, ":p:~:.")
+      local extension = vim.fn.fnamemodify(bufname, ":t:e")
+      local icon, icon_hl = require("nvim-web-devicons").get_icon(bufname, extension)
+      if not icon or icon == "nil" then
+        icon = ""
+      end
+      if filename ~= "" then
+        set_iterm2_current_filename(icon .. " " .. filename)
+      else
+        set_iterm2_current_filename(" ")
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("VimLeavePre", {
+    group = vim.api.nvim_create_augroup("iterm2-leave", {}),
+    callback = function()
+      set_iterm2_current_filename("")
+    end,
+  })
+end
+
 -- local CursorBlend = {}
 
 -- CursorBlend.ft = { "qf", "neotest-summary" }
