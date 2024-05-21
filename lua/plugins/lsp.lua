@@ -23,20 +23,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
     end
     if client.server_capabilities.inlayHintProvider and not vim.g.disable_inlay_hints then
-      vim.lsp.inlay_hint.enable(bufnr, true)
+      vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       vim.api.nvim_create_augroup("lsp_inlay_hints", { clear = true })
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_inlay_hints" })
 
       vim.api.nvim_create_autocmd("InsertEnter", {
         callback = function(inner_args)
-          vim.lsp.inlay_hint.enable(inner_args.buf, false)
+          vim.lsp.inlay_hint.enable(false, { bufnr = inner_args.buf })
         end,
         group = "lsp_inlay_hints",
         buffer = bufnr,
       })
       vim.api.nvim_create_autocmd("InsertLeave", {
         callback = function(inner_args)
-          vim.lsp.inlay_hint.enable(inner_args.buf, true)
+          vim.lsp.inlay_hint.enable(true, { bufnr = inner_args.buf })
         end,
         group = "lsp_inlay_hints",
         buffer = bufnr,
@@ -165,7 +165,14 @@ return {
         max_height = 25,
       },
       diagnostic = {
-        signs = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = require("config.icons").diagnostics.error,
+            [vim.diagnostic.severity.WARN] = require("config.icons").diagnostics.warn,
+            [vim.diagnostic.severity.HINT] = require("config.icons").diagnostics.hint,
+            [vim.diagnostic.severity.INFO] = require("config.icons").diagnostics.info,
+          },
+        },
         virtual_text = false,
         update_in_insert = false,
         underline = true,
