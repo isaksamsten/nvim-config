@@ -1,5 +1,11 @@
 local Toggle = {}
 
+Toggle.is_inlay_hint_active = true
+Toggle.inlay_hint = function()
+  Toggle.is_inlay_hint_active = not Toggle.is_inlay_hint_active
+  vim.lsp.inlay_hint.enable(Toggle.is_inlay_hint_active)
+end
+
 Toggle.virtual_text_state = {
   active = false,
   default_state = {

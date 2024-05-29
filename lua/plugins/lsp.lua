@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
     require("config.keymaps").lsp_on_attach(client, bufnr)
 
-    if client.server_capabilities.documentHighlightProvider then
+    if client.supports_method("documentHighlightProvider") then
       vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
       vim.api.nvim_create_autocmd("CursorHold", {
@@ -22,28 +22,35 @@ vim.api.nvim_create_autocmd("LspAttach", {
         desc = "Clear All the References",
       })
     end
-    if client.server_capabilities.inlayHintProvider and not vim.g.disable_inlay_hints then
-      vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    if client.supports_method("inlayHintProvider") then
+      if vim.b.inlay_hint_disable == nil then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      end
+
       vim.api.nvim_create_augroup("lsp_inlay_hints", { clear = true })
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_inlay_hints" })
 
       vim.api.nvim_create_autocmd("InsertEnter", {
         callback = function(inner_args)
-          vim.lsp.inlay_hint.enable(false, { bufnr = inner_args.buf })
+          if require("helpers.toggle").is_inlay_hint_active and vim.b.inlay_hint_disable ~= true then
+            vim.lsp.inlay_hint.enable(false, { bufnr = inner_args.buf })
+          end
         end,
         group = "lsp_inlay_hints",
         buffer = bufnr,
       })
       vim.api.nvim_create_autocmd("InsertLeave", {
         callback = function(inner_args)
-          vim.lsp.inlay_hint.enable(true, { bufnr = inner_args.buf })
+          if require("helpers.toggle").is_inlay_hint_active and vim.b.inlay_hint_disable ~= true then
+            vim.lsp.inlay_hint.enable(true, { bufnr = inner_args.buf })
+          end
         end,
         group = "lsp_inlay_hints",
         buffer = bufnr,
       })
     end
 
-    if client.server_capabilities.codeLensProvider and vim.lsp.codelens and not vim.g.disable_codelens then
+    if client.supports_method("codeLensProvider") and vim.lsp.codelens and not vim.g.disable_codelens then
       vim.lsp.codelens.refresh()
       vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
         buffer = bufnr,
@@ -121,7 +128,6 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
-      "barreiroleo/ltex_extra.nvim",
       {
         "ray-x/lsp_signature.nvim",
         version = false,
@@ -267,8 +273,8 @@ return {
         -- },
         -- ruff_lsp = {
         --   on_attach = function(client, bufnr)
-        --     client.server_capabilities.hoverProvider = false
-        --     client.server_capabilities.diagnosticProvider = false
+        --     client.supports_method("hoverProvider") = false
+        --     client.supports_method("diagnosticProvider") = false
         --   end,
         -- },
         rust_analyzer = {

@@ -2,7 +2,7 @@ return {
   { "lambdalisue/vim-cython-syntax", lazy = false },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+    -- dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", version = "*" },
     build = ":TSUpdate",
     event = "BufReadPost",
     version = false,
@@ -29,7 +29,12 @@ return {
         "yaml",
       },
       additional_vim_regex_highlighting = false,
-      highlight = { enable = true, disable = { "latex" } },
+      highlight = {
+        enable = true,
+        disable = function(ft, buf)
+          return ft == "latex" or vim.b[buf].bigfile == true or vim.fn.win_gettype() == "command"
+        end,
+      },
       indent = {
         enable = true,
         disable = { "python", "erlang" },

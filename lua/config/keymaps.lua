@@ -90,6 +90,7 @@ end, { desc = "Save virtual environment" })
 local Toggle = require("helpers.toggle")
 vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
 vim.keymap.set("n", "<leader>ud", Toggle.virtual_text, { desc = "Toggle inline diagnostics" })
+vim.keymap.set("n", "<leader>ui", Toggle.inlay_hint, { desc = "Toggle inline diagnostics" })
 
 vim.keymap.set("n", "g,", function()
   vim.diagnostic.open_float(nil, { scope = "line" })
@@ -106,11 +107,11 @@ function M.lsp_on_attach(client, bufnr)
     vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
   end
 
-  if client.server_capabilities.hoverProvider then
+  if client.supports_method("hoverProvider") then
     map({ "n", "v" }, "K", vim.lsp.buf.hover, "Show information")
   end
 
-  if client.server_capabilities.definitionProvider then
+  if client.supports_method("definitionProvider") then
     local definitionProvider = vim.lsp.buf.definition
     if telescope_ok then
       definitionProvider = function()
@@ -120,11 +121,11 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "gd", definitionProvider, "Go to definition")
   end
 
-  if client.server_capabilities.declarationProvider then
+  if client.supports_method("declarationProvider") then
     map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
   end
 
-  if client.server_capabilities.implementationProvider then
+  if client.supports_method("implementationProvider") then
     local implementationProvider = vim.lsp.buf.implementation
     if telescope_ok then
       implementationProvider = function()
@@ -134,7 +135,7 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "gi", implementationProvider, "Go to implementation")
   end
 
-  if client.server_capabilities.typeDefinitionProvider then
+  if client.supports_method("typeDefinitionProvider") then
     local typeDefinitionProvider = vim.lsp.buf.type_definition
     if telescope_ok then
       typeDefinitionProvider = function()
@@ -144,7 +145,7 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "go", typeDefinitionProvider, "Go to type definition")
   end
 
-  if client.server_capabilities.referencesProvider then
+  if client.supports_method("referencesProvider") then
     local referencesProvider = vim.lsp.buf.references
     if telescope_ok then
       referencesProvider = function()
@@ -159,15 +160,15 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "gr", referencesProvider, "Show references")
   end
 
-  if client.server_capabilities.renameProvider then
+  if client.supports_method("renameProvider") then
     map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
   end
 
-  if client.server_capabilities.codeActionProvider then
+  if client.supports_method("codeActionProvider") then
     map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
   end
 
-  if client.server_capabilities.codeLensProvider and not vim.g.disable_codelens then
+  if client.supports_method("codeLensProvider") and not vim.g.disable_codelens then
     map({ "n", "v" }, "ga", vim.lsp.codelens.run, "Code lens")
   end
 end

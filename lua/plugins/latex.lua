@@ -8,9 +8,11 @@ return {
       vim.g.vimtex_quickfix_ignore_filters = {
         "Marginpar on page",
         "Package hyperref Warning: Difference",
+        "Overfull",
+        "Underfull",
       }
       -- vim.g.tex_flavor = "latex"
-      vim.g.vimtex_view_method = "skim"
+      vim.g.vimtex_view_method = "sioyek"
       vim.g.vimtex_view_skim_sync = 1
       vim.g.vimtex_view_skim_activate = 0
     end,

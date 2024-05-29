@@ -79,7 +79,7 @@ local icons = {
       change = "▎",
       untracked = "▎",
     },
-    git = "",
+    git = "",
     add = "",
     branch = "",
     change = "",
