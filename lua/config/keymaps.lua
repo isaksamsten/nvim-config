@@ -107,11 +107,11 @@ function M.lsp_on_attach(client, bufnr)
     vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
   end
 
-  if client.supports_method("hoverProvider") then
+  if client.supports_method("textDocument/hover") then
     map({ "n", "v" }, "K", vim.lsp.buf.hover, "Show information")
   end
 
-  if client.supports_method("definitionProvider") then
+  if client.supports_method("textDocument/definition") then
     local definitionProvider = vim.lsp.buf.definition
     if telescope_ok then
       definitionProvider = function()
@@ -121,11 +121,11 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "gd", definitionProvider, "Go to definition")
   end
 
-  if client.supports_method("declarationProvider") then
+  if client.supports_method("textDocument/declaration") then
     map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
   end
 
-  if client.supports_method("implementationProvider") then
+  if client.supports_method("textDocument/implementation") then
     local implementationProvider = vim.lsp.buf.implementation
     if telescope_ok then
       implementationProvider = function()
@@ -135,7 +135,7 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "gi", implementationProvider, "Go to implementation")
   end
 
-  if client.supports_method("typeDefinitionProvider") then
+  if client.supports_method("textDocument/typeDefinition") then
     local typeDefinitionProvider = vim.lsp.buf.type_definition
     if telescope_ok then
       typeDefinitionProvider = function()
@@ -145,7 +145,7 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "go", typeDefinitionProvider, "Go to type definition")
   end
 
-  if client.supports_method("referencesProvider") then
+  if client.supports_method("textDocument/references") then
     local referencesProvider = vim.lsp.buf.references
     if telescope_ok then
       referencesProvider = function()
@@ -160,15 +160,15 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "gr", referencesProvider, "Show references")
   end
 
-  if client.supports_method("renameProvider") then
+  if client.supports_method("textDocument/rename") then
     map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
   end
 
-  if client.supports_method("codeActionProvider") then
+  if client.supports_method("textDocument/codeAction") then
     map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
   end
 
-  if client.supports_method("codeLensProvider") and not vim.g.disable_codelens then
+  if client.supports_method("textDocument/codeLens") and not vim.g.disable_codelens then
     map({ "n", "v" }, "ga", vim.lsp.codelens.run, "Code lens")
   end
 end

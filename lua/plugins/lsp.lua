@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
     require("config.keymaps").lsp_on_attach(client, bufnr)
 
-    if client.supports_method("documentHighlightProvider") then
+    if client.supports_method("textDocument/documentHighlight") then
       vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
       vim.api.nvim_create_autocmd("CursorHold", {
@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         desc = "Clear All the References",
       })
     end
-    if client.supports_method("inlayHintProvider") then
+    if client.supports_method("textDocument/inlayHint") then
       if vim.b.inlay_hint_disable == nil then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
@@ -50,7 +50,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
     end
 
-    if client.supports_method("codeLensProvider") and vim.lsp.codelens and not vim.g.disable_codelens then
+    if client.supports_method("textDocument/codeLens") and vim.lsp.codelens and not vim.g.disable_codelens then
       vim.lsp.codelens.refresh()
       vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
         buffer = bufnr,
