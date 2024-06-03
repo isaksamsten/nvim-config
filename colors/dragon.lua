@@ -581,6 +581,7 @@ local hlgroups = {
   MiniClueSeparator = { link = "WinSeparator" },
   MiniClueTitle = { link = "MiniFilesTitle" },
   MiniClueDescGroup = { fg = c_dragonTeal },
+  WhichKeySeparator = { link = "WinSeparator" },
 
   -- nvim-dap-ui
   DebugBreakpoint = { fg = c_dragonRed },

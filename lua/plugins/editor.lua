@@ -46,16 +46,6 @@ return { -- TODO
     end,
   },
   {
-    "echasnovski/mini.move",
-    event = { "BufReadPost", "BufNewFile" },
-    version = false,
-    opts = {},
-    config = function(_, opts)
-      require("mini.move").setup(opts)
-    end,
-  },
-
-  {
     "echasnovski/mini.ai",
     event = { "BufReadPost", "BufNewFile" },
     version = false,

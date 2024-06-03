@@ -88,7 +88,7 @@ return {
 
   {
     "nvim-tree/nvim-web-devicons",
-    event = "VimEnter",
+    event = { "VeryLazy" },
     opts = {
       override = {
         ["ipynb"] = {
@@ -251,9 +251,53 @@ return {
       }
     end,
   },
-
+  {
+    "folke/which-key.nvim",
+    -- enabled = false,
+    event = "VeryLazy",
+    opts = {
+      plugins = {},
+      key_labels = { ["<leader>"] = "SPC" },
+      icons = {
+        separator = require("config.icons").indent.marker, -- symbol used between a key and it's label
+      },
+      window = {
+        border = "none",
+        position = "bottom",
+        margin = { 1, 0, 1, 0.5 },
+        padding = { 0, 0, 0, 0 },
+        winblend = 0,
+        zindex = 1000,
+      },
+    },
+    config = function(_, opts)
+      local wk = require("which-key")
+      wk.setup(opts)
+      wk.register({
+        mode = { "n", "v" },
+        ["g"] = { name = "Go to" },
+        ["]"] = { name = "Next" },
+        ["["] = { name = "Previous" },
+        ["<leader>g"] = { name = "Git" },
+        ["<leader>t"] = { name = "Test" },
+        ["<leader>T"] = { name = "Tabs" },
+        ["<leader>r"] = { name = "Run" },
+        ["<leader>u"] = { name = "Toggle" },
+        ["<leader>D"] = { name = "Debug" },
+        ["<leader>S"] = { name = "Search" },
+        ["<leader>a"] = { name = "Activate" },
+        ["<leader>m"] = { name = "Make" },
+        ["\\"] = { name = "Local leader" },
+      })
+      -- require("which-key.plugins").plugins["marks2"] = require("helpers.which_key").marks2
+      -- require("which-key.plugins")._setup(require("helpers.which_key").marks2, {})
+      -- require("which-key.plugins").plugins["registers2"] = require("helpers.which_key").registers2
+      -- require("which-key.plugins")._setup(require("helpers.which_key").registers2, {})
+    end,
+  },
   {
     "echasnovski/mini.clue",
+    enabled = false,
     version = false,
     event = "VeryLazy",
     config = function(_, _)
@@ -315,65 +359,12 @@ return {
     end,
   },
   {
-    "stevearc/dressing.nvim",
-    event = "VeryLazy",
-    branch = "master",
-    enabled = false,
-    opts = function()
-      -- local function is_neotree(opts)
-      --   return string.match(opts.prompt, '^Enter new name for "%w+"')
-      --     or string.match(opts.prompt, "Are you sure you want to delete")
-      --     or string.match(opts.prompt, "^Enter name for new")
-      -- end
-      local icons = require("config.icons")
-      return {
-        input = {
-          padding = 1,
-          border = icons.borders.outer.all,
-          -- border = "shadow",
-          override = function(conf)
-            conf.title_pos = "center"
-            if conf.title then
-              conf.title = string.gsub(conf.title, ":$", "")
-            end
-          end,
-          -- get_config = function(opts)
-          --   if is_neotree(opts) then
-          --     return {
-          --       max_width = 60,
-          --       min_width = 30,
-          --     }
-          --   end
-          -- end,
-        },
-        select = {
-          border = icons.borders.empty,
-          override = function(conf)
-            conf.title_pos = "center"
-            if conf.title then
-              conf.title = string.gsub(conf.title, ":$", "")
-            end
-          end,
-          get_config = function(opts)
-            if opts.kind == "codeaction" then
-              return {
-                backend = "telescope",
-                telescope = require("helpers").telescope_theme("cursor", { prompt_title = "Code actions" }),
-              }
-            end
-          end,
-        },
-      }
-    end,
-    config = true,
-  },
-
-  {
     "goolord/alpha-nvim",
     event = "VimEnter",
     config = function(_, opts)
       local alpha = require("alpha")
       local default = require("alpha.themes.startify")
+      default.nvim_web_devicons.enabled = false
       alpha.setup(default.config)
     end,
   },

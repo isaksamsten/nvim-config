@@ -65,6 +65,7 @@ return {
 
   {
     "tpope/vim-fugitive",
+    version = false,
     cmd = { "G", "Git" },
     keys = { { "<leader>gg", "<cmd>G <CR>", desc = "Git status" } },
   },
@@ -93,5 +94,8 @@ return {
     "HakonHarnes/img-clip.nvim",
     opts = {},
     cmd = { "PasteImage" },
+    keys = {
+      { "n", '"i', "<Cmd>PasteImage<CR>" },
+    },
   },
 }
