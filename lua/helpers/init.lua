@@ -2,6 +2,23 @@ local M = {}
 
 M.root_patterns = { ".git" }
 
+function M.add_clue(binds)
+  local has_miniclue, miniclue = pcall(require, "mini.clue")
+  if not has_miniclue then
+    return
+  end
+  for _, bind in ipairs(binds) do
+    local modes = bind[1]
+    if type(modes) == "table" then
+      for _, mode in ipairs(modes) do
+        miniclue.set_mapping_desc(mode, bind[2], bind[3])
+      end
+    else
+      miniclue.set_mapping_desc(modes, bind[2], bind[3])
+    end
+  end
+end
+
 function M.extend_hl(name, def)
   local current_def = vim.api.nvim_get_hl_by_name(name, true)
   local new_def = vim.tbl_extend("force", {}, current_def, def)

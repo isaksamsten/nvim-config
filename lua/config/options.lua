@@ -19,7 +19,7 @@ function _G.quickfixtextfunc(info)
       display = "[No Name]"
     else
       fname = vim.fn.fnamemodify(fname, ":p:~:.")
-      display, style = require("telescope.utils").transform_path({ path_display = { "filename_first" } }, fname)
+      display = fname
     end
 
     -- local len = vim.fn.strchars(fname)
@@ -74,7 +74,7 @@ function _G.quickfixtextfunc(info)
       local icon, icon_hl = require("nvim-web-devicons").get_icon(fname, extension)
       if not icon or icon == "nil" then
         icon = ""
-        table.insert(highlights, { line = counter, group = "Comment", col = 0, end_col = 5 + #display })
+        table.insert(highlights, { line = counter, group = "Comment", col = 0, end_col = #icon })
       else
         -- print(#icon)
         table.insert(highlights, { line = counter, group = icon_hl, col = 0, end_col = #icon })

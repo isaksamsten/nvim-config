@@ -125,9 +125,9 @@ return {
     version = false,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
+      "hrsh7th/nvim-cmp",
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",
       {
         "ray-x/lsp_signature.nvim",
         version = false,
@@ -226,34 +226,34 @@ return {
         -- esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},
-        basedpyright = {
-          skip_install = true,
-          settings = {
-            verboseOutput = false,
-            autoImportCompletion = true,
-            basedpyright = {
-              disableOrganizeImports = true,
-              analysis = {
-                typeCheckingMode = "standard",
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "openFilesOnly",
-                indexing = true,
-              },
-            },
-          },
-        },
-        -- jedi_language_server = {
-        --   capabilities = {
-        --     textDocument = {
-        --       completion = {
-        --         completionItem = {
-        --           snippetSupport = false,
-        --         },
+        -- basedpyright = {
+        --   skip_install = true,
+        --   settings = {
+        --     verboseOutput = false,
+        --     autoImportCompletion = true,
+        --     basedpyright = {
+        --       disableOrganizeImports = true,
+        --       analysis = {
+        --         typeCheckingMode = "standard",
+        --         autoSearchPaths = true,
+        --         useLibraryCodeForTypes = true,
+        --         diagnosticMode = "openFilesOnly",
+        --         indexing = true,
         --       },
         --     },
         --   },
         -- },
+        jedi_language_server = {
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          },
+        },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -293,7 +293,7 @@ return {
       local mason_lspconfig = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
 
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = vim.lsp.protocol.make_client_capabilities() --require("cmp_nvim_lsp").default_capabilities()
       local ensure_installed = {}
       local setup_servers = {}
       for server, config in pairs(opts.servers) do
@@ -330,6 +330,7 @@ return {
       vim.lsp.handlers["textDocument/hover"] = hover
 
       local manager = require("lspconfig.manager")
+      -- silence warnings when an LSP binary is unavailable.
       local _start_new_client = manager._start_new_client
       function manager:_start_new_client(_, new_config, ...)
         local bin = new_config and new_config.cmd and new_config.cmd[1]

@@ -2,10 +2,10 @@ return {
   { "lambdalisue/vim-cython-syntax", lazy = false },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", version = "*" },
+    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", version = false },
     build = ":TSUpdate",
     event = "BufReadPost",
-    version = "*",
+    version = false,
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
     end,

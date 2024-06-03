@@ -1,5 +1,4 @@
 return {
-  -- { "yorickpeterse/nvim-pqf", event = "VeryLazy", opts = {} },
   {
     "romainl/vim-qf",
     event = "VeryLazy",
@@ -254,34 +253,67 @@ return {
   },
 
   {
-    "folke/which-key.nvim",
+    "echasnovski/mini.clue",
+    version = false,
     event = "VeryLazy",
-    opts = {
-      plugins = {},
-      key_labels = { ["<leader>"] = "SPC" },
-    },
-    config = function(_, opts)
-      local wk = require("which-key")
-      wk.setup(opts)
-      wk.register({
-        mode = { "n", "v" },
-        ["g"] = { name = "Go to" },
-        ["]"] = { name = "Next" },
-        ["["] = { name = "Previous" },
-        ["<leader>g"] = { name = "Git" },
-        ["<leader>t"] = { name = "Test" },
-        ["<leader>T"] = { name = "Tabs" },
-        ["<leader>r"] = { name = "Run" },
-        ["<leader>u"] = { name = "Toggle" },
-        ["<leader>D"] = { name = "Debug" },
-        ["<leader>S"] = { name = "Search" },
-        ["<leader>a"] = { name = "Activate" },
-        ["<leader>m"] = { name = "Make" },
-        ["\\"] = { name = "Local leader" },
+    config = function(_, _)
+      local miniclue = require("mini.clue")
+      miniclue.setup({
+        window = { delay = 500 },
+        triggers = {
+          -- Leader triggers
+          { mode = "n", keys = "<Leader>" },
+          { mode = "x", keys = "<Leader>" },
+
+          -- Built-in completion
+          { mode = "i", keys = "<C-x>" },
+
+          -- `g` key
+          { mode = "n", keys = "g" },
+          { mode = "x", keys = "g" },
+
+          { mode = "n", keys = "\\" },
+          { mode = "x", keys = "\\" },
+
+          { mode = "n", keys = "g" },
+          { mode = "x", keys = "g" },
+
+          -- Marks
+          { mode = "n", keys = "'" },
+          { mode = "n", keys = "`" },
+          { mode = "x", keys = "'" },
+          { mode = "x", keys = "`" },
+
+          { mode = "n", keys = "[" },
+          { mode = "n", keys = "]" },
+          { mode = "x", keys = "[" },
+          { mode = "x", keys = "]" },
+
+          -- Registers
+          { mode = "n", keys = '"' },
+          { mode = "x", keys = '"' },
+          { mode = "i", keys = "<C-r>" },
+          { mode = "c", keys = "<C-r>" },
+
+          -- Window commands
+          { mode = "n", keys = "<C-w>" },
+
+          -- `z` key
+          { mode = "n", keys = "z" },
+          { mode = "x", keys = "z" },
+        },
+
+        clues = {
+          miniclue.gen_clues.builtin_completion(),
+          miniclue.gen_clues.g(),
+          miniclue.gen_clues.marks(),
+          miniclue.gen_clues.registers(),
+          miniclue.gen_clues.windows(),
+          miniclue.gen_clues.z(),
+        },
       })
     end,
   },
-
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
@@ -345,189 +377,87 @@ return {
       alpha.setup(default.config)
     end,
   },
-
   {
-    "nvim-telescope/telescope.nvim",
-    version = false,
-    keys = function(_, keys)
-      local function vertical(config)
-        return require("telescope.themes").get_dropdown(config)
-      end
-      local function ivy(config)
-        config = config or {}
-        return require("telescope.themes").get_ivy(vim.tbl_extend("keep", { previewer = false }, config))
-      end
+    "echasnovski/mini.pick",
+    version = "*",
+    dependencies = { "echasnovski/mini.extra" },
+    keys = function()
+      local MiniPick = require("mini.pick")
+      local MiniExtra = require("mini.extra")
+
       return {
+        {
+          "<leader>f",
+          function()
+            MiniPick.builtin.files({})
+          end,
+          desc = "Find files",
+        },
         {
           "<leader><space>",
           function()
-            require("telescope.builtin").buffers(ivy({
-              prompt_title = "Buffers",
-              previewer = false,
-              sort_mru = true,
-              ignore_current_buffer = true,
-            }))
+            MiniPick.builtin.buffers({ include_current = false })
           end,
           desc = "Search buffers",
         },
         {
           "<leader>r",
           function()
-            require("telescope.builtin").oldfiles(ivy({}))
+            MiniExtra.pickers.oldfiles()
           end,
           desc = "Recent files",
         },
-
-        -- {
-        --   "<leader>o",
-        --   function()
-        --     require("telescope").extensions.file_browser.file_browser(ivy({}))
-        --   end,
-        --   desc = "Open file",
-        -- },
-        {
-          "<leader>f",
-          function()
-            require("telescope.builtin").find_files(ivy({}))
-          end,
-          desc = "Find file",
-        },
-
         {
           "<leader>s",
           function()
-            require("telescope").extensions.live_grep_args.live_grep_args(
-              vertical({ prompt_title = "Search", preview_title = "" })
-            )
+            MiniPick.builtin.grep_live({ tool = "rg" })
           end,
           desc = "Search",
         },
         {
-          "<leader>Sw",
+          "<leader>S",
           function()
-            require("telescope").extensions.live_grep_args.live_grep_args(
-              vertical({ prompt_title = "Search", default_text = vim.fn.expand("<cword>"), preview_title = "" })
-            )
-          end,
-          desc = "Search word under cursor",
-        },
-
-        {
-          "<leader>Ss",
-          function()
-            require("telescope.builtin").current_buffer_fuzzy_find(
-              vertical({ prompt_title = "Search buffer", preview_title = "" })
-            )
+            MiniExtra.pickers.buf_lines({ scope = "current" })
           end,
           desc = "Search in buffer",
         },
         {
-          "<leader>Sb",
-          function()
-            require("telescope.builtin").git_branches(vertical({ prompt_title = "Branches", preview_title = "" }))
-          end,
-          desc = "Search git branches",
-        },
-        {
           "<leader>'",
-          "<cmd>Telescope resume<cr>",
+          "<cmd>Pick resume<cr>",
           desc = "Resume last search",
         },
-
-        {
-          "<leader>d",
-          function()
-            require("telescope.builtin").diagnostics(vertical({ prompt_title = "Diagnostics", preview_title = "" }))
-          end,
-          desc = "Search diagnostics",
-        },
-        -- {
-        --   "<leader>s",
-        --   function()
-        --     require("telescope.builtin").lsp_document_symbols(vertical({
-        --       prompt_title = "Symbols",
-        --       preview_title = "",
-        --       symbols = {
-        --         "Class",
-        --         "Function",
-        --         "Method",
-        --         "Constructor",
-        --         "Interface",
-        --         "Module",
-        --         "Struct",
-        --         "Trait",
-        --         "Field",
-        --         "Property",
-        --       },
-        --     }))
-        --   end,
-        --   desc = "Search symbols",
-        -- },
         {
           "<leader>p",
           function()
-            require("telescope.builtin").lsp_dynamic_workspace_symbols(vertical({
-              prompt_title = "Symbols",
-              preview_title = "",
-              symbols = {
-                "Class",
-                "Function",
-                "Method",
-                "Interface",
-                "Module",
-                "Struct",
-                "Trait",
-                "Property",
-              },
-            }))
+            MiniExtra.pickers.lsp({
+              scope = "workspace_symbol",
+            })
           end,
           desc = "Search symbols",
         },
       }
     end,
-    opts = function()
-      -- local icons = require("config.icons")
-      local lga_actions = require("telescope-live-grep-args.actions")
-      return {
-        defaults = {
-          path_display = { "filename_first" },
-          mappings = {
-            i = {
-              ["<C-u>"] = false,
-              ["<C-d>"] = false,
-            },
-          },
-          selection_caret = "  ",
-          multi_icon = "  ",
-          prompt_prefix = "  ",
-          entry_prefix = "   ",
-        },
-        extensions = {
-          live_grep_args = {
-            auto_quoting = true,
-            mappings = {
-              i = {
-                ["<C-k>"] = function()
-                  lga_actions.quote_prompt()
-                end,
-                ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
-              },
-            },
-          },
-        },
-      }
-    end,
-    dependencies = {
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      "nvim-telescope/telescope-live-grep-args.nvim",
+    opts = {
+      mappings = {
+        choose_marked = "<C-q>",
+        move_down = "<C-j>",
+        move_start = "<C-g>",
+        move_up = "<C-k>",
+      },
+      window = {
+        prompt_cursor = "▏",
+        prompt_prefix = "  ",
+        config = { border = "none" },
+      },
+      options = {
+        content_from_bottom = false,
+      },
     },
     config = function(_, opts)
-      local telescope = require("telescope")
-      telescope.setup(opts)
-      telescope.load_extension("fzf")
-      telescope.load_extension("live_grep_args")
+      require("mini.pick").setup(opts)
     end,
   },
+
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPre", "BufNewFile" },

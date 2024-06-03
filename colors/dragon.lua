@@ -294,6 +294,7 @@ local hlgroups = {
   Number = { fg = c_dragonPink },
   Operator = { fg = c_dragonRed },
   PreProc = { fg = c_dragonRed },
+  Include = { link = "PreProc" },
   Special = { fg = c_dragonTeal },
   SpecialKey = { fg = c_dragonGray2 },
   Statement = { fg = c_dragonViolet },
@@ -307,7 +308,7 @@ local hlgroups = {
   ["@constructor"] = { fg = c_dragonTeal },
   ["@constructor.lua"] = { fg = c_dragonViolet },
   ["@keyword.exception"] = { bold = true, fg = c_dragonRed },
-  ["@keyword.import"] = { link = "PreProc" },
+  ["@keyword.import"] = { link = "Include" },
   ["@keyword.luap"] = { link = "@string.regexp" },
   ["@keyword.operator"] = { bold = true, fg = c_dragonRed },
   ["@keyword.return"] = { fg = c_dragonRed, italic = true },
@@ -362,7 +363,7 @@ local hlgroups = {
   ["@lsp.type.macro"] = { fg = c_dragonPink },
   ["@lsp.type.magicFunction"] = { link = "@function.builtin" },
   ["@lsp.type.method"] = { link = "@function.method" },
-  ["@lsp.type.namespace"] = { link = "@module" },
+  ["@lsp.type.namespace"] = { link = "@namespace" },
   ["@lsp.type.parameter"] = { link = "@variable.parameter" },
   ["@lsp.type.selfParameter"] = { link = "@variable.builtin" },
   ["@lsp.type.variable"] = { fg = "NONE" },
@@ -562,7 +563,24 @@ local hlgroups = {
   MiniFilesNormal = { fg = c_dragonFg0, bg = c_dragonBg3 },
   -- MiniFilesFile = { fg = a.fg, bg = a.float },
   -- MiniFilesDirectory = { fg = b.blue, bg = a.float },
-  MiniFilesCursorLine = { fg = "none", bg = c_dragonBg3 },
+  MiniFilesCursorLine = { link = "PmenuSel" },
+
+  MiniPickBorder = { link = "FloatBorder" },
+  MiniPickBorderBusy = { link = "FloatBorder" },
+  MiniPickBorderText = { link = "MiniPickHeader" },
+  MiniPickHeader = { fg = c_dragonBlue0, bg = c_dragonBg3 },
+  MiniPickMatchCurrent = { link = "PmenuSel" },
+  MiniPickMatchMarked = { fg = c_dragonTeal },
+  MiniPickMatchRanges = { fg = c_dragonRed, bold = true },
+  MiniPickNormal = { fg = c_dragonFg1, bg = c_dragonBg3 },
+  MiniPickPreviewLine = { fg = c_dragonRed, bg = c_winterRed, bold = true },
+  MiniPickPreviewRegion = { fg = c_dragonRed, bg = c_winterRed, bold = true },
+  MiniPickPrompt = { bg = c_dragonBg3 },
+
+  MiniClueBorder = { link = "FloatBorder" },
+  MiniClueSeparator = { link = "WinSeparator" },
+  MiniClueTitle = { link = "MiniFilesTitle" },
+  MiniClueDescGroup = { fg = c_dragonTeal },
 
   -- nvim-dap-ui
   DebugBreakpoint = { fg = c_dragonRed },
@@ -659,16 +677,16 @@ if vim.go.bg == "light" then
   hlgroups.TelescopePreviewNormal = { bg = c_dragonBg2 }
   hlgroups.TelescopePreviewBorder = { fg = c_dragonBg2, bg = c_dragonBg2 }
 
+  hlgroups.MiniPickBorder = { bg = c_dragonBg0, fg = c_dragonBg0 }
+  hlgroups.MiniPickNormal = { fg = c_dragonFg0, bg = c_dragonBg0 }
+  hlgroups.MiniPickPrompt = { bg = c_dragonBg0 }
+  hlgroups.MiniPickHeader = { fg = c_dragonBlue0, bg = c_dragonBg0 }
+  -- hlgroups.MiniPickMatchCurrent = { bg = c_dragonFg0, fg = c_dragonBg0 }
+
   hlgroups.MiniFilesTitleFocused = { fg = c_autumnGreen, bg = c_dragonBg0, bold = true }
   hlgroups.MiniFilesTitle = { fg = c_dragonBlue0, bg = c_dragonBg0, bold = true }
   hlgroups.MiniFilesNormal = { fg = c_dragonFg0, bg = c_dragonBg0 }
 
-  -- hlgroups.GlanceListCursorLine = { bg = c_dragonBg1 }
-  -- hlgroups.GlanceListMatch = { bg = c_dragonBg4 }
-  -- hlgroups.GlanceListNormal = { bg = c_dragonBg0, fg = c_dragonFg0 }
-  -- hlgroups.GlanceWinBarFilename = { bg = c_dragonBg0, fg = c_dragonFg1 }
-  -- hlgroups.GlanceWinBarFilepath = { bg = c_dragonBg0, fg = c_dragonAsh }
-  -- hlgroups.GlanceWinBarTitle = { bg = c_dragonBg0, fg = c_dragonFg1, bold = true }
   hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
@@ -678,11 +696,6 @@ if vim.go.bg == "light" then
   hlgroups.PmenuThumb = { bg = c_dragonBg4 }
   hlgroups.Search = { bg = c_dragonBg3 }
   hlgroups.StatusLine = { bg = c_dragonBg0 }
-  -- hlgroups.StatusLineGitAdded = { bg = c_dragonBg0, fg = c_dragonGreen1 }
-  -- hlgroups.StatusLineGitChanged = { bg = c_dragonBg0, fg = c_autumnYellow }
-  -- hlgroups.StatusLineGitRemoved = { bg = c_dragonBg0, fg = c_dragonRed }
-  -- hlgroups.StatusLineHeader = { bg = c_dragonFg0, fg = c_dragonBg0 }
-  -- hlgroups.StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg0 }
   hlgroups.Visual = { bg = c_dragonBg3 }
   hlgroups["@variable.parameter"] = { link = "Identifier" }
 end
