@@ -8,6 +8,15 @@
 -- vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
 -- vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 
+local function ToggleBackground()
+  if vim.o.background == "dark" then
+    vim.o.background = "light"
+  else
+    vim.o.background = "dark"
+  end
+end
+
+vim.keymap.set("n", "<leader>ub", ToggleBackground, { noremap = true, silent = true, desc="Toggle background color" })
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
