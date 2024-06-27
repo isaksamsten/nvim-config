@@ -130,4 +130,29 @@ function M.foldexpr()
   end)
   return "0"
 end
+
+M.pick_buffers = function()
+  local buffers_output = vim.api.nvim_exec("buffers", true)
+  local cur_buf_id = vim.api.nvim_get_current_buf()
+  local items = {}
+  for _, l in ipairs(vim.split(buffers_output, "\n")) do
+    local buf_str, name = l:match("^%s*%d+"), l:match('"(.*)"')
+    local buf_id = tonumber(buf_str)
+    local item = { text = name, bufnr = buf_id }
+    if buf_id ~= cur_buf_id then
+      table.insert(items, item)
+    end
+  end
+  table.sort(items, function(a, b)
+    return vim.fn.getbufinfo(a.bufnr)[1].lastused > vim.fn.getbufinfo(b.bufnr)[1].lastused
+  end)
+
+  -- local default_opts = { source = { name = "Buffers", show = true } }
+  local MiniPick = require("mini.pick")
+  local show_with_icons = function(buf_id, items, query)
+    MiniPick.default_show(buf_id, items, query, { show_icons = true })
+  end
+
+  return MiniPick.start({ source = { name = "Buffers", show = show_with_icons, items = items } })
+end
 return M

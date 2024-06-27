@@ -194,7 +194,7 @@ return {
           col = 1,
         },
         on_attach = function(bufnr)
-          local gs = package.loaded.gitsigns
+          local gs = require("gitsigns")
 
           local function map(mode, l, r, opts)
             opts = opts or {}
@@ -204,20 +204,20 @@ return {
 
           map("n", "]g", function()
             if vim.wo.diff then
-              return "]g"
+              return "]c"
             end
             vim.schedule(function()
-              gs.next_hunk()
+              gs.nav_hunk("next")
             end)
             return "<Ignore>"
           end, { expr = true, desc = "Next hunk" })
 
           map("n", "[g", function()
             if vim.wo.diff then
-              return "[g"
+              return "[c"
             end
             vim.schedule(function()
-              gs.prev_hunk()
+              gs.nav_hunk("prev")
             end)
             return "<Ignore>"
           end, { expr = true, desc = "Previous hunk" })
@@ -387,7 +387,7 @@ return {
         {
           "<leader><space>",
           function()
-            MiniPick.builtin.buffers({ include_current = false })
+            require("helpers").pick_buffers()
           end,
           desc = "Search buffers",
         },
