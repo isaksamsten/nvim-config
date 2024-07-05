@@ -1,4 +1,4 @@
-local diagnostics = require("config.icons").diagnostics
+-- local diagnostics = require("config.icons").diagnostics
 -- vim.fn.sign_define(
 --   "DiagnosticSignError",
 --   { text = diagnostics.error, texthl = "DiagnosticSignError", numhl = "DiagnosticSignError" }

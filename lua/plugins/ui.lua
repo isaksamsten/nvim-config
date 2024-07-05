@@ -5,6 +5,7 @@ return {
     config = function()
       vim.cmd([[
         let g:qf_mapping_ack_style = 1
+        let g:qf_auto_open_quickfix = 0
         nmap <C-S-q> <Plug>qf_qf_toggle
         nmap <C-q> <Plug>qf_qf_switch
 
@@ -253,7 +254,7 @@ return {
   },
   {
     "folke/which-key.nvim",
-    -- enabled = false,
+    -- dnabled = false,
     event = "VeryLazy",
     opts = {
       plugins = {},

@@ -16,7 +16,7 @@ local function ToggleBackground()
   end
 end
 
-vim.keymap.set("n", "<leader>ub", ToggleBackground, { noremap = true, silent = true, desc="Toggle background color" })
+vim.keymap.set("n", "<leader>ub", ToggleBackground, { noremap = true, silent = true, desc = "Toggle background color" })
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
@@ -154,31 +154,31 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "go", typeDefinitionProvider, "Go to type definition")
   end
 
-  if client.supports_method("textDocument/references") then
-    local referencesProvider = vim.lsp.buf.references
-    if telescope_ok then
-      referencesProvider = function()
-        builtin.lsp_references(
-          require("helpers").telescope_theme(
-            "cursor",
-            { prompt_title = "References", include_declaration = false, show_line = false, jump_type = "split" }
-          )
-        )
-      end
-    end
-    map("n", "gr", referencesProvider, "Show references")
-  end
+  -- if client.supports_method("textDocument/references") then
+  --   local referencesProvider = vim.lsp.buf.references
+  --   if telescope_ok then
+  --     referencesProvider = function()
+  --       builtin.lsp_references(
+  --         require("helpers").telescope_theme(
+  --           "cursor",
+  --           { prompt_title = "References", include_declaration = false, show_line = false, jump_type = "split" }
+  --         )
+  --       )
+  --     end
+  --   end
+  --   map("n", "gr", referencesProvider, "Show references")
+  -- end
 
   if client.supports_method("textDocument/rename") then
     map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
   end
 
-  if client.supports_method("textDocument/codeAction") then
-    map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
-  end
+  -- if client.supports_method("textDocument/codeAction") then
+  --   map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
+  -- end
 
   if client.supports_method("textDocument/codeLens") and not vim.g.disable_codelens then
-    map({ "n", "v" }, "ga", vim.lsp.codelens.run, "Code lens")
+    map({ "n", "v" }, "grl", vim.lsp.codelens.run, "Code lens")
   end
 end
 
