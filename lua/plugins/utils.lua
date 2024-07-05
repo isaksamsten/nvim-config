@@ -46,7 +46,7 @@ return {
     "mrjones2014/smart-splits.nvim",
     version = false,
     build = "./kitty/install-kittens.bash",
-    cond = vim.env.KITTY_PID ~= nil,
+    cond = vim.env.KITTY_LISTEN_ON ~= nil,
     lazy = false,
     config = function(_, opts)
       require("smart-splits").setup(opts)
@@ -94,26 +94,6 @@ return {
     version = false,
     cmd = { "G", "Git" },
     keys = { { "<leader>gg", "<cmd>G <CR>", desc = "Git status" } },
-  },
-
-  {
-    "ojroques/nvim-osc52",
-    event = "VeryLazy",
-    -- enabled = false,
-    cond = require("helpers").is_remote,
-    opts = {
-      silent = true,
-    },
-    config = function(_, opts)
-      require("osc52").setup(opts)
-      local function copy()
-        if vim.v.event.operator == "y" and (vim.v.event.regname == "" or vim.v.event.regname == "+") then
-          require("osc52").copy_register("+")
-        end
-      end
-
-      vim.api.nvim_create_autocmd("TextYankPost", { callback = copy })
-    end,
   },
 
   {
