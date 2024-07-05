@@ -88,38 +88,18 @@ return {
   },
 
   {
-    "nvim-tree/nvim-web-devicons",
-    event = { "VeryLazy" },
-    opts = {
-      override = {
-        ["ipynb"] = {
-          icon = "",
-          color = "#519aba",
-          cterm_color = "231",
-          name = "ReStructuredText",
-        },
-        ["rst"] = {
-          icon = "",
-          color = "#519aba",
-          cterm_color = "231",
-          name = "ReStructuredText",
-        },
-        ["pyx"] = {
-          icon = "",
-          color = "#C78851",
-          cterm_color = "136",
-          name = "PYX",
-        },
-        ["pxd"] = {
-          icon = "",
-          color = "#52778B",
-          cterm_color = "110",
-          name = "PXD",
-        },
-      },
-    },
+    "echasnovski/mini.icons",
+    lazy = true,
+    opts = {},
+    init = function()
+      package.preload["nvim-web-devicons"] = function()
+        require("mini.icons").mock_nvim_web_devicons()
+        return package.loaded["nvim-web-devicons"]
+      end
+    end,
   },
-  "MunifTanjim/nui.nvim",
+
+  { "MunifTanjim/nui.nvim", lazy = true },
 
   {
     "famiu/bufdelete.nvim", -- For with confirm+less noice
