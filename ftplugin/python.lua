@@ -11,3 +11,29 @@ vim.api.nvim_create_user_command("Python", function(args)
     end
   end
 end, {})
+
+local Python = require("helpers.python")
+vim.keymap.set("n", "<leader>AA", function()
+  Python.select_conda({
+    callback = function(env)
+      if Python.activate(env) then
+        vim.cmd("LspRestart<CR>")
+      end
+    end,
+  })
+end, { desc = "Select Conda environment", silent = false })
+
+vim.keymap.set("n", "<leader>Aa", function()
+  Python.activate()
+end, { desc = "Activate Python environment", silent = false })
+
+vim.keymap.set("n", "<leader>As", function()
+  Python.select_conda({
+    callback = function(env)
+      if env then
+        Python.write_pyrightconfig(env)
+      end
+    end,
+    force = true,
+  })
+end, { desc = "Save virtual environment" })

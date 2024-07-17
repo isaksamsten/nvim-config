@@ -237,20 +237,33 @@ return {
     "folke/which-key.nvim",
     -- dnabled = false,
     event = "VeryLazy",
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Keymaps (which-key)",
+      },
+      {
+        "<c-w><space>",
+        function()
+          require("which-key").show({ keys = "<c-w>", loop = true })
+        end,
+        desc = "Window Hydra Mode (which-key)",
+      },
+    },
     opts = {
       plugins = {},
       preset = "helix",
-      key_labels = { ["<leader>"] = "SPC" },
       icons = {
         separator = require("config.icons").indent.marker, -- symbol used between a key and it's label
       },
-      window = {
+      win = {
         border = "none",
-        position = "bottom",
-        -- margin = { 1, 0, 1, 0.5 },
-        -- padding = { 0, 0, 0, 0 },
-        winblend = 0,
-        zindex = 1000,
+        wo = {
+          winblend = 0,
+        },
       },
     },
     config = function(_, opts)
@@ -262,10 +275,16 @@ return {
           { "<leader>D", group = "Debug" },
           { "<leader>S", group = "Search" },
           { "<leader>T", group = "Tabs" },
-          { "<leader>a", group = "Activate" },
+          { "<leader>A", group = "Python", icon = { cat = "filetype", name = "python" } },
           { "<leader>g", group = "Git" },
+          {
+            "<leader>b",
+            group = "buffer",
+            expand = function()
+              return require("which-key.extras").expand.buf()
+            end,
+          },
           { "<leader>m", group = "Make" },
-          { "<leader>r", group = "Run" },
           { "<leader>t", group = "Test" },
           { "<leader>u", group = "Toggle" },
           { "[", group = "Previous" },

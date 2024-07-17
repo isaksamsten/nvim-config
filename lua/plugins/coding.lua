@@ -119,7 +119,7 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
+      -- "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
       {
@@ -187,6 +187,7 @@ return {
     },
     opts = function()
       local icons = require("config.icons")
+      local helpers = require("helpers")
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local has_words_before = function()
@@ -265,7 +266,13 @@ return {
               cmp.complete()
             end
           end, { "i", "c" }),
-          ["<CR>"] = cmp.mapping.confirm({ select = false }),
+          ["<CR>"] = function(fallback)
+            helpers.create_undo()
+            if cmp.confirm({ select = false }) then
+              return
+            end
+            fallback()
+          end,
           ["<C-u>"] = { i = cmp.mapping.scroll_docs(-4) },
           ["<C-d>"] = { i = cmp.mapping.scroll_docs(4) },
           ["<Tab>"] = {
@@ -273,6 +280,7 @@ return {
               -- We dont autocomplete if we are in an active Snippet unless the completion
               -- item is selected explicitly.
               if cmp.visible() then
+                helpers.create_undo()
                 cmp.confirm({ select = true })
               elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
@@ -310,7 +318,7 @@ return {
         sources = cmp.config.sources({
           {
             name = "nvim_lsp",
-            keyword_length = 1,
+            keyword_length = 2,
             entry_filter = function(entry)
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,

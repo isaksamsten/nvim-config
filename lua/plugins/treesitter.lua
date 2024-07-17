@@ -5,7 +5,16 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", version = false },
     build = ":TSUpdate",
     event = "BufReadPost",
+    lazy = vim.fn.argc(-1) == 0,
     version = false,
+    keys = {
+      { "<c-space>", desc = "Increment Selection" },
+      { "<bs>", desc = "Decrement Selection", mode = "x" },
+    },
+    init = function(plugin)
+      require("lazy.core.loader").add_to_rtp(plugin)
+      require("nvim-treesitter.query_predicates")
+    end,
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
     end,
@@ -37,9 +46,15 @@ return {
       },
       indent = {
         enable = true,
-        disable = { "python", "erlang" },
-        incremental_selection = {
-          enable = false,
+        disable = { "erlang" },
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
         },
       },
       textobjects = {

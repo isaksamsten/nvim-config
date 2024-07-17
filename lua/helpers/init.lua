@@ -2,6 +2,13 @@ local M = {}
 
 M.root_patterns = { ".git" }
 
+M.CREATE_UNDO = vim.api.nvim_replace_termcodes("<c-G>u", true, true, true)
+function M.create_undo()
+  if vim.api.nvim_get_mode().mode == "i" then
+    vim.api.nvim_feedkeys(M.CREATE_UNDO, "n", false)
+  end
+end
+
 function M.add_clue(binds)
   local has_miniclue, miniclue = pcall(require, "mini.clue")
   if not has_miniclue then

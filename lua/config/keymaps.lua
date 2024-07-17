@@ -16,7 +16,7 @@ local function ToggleBackground()
   end
 end
 
-vim.keymap.set("n", "<leader>ub", ToggleBackground, { noremap = true, silent = true, desc = "Toggle background color" })
+vim.keymap.set("n", "<leader>ub", ToggleBackground, { noremap = true, silent = true, desc = "Background color" })
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
@@ -69,37 +69,11 @@ vim.keymap.set({ "n", "v" }, "<leader>Tx", "<Esc><Cmd>tabclose<CR>", { desc = "C
 -- vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
 -- vim.keymap.set({ "n" }, "[Q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
 
-local Python = require("helpers.python")
-vim.keymap.set("n", "<leader>AA", function()
-  Python.select_conda({
-    callback = function(env)
-      if Python.activate(env) then
-        vim.cmd("LspRestart<CR>")
-      end
-    end,
-  })
-end, { desc = "Select Conda environment", silent = false })
-
-vim.keymap.set("n", "<leader>Aa", function()
-  Python.activate()
-end, { desc = "Activate Python environment", silent = false })
-
-vim.keymap.set("n", "<leader>As", function()
-  Python.select_conda({
-    callback = function(env)
-      if env then
-        Python.write_pyrightconfig(env)
-      end
-    end,
-    force = true,
-  })
-end, { desc = "Save virtual environment" })
-
 -- Toggle
 local Toggle = require("helpers.toggle")
-vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Toggle format on save" })
-vim.keymap.set("n", "<leader>ud", Toggle.virtual_text, { desc = "Toggle inline diagnostics" })
-vim.keymap.set("n", "<leader>ui", Toggle.inlay_hint, { desc = "Toggle inline diagnostics" })
+vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Format on save" })
+vim.keymap.set("n", "<leader>ud", Toggle.virtual_text, { desc = "Diagnostics" })
+vim.keymap.set("n", "<leader>ui", Toggle.inlay_hint, { desc = "Inlay hints" })
 
 vim.keymap.set("n", "g,", function()
   vim.diagnostic.open_float(nil, { scope = "line" })
