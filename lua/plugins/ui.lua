@@ -1,4 +1,5 @@
 return {
+
   {
     "romainl/vim-qf",
     event = "VeryLazy",
@@ -238,6 +239,7 @@ return {
     event = "VeryLazy",
     opts = {
       plugins = {},
+      preset = "helix",
       key_labels = { ["<leader>"] = "SPC" },
       icons = {
         separator = require("config.icons").indent.marker, -- symbol used between a key and it's label
@@ -245,8 +247,8 @@ return {
       window = {
         border = "none",
         position = "bottom",
-        margin = { 1, 0, 1, 0.5 },
-        padding = { 0, 0, 0, 0 },
+        -- margin = { 1, 0, 1, 0.5 },
+        -- padding = { 0, 0, 0, 0 },
         winblend = 0,
         zindex = 1000,
       },
@@ -254,21 +256,23 @@ return {
     config = function(_, opts)
       local wk = require("which-key")
       wk.setup(opts)
-      wk.register({
-        mode = { "n", "v" },
-        ["g"] = { name = "Go to" },
-        ["]"] = { name = "Next" },
-        ["["] = { name = "Previous" },
-        ["<leader>g"] = { name = "Git" },
-        ["<leader>t"] = { name = "Test" },
-        ["<leader>T"] = { name = "Tabs" },
-        ["<leader>r"] = { name = "Run" },
-        ["<leader>u"] = { name = "Toggle" },
-        ["<leader>D"] = { name = "Debug" },
-        ["<leader>S"] = { name = "Search" },
-        ["<leader>a"] = { name = "Activate" },
-        ["<leader>m"] = { name = "Make" },
-        ["\\"] = { name = "Local leader" },
+      wk.add({
+        {
+          mode = { "n", "v" },
+          { "<leader>D", group = "Debug" },
+          { "<leader>S", group = "Search" },
+          { "<leader>T", group = "Tabs" },
+          { "<leader>a", group = "Activate" },
+          { "<leader>g", group = "Git" },
+          { "<leader>m", group = "Make" },
+          { "<leader>r", group = "Run" },
+          { "<leader>t", group = "Test" },
+          { "<leader>u", group = "Toggle" },
+          { "[", group = "Previous" },
+          { "\\", group = "Local leader" },
+          { "]", group = "Next" },
+          { "g", group = "Go to" },
+        },
       })
       -- require("which-key.plugins").plugins["marks2"] = require("helpers.which_key").marks2
       -- require("which-key.plugins")._setup(require("helpers.which_key").marks2, {})
