@@ -314,7 +314,6 @@ local hlgroups = {
   ["@keyword.return"] = { fg = c_dragonRed, italic = true },
   ["@module"] = { fg = c_dragonOrange0 },
   ["@operator"] = { link = "Operator" },
-  ["@variable.parameter"] = { fg = c_dragonGray0 },
   ["@punctuation.bracket"] = { fg = c_dragonGray1 },
   ["@punctuation.delimiter"] = { fg = c_dragonGray1 },
   ["@markup.list"] = { fg = c_dragonTeal },
