@@ -232,34 +232,34 @@ return {
         -- esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},
-        -- basedpyright = {
-        --   skip_install = true,
-        --   settings = {
-        --     verboseOutput = false,
-        --     autoImportCompletion = true,
-        --     basedpyright = {
-        --       disableOrganizeImports = true,
-        --       analysis = {
-        --         typeCheckingMode = "standard",
-        --         autoSearchPaths = true,
-        --         useLibraryCodeForTypes = true,
-        --         diagnosticMode = "openFilesOnly",
-        --         indexing = true,
-        --       },
-        --     },
-        --   },
-        -- },
-        jedi_language_server = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = false,
-                },
+        basedpyright = {
+          -- skip_install = true,
+          settings = {
+            verboseOutput = false,
+            autoImportCompletion = true,
+            basedpyright = {
+              disableOrganizeImports = true,
+              analysis = {
+                typeCheckingMode = "standard",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+                indexing = true,
               },
             },
           },
         },
+        -- jedi_language_server = {
+        --   capabilities = {
+        --     textDocument = {
+        --       completion = {
+        --         completionItem = {
+        --           snippetSupport = false,
+        --         },
+        --       },
+        --     },
+        --   },
+        -- },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -277,12 +277,12 @@ return {
         --     },
         --   },
         -- },
-        -- ruff_lsp = {
-        --   on_attach = function(client, bufnr)
-        --     client.supports_method("hoverProvider") = false
-        --     client.supports_method("diagnosticProvider") = false
-        --   end,
-        -- },
+        ruff = {
+          on_attach = function(client, bufnr)
+            client.server_capabilities.hoverProvider = false
+            client.server_capabilities.diagnosticProvider = false
+          end,
+        },
         rust_analyzer = {
           -- settings = {
           --   ["rust-analyzer"] = { completion = { autoimport = { enable = false } } },
