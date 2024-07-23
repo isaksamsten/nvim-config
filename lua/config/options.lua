@@ -165,11 +165,11 @@ opt.title = true
 -- opt.selection = "exclusive"
 opt.autowrite = true -- enable auto write
 
-if not vim.env.SSH_TTY then
-  -- only set clipboard if not in ssh, to make sure the OSC 52
-  -- integration works automatically. Requires Neovim >= 0.10.0
-  opt.clipboard = "unnamedplus" -- Sync with system clipboard
-end
+-- if not vim.env.SSH_TTY then
+--   -- only set clipboard if not in ssh, to make sure the OSC 52
+--   -- integration works automatically. Requires Neovim >= 0.10.0
+--   -- opt.clipboard = "unnamedplus" -- Sync with system clipboard
+-- end
 
 opt.cmdheight = 1
 opt.completeopt = "menu,menuone,noselect"
