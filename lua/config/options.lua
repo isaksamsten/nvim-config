@@ -138,6 +138,7 @@ vim.o.titlestring = "nvim %{v:lua.Update_titlestring(22)}"
 vim.o.quickfixtextfunc = [[{info -> v:lua.quickfixtextfunc(info)}]]
 
 if vim.fn.has("nvim-0.10") == 1 then
+  vim.opt.smoothscroll = true
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "v:lua.require'helpers'.foldexpr()"
   vim.opt.foldtext = ""

@@ -249,7 +249,8 @@ return {
               item.kind = icons.kinds["Function"]
               item.menu = "Function"
             else
-              item.kind = (icons.kinds[item.kind] or icons.kinds.Unknown)
+              local icon, _, _ = require("mini.icons").get("lsp", item.kind)
+              item.kind = (icon or icons.kinds.Unknown)
             end
             return item
           end,
@@ -318,7 +319,7 @@ return {
         sources = cmp.config.sources({
           {
             name = "nvim_lsp",
-            keyword_length = 2,
+            keyword_length = 1,
             entry_filter = function(entry)
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,

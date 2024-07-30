@@ -235,7 +235,6 @@ return {
   },
   {
     "folke/which-key.nvim",
-    -- dnabled = false,
     event = "VeryLazy",
     keys = {
       {
@@ -243,14 +242,21 @@ return {
         function()
           require("which-key").show({ global = false })
         end,
-        desc = "Buffer Keymaps (which-key)",
+        desc = "Buffer keys",
       },
       {
         "<c-w><space>",
         function()
           require("which-key").show({ keys = "<c-w>", loop = true })
         end,
-        desc = "Window Hydra Mode (which-key)",
+        desc = "Persist",
+      },
+      {
+        "<leader>d<space>",
+        function()
+          require("which-key").show({ keys = "<leader>d", loop = true })
+        end,
+        desc = "Persist",
       },
     },
     opts = {
@@ -272,19 +278,17 @@ return {
       wk.add({
         {
           mode = { "n", "v" },
-          { "<leader>D", group = "Debug" },
-          { "<leader>S", group = "Search" },
+          { "<leader>d", group = "Debug" },
+          { "<leader>S", group = "Search alternate" },
           { "<leader>T", group = "Tabs" },
-          { "<leader>A", group = "Python", icon = { cat = "filetype", name = "python" } },
           { "<leader>g", group = "Git" },
           {
             "<leader>b",
-            group = "buffer",
+            group = "Buffer",
             expand = function()
               return require("which-key.extras").expand.buf()
             end,
           },
-          { "<leader>m", group = "Make" },
           { "<leader>t", group = "Test" },
           { "<leader>u", group = "Toggle" },
           { "[", group = "Previous" },
@@ -299,69 +303,7 @@ return {
       -- require("which-key.plugins")._setup(require("helpers.which_key").registers2, {})
     end,
   },
-  {
-    "echasnovski/mini.clue",
-    enabled = false,
-    version = false,
-    event = "VeryLazy",
-    config = function(_, _)
-      local miniclue = require("mini.clue")
-      miniclue.setup({
-        window = { delay = 500 },
-        triggers = {
-          -- Leader triggers
-          { mode = "n", keys = "<Leader>" },
-          { mode = "x", keys = "<Leader>" },
 
-          -- Built-in completion
-          { mode = "i", keys = "<C-x>" },
-
-          -- `g` key
-          { mode = "n", keys = "g" },
-          { mode = "x", keys = "g" },
-
-          { mode = "n", keys = "\\" },
-          { mode = "x", keys = "\\" },
-
-          { mode = "n", keys = "g" },
-          { mode = "x", keys = "g" },
-
-          -- Marks
-          { mode = "n", keys = "'" },
-          { mode = "n", keys = "`" },
-          { mode = "x", keys = "'" },
-          { mode = "x", keys = "`" },
-
-          { mode = "n", keys = "[" },
-          { mode = "n", keys = "]" },
-          { mode = "x", keys = "[" },
-          { mode = "x", keys = "]" },
-
-          -- Registers
-          { mode = "n", keys = '"' },
-          { mode = "x", keys = '"' },
-          { mode = "i", keys = "<C-r>" },
-          { mode = "c", keys = "<C-r>" },
-
-          -- Window commands
-          { mode = "n", keys = "<C-w>" },
-
-          -- `z` key
-          { mode = "n", keys = "z" },
-          { mode = "x", keys = "z" },
-        },
-
-        clues = {
-          miniclue.gen_clues.builtin_completion(),
-          miniclue.gen_clues.g(),
-          miniclue.gen_clues.marks(),
-          miniclue.gen_clues.registers(),
-          miniclue.gen_clues.windows(),
-          miniclue.gen_clues.z(),
-        },
-      })
-    end,
-  },
   {
     "goolord/alpha-nvim",
     event = "VimEnter",

@@ -5,27 +5,19 @@ return {
     keys = function()
       return {
         {
-          "<F4>",
+          "<leader>dw",
           function()
-            require("dapui").float_element("scopes", { enter = true })
+            require("dap.ui.widgets").hover()
           end,
-          desc = "Open debug interface",
+          desc = "Widgets",
         },
         {
-          "<leader>Ds",
+          "<leader>du",
           function()
-            require("dapui").toggle({ layout = 1 })
+            require("dapui").toggle({})
           end,
-          desc = "Open debug scopes.",
+          desc = "Toggle UI",
         },
-        {
-          "<leader>Dc",
-          function()
-            require("dapui").toggle({ layout = 2 })
-          end,
-          desc = "Open debug console.",
-        },
-
         {
           "<F9>",
           function()
@@ -36,58 +28,26 @@ return {
         {
           "<F21>", -- SHIFT+F9
           function()
-            local Input = require("nui.input")
-            local event = require("nui.utils.autocmd").event
-            local popup_options = {
-              relative = "cursor",
-              position = {
-                row = -2,
-                col = 1,
-              },
-              size = 50,
-              border = {
-                style = require("config.icons").borders.empty,
-                text = {
-                  top = "Condition",
-                  title_pos = "center",
-                },
-              },
-              win_options = {
-                winhighlight = "PopupNormal:FloatBorder",
-              },
-            }
-
-            local input = Input(popup_options, {
-              on_submit = function(value)
-                require("dap").set_breakpoint(value)
-              end,
-            })
-            input:map("n", "<Esc>", function()
-              input:unmount()
-            end, { noremap = true })
-            input:on(event.BufLeave, function()
-              input:unmount()
-            end)
-            input:mount()
+            require("dap").set_breakpoint(vim.fn.input("Condition: "))
           end,
           desc = "Set conditional breakpoint",
         },
         {
-          "<F29>", -- CTRL+F5
+          "<leader>dl",
           function()
             require("dap").run_last()
           end,
           desc = "Run last debug",
         },
         {
-          "<F17>", -- SHIFT+F5
+          "<leader>dt", -- SHIFT+F5
           function()
-            require("dap").close()
+            require("dap").terminate()
           end,
-          desc = "Stop debugging",
+          desc = "Terminate",
         },
         {
-          "<F5>",
+          "<leader>dr",
           function()
             require("dap").continue()
           end,
@@ -113,6 +73,34 @@ return {
             require("dap").step_out()
           end,
           desc = "Step out",
+        },
+        {
+          "<leader>dc",
+          function()
+            require("dap").run_to_cursor()
+          end,
+          desc = "Run to Cursor",
+        },
+        {
+          "<leader>dg",
+          function()
+            require("dap").goto_()
+          end,
+          desc = "Go to Line (No Execute)",
+        },
+        {
+          "<leader>dj",
+          function()
+            require("dap").down()
+          end,
+          desc = "Down",
+        },
+        {
+          "<leader>dk",
+          function()
+            require("dap").up()
+          end,
+          desc = "Up",
         },
       }
     end,
@@ -215,6 +203,18 @@ return {
             -- linehl = "DebugLogPointLine",
             numhl = "DebugLogPointLine",
           })
+
+          -- setup dap config by VsCode launch.json file
+          local vscode = require("dap.ext.vscode")
+          local json = require("plenary.json")
+          vscode.json_decode = function(str)
+            return vim.json.decode(json.json_strip_comments(str))
+          end
+
+          -- Extends dap.configurations with entries read from .vscode/launch.json
+          if vim.fn.filereadable(".vscode/launch.json") then
+            vscode.load_launchjs()
+          end
         end,
       },
     },
