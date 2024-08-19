@@ -549,9 +549,10 @@ local hlgroups = {
   TelescopeSelectionCaret = { link = "CursorLineNr" },
   TelescopeTitle = { fg = c_dragonRed },
 
-  IndentBlanklineChar = { fg = c_dragonBg3 },
-  IndentBlanklineSpaceChar = { link = "IndentBlanklineChar" },
-  IndentBlanklineSpaceCharBlankline = { link = "IndentBlanklineChar" },
+  IblIndent = { fg = c_dragonBg3 },
+  IblScope = { fg = c_dragonBg5 },
+  -- IndentBlanklineSpaceChar = { link = "IndentBlanklineChar" },
+  -- IndentBlanklineSpaceCharBlankline = { link = "IndentBlanklineChar" },
 
   MiniIndentscopeSymbol = { link = "IndentBlanklineChar" },
 

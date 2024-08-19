@@ -310,7 +310,7 @@ return {
     config = function(_, opts)
       local alpha = require("alpha")
       local default = require("alpha.themes.startify")
-      default.nvim_web_devicons.enabled = false
+      -- default.nvim_web_devicons.enabled = false
       alpha.setup(default.config)
     end,
   },
@@ -400,8 +400,8 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     main = "ibl",
     opts = {
-      indent = { char = require("config.icons").statuscol, highlight = "IndentBlanklineChar" },
-      scope = { enabled = false },
+      indent = { char = require("config.icons").statuscol },
+      scope = { enabled = false, show_start = false, show_end = false },
     },
     config = function(_, opts)
       require("ibl").setup(opts)
