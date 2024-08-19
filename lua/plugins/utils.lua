@@ -46,11 +46,7 @@ return {
     "mrjones2014/smart-splits.nvim",
     version = false,
     build = "./kitty/install-kittens.bash",
-<<<<<<< HEAD
-    cond = vim.env.KITTY_LISTEN_ON ~= nil,
-=======
     cond = vim.env.KITTY_PID ~= nil or vim.env.TMUX ~= nil,
->>>>>>> 9aaa526 (Updates)
     lazy = false,
     config = function(_, opts)
       require("smart-splits").setup(opts)
