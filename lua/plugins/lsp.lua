@@ -67,6 +67,34 @@ return {
     opts = {
       root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" },
     },
+    keys = {
+      { "crv", function() require("jdtls").extract_variable() end, desc = "Extract variable" },
+      {
+        "crv",
+        function()
+          require("jdtls").extract_variable(true)
+        end,
+        mode = "v",
+        desc = "Extract variable",
+      },
+      { "crc", function() require("jdtls").extract_constant() end, desc = "Extract constant" },
+      {
+        "crc",
+        function()
+          require("jdtls").extract_constant(true)
+        end,
+        mode = "v",
+        desc = "Extract constant",
+      },
+      {
+        "crm",
+        function()
+          require("jdtls").extract_method(true)
+        end,
+        mode = "v",
+        desc = "Extract method",
+      },
+    },
     config = function(_, opts)
       local resolve_opts = function()
         local root_dir = require("jdtls.setup").find_root(opts.root_markers or { ".git", "pom.xml", "build.gradle" })
