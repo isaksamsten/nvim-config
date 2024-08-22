@@ -116,6 +116,14 @@ return {
     version = false,
     event = { "CmdlineEnter", "InsertEnter" },
     dependencies = {
+      {
+        "milanglacier/minuet-ai.nvim",
+        opts = {
+          provider = "openai",
+          add_single_line_entry = false,
+        },
+        dependencies = { "nvim-lua/plenary.nvim" },
+      },
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
@@ -256,6 +264,76 @@ return {
           end,
         },
         mapping = cmp.mapping.preset.insert({
+          ["<C-a>"] = cmp.mapping(function(context)
+            local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+            if filetype ~= "tex" then
+              require("minuet.config").provider = "openai"
+            else
+              require("minuet.config").provider_options.openai.system = {
+                template = "{{{prompt}}}\n{{{guidelines}}}\n{{{n_completion_template}}}",
+                prompt = [[
+You are the backend of an AI-powered prose completion engine. You are an
+excellent write in the english language and author scientific manuscripts. Your
+task is to provide suggestions on how to complete a given text based on the
+user's input. The user's text will be enclosed in markers:
+
+- `<contextAfterCursor>`: Text context after the cursor
+- `<cursorPosition>`: Current cursor location
+- `<contextBeforeCursor>`: Text context before the cursor
+
+Note that the user's text will be prompted in reverse order: first the text
+after the cursor, then the text before the cursor.
+              ]],
+                guidelines = [[
+Guidelines:
+1. Offer completions after the `<cursorPosition>` marker.
+2. Make sure you have maintained the user's existing whitespace and indentation.
+   This is REALLY IMPORTANT!
+3. Provide multiple completion options when possible.
+4. Return completions separated by the marker <endCompletion>.
+5. The returned message will be further parsed and processed. DO NOT include
+   additional comments or markdown code block fences. Return the result directly.
+6. Keep each completion option concise, limiting it to a single line or a few lines.
+              ]],
+                n_completion_template = "7. Provide at most %d completion items.",
+              }
+              require("minuet.config").provider_options.openai.few_shots = {
+                {
+                  role = "user",
+                  content = [[
+% language: latex
+<contextAfterCursor>
+
+This technique is widely used in various domains, such as finance, healthcare,
+and speech recognition, where understanding temporal dynamics is crucial for
+making accurate predictions.
+<contextBeforeCursor>
+Time series classification is a specialized area of machine learning that
+focuses on categorizing sequences of data points collected or recorded at
+successive points in time. Unlike traditional classification tasks
+  <cursorPosition>]],
+                },
+                {
+                  role = "assistant",
+                  content = [[
+, time series data has an inherent temporal order, which adds complexity due to
+the potential dependencies between different time points.
+<endCompletion>
+, time series data is inherently sequential, adding complexity because of the
+potential interdependencies between different time points.
+<endCompletion>
+]],
+                },
+              }
+            end
+            cmp.complete({
+              config = {
+                sources = cmp.config.sources({
+                  { name = "minuet" },
+                }),
+              },
+            })
+          end),
           ["<C-k>"] = { i = prev_item, c = prev_item },
           ["<C-j>"] = { i = next_item, c = next_item },
           ["<Up>"] = { i = prev_item, c = prev_item },

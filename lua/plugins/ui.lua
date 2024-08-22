@@ -295,6 +295,8 @@ return {
           { "\\", group = "Local leader" },
           { "]", group = "Next" },
           { "g", group = "Go to" },
+          { "<LocalLeader>c", group = "Companion", icon = "󱍅" },
+          { "<LocalLeader>r", group = "Actions", icon = "󱙺" },
         },
       })
       -- require("which-key.plugins").plugins["marks2"] = require("helpers.which_key").marks2
