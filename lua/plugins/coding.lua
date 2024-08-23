@@ -115,14 +115,6 @@ return {
     version = false,
     event = { "CmdlineEnter", "InsertEnter" },
     dependencies = {
-      {
-        "milanglacier/minuet-ai.nvim",
-        opts = {
-          provider = "openai",
-          add_single_line_entry = false,
-        },
-        dependencies = { "nvim-lua/plenary.nvim" },
-      },
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
@@ -141,10 +133,6 @@ return {
         end,
         config = function(_, opts)
           require("luasnip").setup(opts)
-
-          -- Extend python and rst with corresponding snippets
-          require("luasnip").filetype_extend("python", { "rst" })
-          require("luasnip").filetype_extend("rst", { "python" })
 
           -- Unlink the snippet and restore completion
           -- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1011938524
@@ -263,21 +251,6 @@ return {
           end,
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-a>"] = cmp.mapping(function(context)
-            local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-            require("minuet.config").provider_options.openai.system =
-              require("helpers.prompts").minuet_system_prompt(filetype)
-            require("minuet.config").provider_options.openai.few_shots =
-              require("helpers.prompts").minuet_few_shot(filetype)
-
-            cmp.complete({
-              config = {
-                sources = cmp.config.sources({
-                  { name = "minuet" },
-                }),
-              },
-            })
-          end),
           ["<C-k>"] = { i = prev_item, c = prev_item },
           ["<C-j>"] = { i = next_item, c = next_item },
           ["<Up>"] = { i = prev_item, c = prev_item },

@@ -1,3 +1,4 @@
+local text_ft = { "tex", "md", "rst", "txt" }
 return {
   {
     "olimorris/codecompanion.nvim",
@@ -6,15 +7,13 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     version = false,
-    lazy = false,
     keys = {
       { "<LocalLeader>a", "<cmd>CodeCompanionToggle<cr>", mode = { "n", "v" }, desc = "Toggle AI chat" },
-      "<LocalLeader>c",
+      { "<LocalLeader>c", nil, mode = { "n", "v" } },
     },
     opts = {
       opts = {
-        -- use_default_actions = true,
-        use_default_prompts = true,
+        use_default_prompts = false,
       },
       adapters = {
         openai = function()
@@ -28,12 +27,34 @@ return {
         end,
       },
       default_prompts = {
+        ["Generate a Commit Message"] = {
+          strategy = "chat",
+          description = "Generate a commit message",
+          opts = {
+            default_prompt = false,
+            mapping = "<LocalLeader>cm",
+            slash_cmd = "commit",
+            auto_submit = true,
+          },
+          prompts = {
+            {
+              role = "${user}",
+              contains_code = true,
+              content = function()
+                return "Given the git diff listed below, please generate a commit message for me:"
+                  .. "\n\n```\n"
+                  .. vim.fn.system("git diff")
+                  .. "\n```"
+              end,
+            },
+          },
+        },
         ["Fix code"] = {
           strategy = "chat",
           description = "Fix code or text",
           opts = {
             index = 5,
-            default_prompt = true,
+            default_prompt = false,
             mapping = "<LocalLeader>cf",
             modes = { "v" },
             auto_submit = true,
@@ -44,7 +65,7 @@ return {
             {
               role = "system",
               content = function(context)
-                if context.filetype == "tex" then
+                if vim.tbl_contains(text_ft, context.filetype) then
                   return [[ When asked to improve text, follow these steps:
 1. **Identify Potential Issues**: Thoroughly read the provided text, focusing on identifying areas that need correction, clarification, or enhancement.
 2. **Formulate a Plan**: Outline a clear strategy for improving the text, detailing specific changes and the rationale behind them.
@@ -76,7 +97,7 @@ Use Markdown formatting and include the programming language name at the start o
               contains_code = true,
               content = function(context)
                 local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                if context.filetype == "tex" then
+                if vim.tbl_contains(text_ft, context.filetype) then
                   return "Please improve the selected text:\n\n" .. code .. "\n\n"
                 else
                   return "Please fix the selected code:\n\n```" .. context.filetype .. "\n" .. code .. "\n```\n\n"
@@ -90,7 +111,7 @@ Use Markdown formatting and include the programming language name at the start o
           description = "Explain code or text",
           opts = {
             index = 5,
-            default_prompt = true,
+            default_prompt = false,
             mapping = "<LocalLeader>ce",
             modes = { "v" },
             auto_submit = true,
@@ -132,7 +153,6 @@ Use Markdown formatting and include the programming language name at the start o
     },
     config = function(_, opts)
       require("codecompanion").setup(opts)
-      vim.cmd([[cab cc CodeCompanion]])
     end,
   },
   {
@@ -179,7 +199,7 @@ Use Markdown formatting and include the programming language name at the start o
         fix = [[You are tasked with fixing code written in {{filetype}} to
         improve its performance, clarity and correctness. Provide only the
         modified code. Exclude any non-code elements, including Markdown or
-        comments.]],
+        comments. *NEVER USE MARKDOWN CODE BLOCKS!*]],
         clarify = [[Your task is to enhance the clarity of English text
         intended for a scientific manuscript written in {{filetype}}. Adhere
         strictly to the {{filetype}} syntax, ensuring that your revisions are
@@ -198,13 +218,13 @@ Use Markdown formatting and include the programming language name at the start o
           { "]z", "<Plug>JumpDiffCharNextStart", desc = "Next diff", silent = true },
           {
             "do",
-            "<Plug>GetDiffCharPair | <Plug>JumpDiffCharNextStart",
+            "<Plug>GetDiffCharPair",
             desc = "Obtain diff and Next diff",
             silent = true,
           },
           {
             "dp",
-            "<Plug>PutDiffCharPair | <Plug>JumpDiffCharNextStart",
+            "<Plug>PutDiffCharPair",
             desc = "Put diff and Next diff",
             silent = true,
           },
@@ -217,7 +237,7 @@ Use Markdown formatting and include the programming language name at the start o
     version = false,
     build = "./kitty/install-kittens.bash",
     cond = vim.env.KITTY_PID ~= nil or vim.env.TMUX ~= nil,
-    lazy = false,
+    event = "VeryLazy",
     config = function(_, opts)
       require("smart-splits").setup(opts)
       -- vim.keymap.set("n", "<A-h>", require("smart-splits").resize_left)
