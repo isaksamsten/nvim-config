@@ -222,6 +222,8 @@ opt.linebreak = true
 -- if vim.fn.has("nvim-0.9.0") == 1 then
 opt.splitkeep = "screen"
 opt.shortmess:append({ C = true })
+
+opt.diffopt = { "internal", "filler", "closeoff", "algorithm:patience", "followwrap", "linematch:120" }
 -- end
 
 -- fix markdown indentation settings

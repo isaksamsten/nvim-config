@@ -41,7 +41,7 @@ return {
           { text = { " " } },
           {
             sign = {
-              namespace = { "gitsign" },
+              namespace = { "gitsigns+" },
               maxwidth = 1,
               colwidth = 1,
               auto = false,

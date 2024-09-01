@@ -113,13 +113,13 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false,
-    event = { "CmdlineEnter", "InsertEnter" },
+    event = { "InsertEnter" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
       -- "hrsh7th/cmp-nvim-lua",
-      "hrsh7th/cmp-cmdline",
+      -- "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
       {
         "L3MON4D3/LuaSnip",
@@ -251,10 +251,10 @@ return {
           end,
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-k>"] = { i = prev_item, c = prev_item },
-          ["<C-j>"] = { i = next_item, c = next_item },
-          ["<Up>"] = { i = prev_item, c = prev_item },
-          ["<Down>"] = { i = next_item, c = next_item },
+          ["<C-p>"] = { i = prev_item },
+          ["<C-n>"] = { i = next_item },
+          ["<Up>"] = { i = prev_item },
+          ["<Down>"] = { i = next_item },
           ["<C-Space>"] = cmp.mapping(function(_)
             if cmp.visible() then
               cmp.abort()
@@ -291,14 +291,6 @@ return {
                 luasnip.expand_or_jump()
               else
                 fallback()
-              end
-            end,
-
-            c = function(_)
-              if cmp.visible() then
-                cmp.confirm({ select = true })
-              else
-                cmp.complete()
               end
             end,
           },
@@ -343,22 +335,22 @@ return {
       local cmp = require("cmp")
       cmp.setup(opts)
 
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = opts.mapping,
-        sources = {
-          { name = "buffer" },
-        },
-      })
-      cmp.setup.cmdline(":", {
-        enabled = false,
-        -- completion = { autocomplete = false },
-        mapping = opts.mapping,
-        sources = cmp.config.sources({
-          { name = "cmdline" },
-        }, {
-          { name = "path" },
-        }),
-      })
+      -- cmp.setup.cmdline({ "/", "?" }, {
+      --   mapping = opts.mapping,
+      --   sources = {
+      --     { name = "buffer" },
+      --   },
+      -- })
+      -- cmp.setup.cmdline(":", {
+      --   enabled = false,
+      --   -- completion = { autocomplete = false },
+      --   mapping = opts.mapping,
+      --   sources = cmp.config.sources({
+      --     { name = "cmdline" },
+      --   }, {
+      --     { name = "path" },
+      --   }),
+      -- })
 
       require("cmp_git").setup()
       cmp.setup.filetype("gitcommit", {
@@ -367,10 +359,10 @@ return {
           { name = "git" },
         },
       })
-      cmp.setup.cmdline("@", { enabled = false })
-      cmp.setup.cmdline(">", { enabled = false })
-      cmp.setup.cmdline("-", { enabled = false })
-      cmp.setup.cmdline("=", { enabled = false })
+      -- cmp.setup.cmdline("@", { enabled = false })
+      -- cmp.setup.cmdline(">", { enabled = false })
+      -- cmp.setup.cmdline("-", { enabled = false })
+      -- cmp.setup.cmdline("=", { enabled = false })
 
       cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
         enabled = true,

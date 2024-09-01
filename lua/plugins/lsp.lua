@@ -68,7 +68,13 @@ return {
       root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" },
     },
     keys = {
-      { "crv", function() require("jdtls").extract_variable() end, desc = "Extract variable" },
+      {
+        "crv",
+        function()
+          require("jdtls").extract_variable()
+        end,
+        desc = "Extract variable",
+      },
       {
         "crv",
         function()
@@ -77,7 +83,13 @@ return {
         mode = "v",
         desc = "Extract variable",
       },
-      { "crc", function() require("jdtls").extract_constant() end, desc = "Extract constant" },
+      {
+        "crc",
+        function()
+          require("jdtls").extract_constant()
+        end,
+        desc = "Extract constant",
+      },
       {
         "crc",
         function()
@@ -260,34 +272,34 @@ return {
         -- esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},
-        basedpyright = {
-          -- skip_install = true,
-          settings = {
-            verboseOutput = false,
-            autoImportCompletion = true,
-            basedpyright = {
-              disableOrganizeImports = true,
-              analysis = {
-                typeCheckingMode = "standard",
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "openFilesOnly",
-                indexing = true,
-              },
-            },
-          },
-        },
-        -- jedi_language_server = {
-        --   capabilities = {
-        --     textDocument = {
-        --       completion = {
-        --         completionItem = {
-        --           snippetSupport = false,
-        --         },
+        -- basedpyright = {
+        --   -- skip_install = true,
+        --   settings = {
+        --     verboseOutput = false,
+        --     autoImportCompletion = true,
+        --     basedpyright = {
+        --       disableOrganizeImports = true,
+        --       analysis = {
+        --         typeCheckingMode = "standard",
+        --         autoSearchPaths = true,
+        --         useLibraryCodeForTypes = true,
+        --         diagnosticMode = "openFilesOnly",
+        --         indexing = true,
         --       },
         --     },
         --   },
         -- },
+        jedi_language_server = {
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          },
+        },
         lua_ls = {},
         jsonls = {},
         marksman = {},

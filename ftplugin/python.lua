@@ -2,14 +2,12 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.b.inlay_hint_disable = true
 
-vim.api.nvim_create_user_command("Python", function(args)
+vim.api.nvim_create_user_command("Python", function()
   local python = require("helpers.python").python()
-  if args ~= nil then
-    if python then
-      vim.notify(python.name .. " (" .. python.version .. ")")
-    else
-      vim.notify("No python environment")
-    end
+  if python then
+    vim.notify(python.name .. " (" .. python.version .. ")")
+  else
+    vim.notify("No python environment")
   end
 end, {})
 
