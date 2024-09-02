@@ -379,9 +379,7 @@ return {
     opts = {
       mappings = {
         choose_marked = "<C-q>",
-        move_down = "<C-j>",
         move_start = "<C-g>",
-        move_up = "<C-k>",
       },
       window = {
         prompt_cursor = "▏",

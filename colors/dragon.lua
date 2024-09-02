@@ -245,7 +245,7 @@ local hlgroups = {
   NormalNC = { link = "Normal" },
   Pmenu = { bg = c_dragonBg3, fg = c_dragonFg1 },
   PmenuSbar = { bg = c_dragonBg4 },
-  PmenuSel = { bg = c_dragonBg4, fg = "NONE" },
+  PmenuSel = { bg = c_dragonBg4, fg = "NONE", bold = true },
   PmenuThumb = { bg = c_dragonBg5 },
   PmenuBorder = { link = "FloatBorder" },
   Question = { link = "MoreMsg" },
@@ -694,7 +694,7 @@ if vim.go.bg == "light" then
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.PmenuSbar = { bg = c_dragonBg2 }
-  hlgroups.PmenuSel = { bg = c_dragonFg0, fg = c_dragonBg0 }
+  hlgroups.PmenuSel = { fg = "NONE", bg = "#f4f4f4", bold = true }
   hlgroups.PmenuThumb = { bg = c_dragonBg4 }
   hlgroups.Search = { bg = c_dragonBg3 }
   hlgroups.StatusLine = { bg = c_dragonBg0 }
