@@ -157,8 +157,15 @@ Use Markdown formatting and include the programming language name at the start o
     end,
   },
   {
-    -- dir = "~/Projects/dante.nvim/",
+    -- dir = "~/Projects/sia.nvim/",
+    -- name = "Sia",
     "isaksamsten/sia.nvim",
+    keys = {
+      { "<LocalLeader><space>", mode = { "v" }, ":Sia ", desc = "Sia" },
+      { "<LocalLeader><space>", mode = { "n" }, ":Sia! ", desc = "Sia!" },
+      { "<LocalLeader><cr>", mode = { "v" }, ":Sia<cr>", desc = ":Sia" },
+      { "<LocalLeader>%", mode = { "v" }, ":Sia<cr>", desc = "%:Sia" },
+    },
     -- enabled = false,
     dependencies = {
       {
@@ -211,6 +218,7 @@ LaTeX commands. I will give text I need you to improve.]],
           temperature = 0.1,
           model = "gpt-4o",
           mode = "diff",
+          range = true,
         },
         complete = {
           prompt = {
@@ -297,6 +305,7 @@ a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
           mode = "diff",
           model = "gpt-4o",
           temperature = 0.5,
+          range = true,
         },
         fix = {
           prompt = {
@@ -314,7 +323,7 @@ a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
           mode = "diff",
           model = "gpt-4o",
           temperature = 0.0,
-          visual = true,
+          range = true,
         },
       },
     },
