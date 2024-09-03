@@ -156,10 +156,19 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
+    version = false,
     opts = function()
       local signs = require("config.icons").git.signs
       return {
         signs = {
+          add = { text = signs.add },
+          change = { text = signs.change },
+          delete = { text = signs.delete },
+          topdelete = { text = signs.topdelete },
+          changedelete = { text = signs.changedelete },
+          untracked = { text = signs.untracked },
+        },
+        signs_staged = {
           add = { text = signs.add },
           change = { text = signs.change },
           delete = { text = signs.delete },

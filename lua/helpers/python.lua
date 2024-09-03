@@ -146,6 +146,17 @@ function M.conda_envs()
   return nil
 end
 
+-- Creates a conda environment from the specified environment path.
+--
+-- @param env_path: The path to the conda environment.
+-- @return A table containing the following keys if the environment exists:
+--   - exe: The path to the Python executable within the conda environment.
+--   - path: The original path provided as input.
+--   - type: A string indicating the type of environment, which is "conda".
+--   - name: The base name of the environment path.
+--   - version: The version of Python in the conda environment, retrieved using the python_version function.
+--
+-- If the environment does not exist, the function returns nil.
 local function create_conda_env_from_env_path(env_path)
   local exe = vim.fn.simplify(env_path .. "/bin/python")
 
