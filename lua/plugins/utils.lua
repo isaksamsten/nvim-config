@@ -171,7 +171,7 @@ a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
               role = "system",
               content = [[You are tasked with fixing code written in {{filetype}} to
         improve its performance, clarity and correctness. Provide only the
-        modified code. *NEVER USE MARKDOWN CODE BLOCKS!*]],
+        modified code, comments and documentation.]],
             },
             {
               role = "user",
