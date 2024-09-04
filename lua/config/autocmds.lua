@@ -209,3 +209,17 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "tex" },
   command = "setlocal wrap breakindent conceallevel=0",
 })
+
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "diff",
+  callback = function()
+    local ok, ibl = pcall(require, "ibl")
+    if ok then
+      if vim.opt.diff:get() then
+        ibl.update({ enabled = false })
+      else
+        ibl.update({ enabled = true })
+      end
+    end
+  end,
+})
