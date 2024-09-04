@@ -4,11 +4,9 @@ return {
     -- name = "Sia",
     "isaksamsten/sia.nvim",
     keys = {
-      { "<LocalLeader><space>", mode = { "v" }, ":Sia ", desc = "Sia " },
-      { "<LocalLeader><space>", mode = { "n" }, ":Sia! ", desc = "Sia! " },
-      { "<LocalLeader><cr>", mode = { "v" }, ":Sia<cr>", desc = ":Sia" },
-      { "<LocalLeader><cr>", mode = { "n" }, ":Sia<cr>", desc = ":Sia" },
-      { "<LocalLeader>%", mode = { "v" }, ":Sia<cr>", desc = "%:Sia" },
+      { "<LocalLeader><space>", mode = { "v", "n" }, ":Sia ", desc = ":Sia " },
+      { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
+      { "<LocalLeader>%", mode = { "n" }, ":%Sia ", desc = "%:Sia" },
     },
     -- enabled = false,
     dependencies = {
@@ -30,6 +28,10 @@ return {
             silent = true,
           },
         },
+        config = function()
+          vim.g.DiffColors = 0
+          vim.g.DiffUnit = "word"
+        end,
       },
     },
     cmd = "Sia",
@@ -177,11 +179,12 @@ a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
             },
           },
           mode = "diff",
-          model = "gpt-4o",
+          model = "gpt-4o-mini",
           temperature = 0.0,
           context = function(bufnr)
             return require("sia.context").treesitter("@function.outer")(bufnr)
           end,
+          insert = { placement = { "below", "end" } },
         },
       },
     },
