@@ -59,6 +59,7 @@ local c_waveRed
 local c_winterBlue
 local c_winterGreen
 local c_winterRed
+local c_winterRed1
 local c_winterYellow
 
 if vim.go.bg == 'dark' then
@@ -109,6 +110,7 @@ if vim.go.bg == 'dark' then
   c_winterBlue    = '#252535'
   c_winterGreen   = '#2e322d'
   c_winterRed     = '#43242b'
+  c_winterRed1    = '#643640'
   c_winterYellow  = '#322e29'
 else
   c_autumnGreen   = '#969438'
@@ -149,7 +151,7 @@ else
   c_springBlue    = '#7fb4ca'
   c_springGreen   = '#98bb6c'
   c_springViolet  = '#938aa9'
-  c_sumiInk6      = '#b1b1d2'
+  c_sumiInk6      = '#e0e0ee'
   c_waveAqua0     = '#69827b'
   c_waveAqua1     = '#7aa89f'
   c_waveBlue0     = '#223249'
@@ -158,6 +160,7 @@ else
   c_winterBlue    = '#f2f2fa'
   c_winterGreen   = '#eaede8'
   c_winterRed     = '#f2e0e3'
+  c_winterRed1    = '#e3bcc3'
   c_winterYellow  = '#f0ede9'
 end
 -- stylua: ignore end
@@ -216,12 +219,12 @@ local hlgroups = {
   Cursor = { bg = c_dragonFg0, fg = c_dragonBg1 },
   CursorColumn = { link = "CursorLine" },
   CursorIM = { link = "Cursor" },
-  CursorLine = { bg = c_dragonBg2 },
+  CursorLine = { bg = c_dragonBg2, ctermfg = "White" },
   CursorLineNr = { fg = c_dragonGray0, bold = true },
   DebugPC = { bg = c_winterRed },
   DiffAdd = { bg = c_winterGreen },
   DiffChange = { bg = c_winterBlue },
-  DiffDelete = { fg = c_dragonBg4 },
+  DiffDelete = { fg = c_winterRed1, bg = c_winterRed },
   DiffText = { bg = c_sumiInk6 },
   Directory = { fg = c_dragonBlue1 },
   EndOfBuffer = { fg = c_dragonBg1 },
@@ -662,7 +665,7 @@ local hlgroups = {
 
 -- Highlight group overrides {{{1
 if vim.go.bg == "light" then
-  hlgroups.CursorLine = { bg = c_dragonBg0 }
+  hlgroups.CursorLine = { bg = c_dragonBg0, ctermfg = "White" }
   hlgroups.QuickFixLine = { bg = "NONE", bold = true }
   hlgroups.FloatBorder = { bg = c_dragonBg0, fg = c_dragonBg0 }
   hlgroups.NormalFloat = { bg = c_dragonBg0 }
