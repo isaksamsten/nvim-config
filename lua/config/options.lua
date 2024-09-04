@@ -142,7 +142,7 @@ if vim.fn.has("nvim-0.10") == 1 then
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "v:lua.require'helpers'.foldexpr()"
   vim.opt.foldtext = ""
-  vim.opt.fillchars = "fold: "
+  -- vim.opt.fillchars = "fold: "
 else
   vim.opt.foldmethod = "indent"
 end
@@ -159,7 +159,7 @@ vim.g.cmp_completion_max_width = 30
 vim.g.max_width_diagnostic_virtual_text = 50
 
 local opt = vim.opt
-vim.opt.fillchars = { eob = " ", fold = " ", foldopen = "", foldclose = "", foldsep = " " }
+vim.opt.fillchars = { eob = " ", fold = " ", foldopen = "", foldclose = "", foldsep = " ", diff = "╱" }
 opt.title = true
 -- opt.titlestring = "nvim %<%t%="
 -- opt.titlestring = "{ %!v:lua._titlestring() }"
