@@ -1,4 +1,5 @@
 return {
+  -- { "projekt0n/github-nvim-theme", lazy = false, priority = 1000 },
   {
     -- dir = "~/Projects/sia.nvim/",
     -- name = "Sia",
@@ -7,6 +8,10 @@ return {
       { "<LocalLeader><space>", mode = { "v", "n" }, ":Sia ", desc = ":Sia " },
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "<LocalLeader>%", mode = { "n" }, ":%Sia ", desc = "%:Sia" },
+      { "gza", mode = { "n", "x" }, "<Plug>(sia-append)", desc = "Append context" },
+      { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Execute default prompt" },
+      { "gze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain" },
+      { "gzf", mode = { "n", "x" }, "<Plug>(sia-execute-fix)", desc = "Fix" },
     },
     -- enabled = false,
     dependencies = {

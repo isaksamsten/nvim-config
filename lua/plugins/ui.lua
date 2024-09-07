@@ -5,13 +5,13 @@ return {
     event = "VeryLazy",
     config = function()
       vim.cmd([[
-        let g:qf_mapping_ack_style = 1
+         let g:qf_mapping_ack_style = 1
         let g:qf_auto_open_quickfix = 0
         nmap <C-S-q> <Plug>qf_qf_toggle
         nmap <C-q> <Plug>qf_qf_switch
 
         nmap [q <Plug>qf_qf_previous
-        nmap ]q  <Plug>qf_qf_next
+        nmap ]q <Plug>qf_qf_next
       ]])
     end,
   },
@@ -304,8 +304,7 @@ return {
           { "\\", group = "Local leader" },
           { "]", group = "Next" },
           { "g", group = "Go to" },
-          { "<LocalLeader>c", group = "Companion", icon = "󱍅" },
-          { "<LocalLeader>r", group = "Actions", icon = "󱙺" },
+          { "gz", group = "AI", icon = "󱙺" },
         },
       })
       -- require("which-key.plugins").plugins["marks2"] = require("helpers.which_key").marks2
