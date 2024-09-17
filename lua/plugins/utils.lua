@@ -139,7 +139,6 @@ the classification of insects based on their sound profiles
           suffix = 1,
           model = "gpt-4o",
           mode = "insert",
-          range = false,
         },
         rephrase = {
           prompt = {
