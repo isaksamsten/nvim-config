@@ -301,16 +301,12 @@ return {
           { "<leader>t", group = "Test" },
           { "<leader>u", group = "Toggle" },
           { "[", group = "Previous" },
-          { "\\", group = "Local leader" },
+          { "\\", group = "Backslash" },
           { "]", group = "Next" },
           { "g", group = "Go to" },
           { "gz", group = "AI", icon = "󱙺" },
         },
       })
-      -- require("which-key.plugins").plugins["marks2"] = require("helpers.which_key").marks2
-      -- require("which-key.plugins")._setup(require("helpers.which_key").marks2, {})
-      -- require("which-key.plugins").plugins["registers2"] = require("helpers.which_key").registers2
-      -- require("which-key.plugins")._setup(require("helpers.which_key").registers2, {})
     end,
   },
 

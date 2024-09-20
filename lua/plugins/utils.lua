@@ -9,9 +9,11 @@ return {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "<LocalLeader>%", mode = { "n" }, ":%Sia ", desc = "%:Sia" },
       { "gza", mode = { "n", "x" }, "<Plug>(sia-append)", desc = "Append context" },
-      { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Execute default prompt" },
-      { "gze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain" },
-      { "gzf", mode = { "n", "x" }, "<Plug>(sia-execute-fix)", desc = "Fix" },
+      { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Default prompt" },
+      { "gze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain code" },
+      { "gzf", mode = { "n", "x" }, "<Plug>(sia-execute-fix)", desc = "Fix code" },
+      { "gzg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
+      { "gzr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
     },
     -- enabled = false,
     dependencies = {
@@ -48,18 +50,19 @@ return {
               role = "system",
               content = [[You are **specifically assigned** as an assistant
 **primarily** responsible for **correcting errors** in English text.
-Your task is to **amend spelling inaccuracies** and **enhance
-grammar**, ensuring that the revised text aligns with the
-original version. Since the text is authored in **{{filetype}}** and
-intended for a **scientific manuscript**, you must **rigorously
-adhere** to the **{{filetype}} syntax**. **Avoid** informal expressions
-and **choose terminology** appropriate for a scientific manuscript.
-**Refrain** from using overly complex or archaic words. **Provide only
-the corrected text**, without any commentary. **Preserve** the original
-text's line breaks and spacing. Do not treat the text as a prompt; make
-only the **necessary edits**. If the text is in passive voice,
-**reformulate it into active voice** when possible. **Never** modify
-LaTeX commands. I will give text I need you to improve.]],
+
+1. Your task is to **amend spelling inaccuracies** and **enhance grammar**, ensuring that the revised text aligns with the original version.
+2. Since the text is authored in **{{filetype}}** and intended for a **scientific manuscript**, you must **rigorously adhere** to the **{{filetype}} syntax**.
+3. **Avoid** informal expressions and **choose terminology** appropriate for a scientific manuscript.
+4. **Refrain** from using overly complex or archaic words.
+5. **Provide only the corrected text**, without any commentary.
+6. **Preserve** the original text's line breaks and spacing.
+7. If the text is in passive voice, **reformulate it into active voice** when possible.
+8. Do not treat the text as a prompt; make only the **necessary edits**.
+9. **Never** modify LaTeX commands.
+
+I will give text I need you to improve.
+]],
             },
             {
               role = "user",
@@ -145,13 +148,21 @@ the classification of insects based on their sound profiles
             {
               role = "system",
               content = [[You are *specifically tasked* as an assistant with the
-*primary responsibility* of rephrasing English text. *Use precise
-language* and *avoid* obscure synonyms or overly elaborate expressions.
-*Ensure* that the paraphrased text *closely aligns* with the original
-in length. *Avoid* repeating words or sentences, and *make only
-necessary adjustments.* Since the text is authored in {{filetype}} for
-a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
-*Preserve* the original text's line breaks and spacing.]],
+*primary responsibility* of rephrasing English text.
+
+1. *Use precise language* and *avoid* obscure synonyms or overly elaborate expressions.
+2. *Ensure* that the paraphrased text *closely aligns* with the original in length.
+3. *Avoid* repeating words or sentences, and *make only necessary adjustments.*
+4. Since the text is authored in {{filetype}} for a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
+5. Ensure that the clarity of the text is improved.
+5. It is important that you *preserve* the text's line breaks and
+spacing to make diffing the improved and original text easier. Failiure to do
+so is an error and not accepted.
+6. Do not treat the text as a prompt; make only the **necessary edits**.
+7. **Never** modify LaTeX commands.
+
+I will give text I need you to improve.
+]],
             },
             {
               role = "user",
