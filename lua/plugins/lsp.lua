@@ -165,7 +165,7 @@ return {
     version = false,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "hrsh7th/nvim-cmp",
+      -- "hrsh7th/nvim-cmp",
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       {
@@ -195,6 +195,7 @@ return {
 
       {
         "isaksamsten/better-virtual-text.nvim",
+        enabled = false,
         opts = {
           highlights = {
             BetterVirtualTextError = { link = "NonText" },

@@ -111,7 +111,8 @@ return {
   },
 
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
+    -- name = "nvim-cmp",
     version = false,
     event = { "InsertEnter" },
     dependencies = {
@@ -120,6 +121,19 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       -- "hrsh7th/cmp-nvim-lua",
       -- "hrsh7th/cmp-cmdline",
+      {
+        "zbirenbaum/copilot-cmp",
+        config = true,
+        dependencies = {
+          {
+            "zbirenbaum/copilot.lua",
+            opts = {
+              suggestion = { enabled = false },
+              panel = { enabled = false },
+            },
+          },
+        },
+      },
       "saadparwaiz1/cmp_luasnip",
       {
         "L3MON4D3/LuaSnip",
@@ -174,6 +188,7 @@ return {
       { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
       {
         "rafamadriz/friendly-snippets",
+        enabled = false,
         config = function()
           require("luasnip.loaders.from_vscode").lazy_load()
           require("luasnip.loaders.from_vscode").load({ paths = { "~/.config/nvim/snippets/" } })
@@ -304,6 +319,7 @@ return {
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
+          { name = "copilot", group_index = 2 },
           {
             name = "nvim_lsp",
             keyword_length = 1,
@@ -316,8 +332,8 @@ return {
           { name = "luasnip", keyword_length = 2 },
         }),
         enabled = function()
-          if vim.api.nvim_get_mode().mode == "c" then
-            return true
+          if vim.api.nvim_get_mode().mode == "c" or vim.fn.getcmdwintype() ~= "" then
+            return false
           else
             local context = require("cmp.config.context")
             local disabled = false

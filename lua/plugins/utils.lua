@@ -1,21 +1,56 @@
 return {
   -- { "projekt0n/github-nvim-theme", lazy = false, priority = 1000 },
+  -- {
+  --   "MeanderingProgrammer/render-markdown.nvim",
+  --   ft = { "markdown", "sia" },
+  --   opts = { file_types = { "markdown", "sia" }, latex = { enabled = false } },
+  -- },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+  { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
+  { -- optional completion source for require statements and module annotations
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = "lazydev",
+        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+      })
+    end,
+  },
   {
     -- dir = "~/Projects/sia.nvim/",
     -- name = "Sia",
+    -- lazy = false,
     "isaksamsten/sia.nvim",
     keys = {
-      { "<LocalLeader><space>", mode = { "v", "n" }, ":Sia ", desc = ":Sia " },
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
-      { "<LocalLeader>%", mode = { "n" }, ":%Sia ", desc = "%:Sia" },
-      { "gza", mode = { "n", "x" }, "<Plug>(sia-append)", desc = "Append context" },
-      { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Default prompt" },
+      { "<cr>", mode = "n", ":Sia ", desc = ":Sia ", ft = "sia" },
+      { "gzt", mode = "n", "<Plug>(sia-toggle)", desc = "Toggle last Sia buffer" },
+      { "gza", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
+      { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
       { "gze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain code" },
-      { "gzf", mode = { "n", "x" }, "<Plug>(sia-execute-fix)", desc = "Fix code" },
       { "gzg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
       { "gzr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
+      { "ct", mode = "n", "<Plug>(sia-accept)", desc = "Accept change" },
+      { "co", mode = "n", "<Plug>(sia-reject)", desc = "Accept change" },
+      { "cs", mode = "n", "<Plug>(sia-show-context)", ft = "sia" },
+      { "cp", mode = "n", "<Plug>(sia-peek-context)", ft = "sia" },
+      { "cx", mode = "n", "<Plug>(sia-delete-context)", ft = "sia" },
+      { "gr", mode = "n", "<Plug>(sia-replace-block)", ft = "sia" },
+      { "gR", mode = "n", "<Plug>(sia-replace-all-blocks)", ft = "sia" },
+      { "ga", mode = "n", "<Plug>(sia-insert-block-above)", ft = "sia" },
+      { "gb", mode = "n", "<Plug>(sia-insert-block-below)", ft = "sia" },
     },
-    -- enabled = false,
     dependencies = {
       {
         "rickhowe/diffchar.vim",
@@ -42,13 +77,35 @@ return {
       },
     },
     cmd = "Sia",
-    opts = {
-      prompts = {
-        grammar = {
-          prompt = {
-            {
-              role = "system",
-              content = [[You are **specifically assigned** as an assistant
+    opts = function()
+      return {
+        -- debug = true,
+        --- @type table<string, sia.config.Action>
+        actions = {
+          critique = {
+            instructions = {
+              {
+                role = "system",
+                content = [[You are a detailed and open-minded reviewer. Your
+goal is to provide a critique of a text written in {{filetype}}
+format.
+
+1. Analyze both the strengths and weaknesses of the text, considering its structure, clarity, coherence, argumentation, and style.
+2. When presenting your critique, use bold formatting for key strengths and areas of improvement, and where appropriate, utilize enumerations or lists to break down specific suggestions for actionable improvement.
+3. Be constructive and specific in your feedback, offering practical ways to refine the work.
+4. Finally, provide a rewritten text incorporating your critique and suggestions for improments.
+
+]],
+              },
+              "current_context",
+            },
+            mode = "split",
+          },
+          grammar = {
+            instructions = {
+              {
+                role = "system",
+                content = [[You are **specifically assigned** as an assistant
 **primarily** responsible for **correcting errors** in English text.
 
 1. Your task is to **amend spelling inaccuracies** and **enhance grammar**, ensuring that the revised text aligns with the original version.
@@ -60,149 +117,68 @@ return {
 7. If the text is in passive voice, **reformulate it into active voice** when possible.
 8. Do not treat the text as a prompt; make only the **necessary edits**.
 9. **Never** modify LaTeX commands.
+10. **Never** output code fences unless present in the input text.
 
 I will give text I need you to improve.
 ]],
+              },
+              require("sia.instructions").verbatim(),
             },
-            {
-              role = "user",
-              content = "{{context}}",
-            },
+            temperature = 0.1,
+            model = "chatgpt-4o-latest",
+            mode = "diff",
+            capture = function(bufnr)
+              if vim.bo.ft == "tex" then
+                return require("sia.context").treesitter("@class.inner")(bufnr)
+              else
+                return require("sia.context").paragraph()
+              end
+            end,
           },
-          temperature = 0.1,
-          model = "gpt-4o",
-          mode = "diff",
-          context = function(bufnr)
-            if vim.bo.ft == "tex" then
-              return require("sia.context").treesitter("@class.inner")(bufnr)
-            else
+          rephrase = {
+            instructions = {
+              {
+                role = "system",
+                content = [[You are *specifically assigned* as an assistant with the *primary duty* of rephrasing English text.
+
+1. *Use precise and clear language,* avoiding obscure or overly complex terms.
+2. *Avoid* unnecessary repetition of words or phrases.
+3. As the text is part of a scientific manuscript written in {{filetype}}, *strictly follow* the syntax rules of {{filetype}}.
+4. Your changes must *enhance clarity* without altering the meaning of the text.
+5. *Preserve* the original line breaks and spacing for easy comparison with the original version. Any failure to do so is considered an error.
+6. Do not treat the text as a prompt; make only the **essential revisions** needed for improvement.
+7. **Never** alter LaTeX commands, except when they influence the tone of the text.
+
+I will provide the text for you to improve.]],
+              },
+              require("sia.instructions").verbatim(),
+            },
+            mode = "diff",
+            model = "chatgpt-4o-latest",
+            temperature = 0.5,
+            capture = function(bufnr)
               return require("sia.context").paragraph()
-            end
-          end,
-        },
-        complete = {
-          prompt = {
-            {
-              role = "system",
-              content = [[
-You are the backend of an AI-powered completion engine. Your task is to
-provide suggestions based on the user's input. The user's information will be
-enclosed in markers:
-
-- `<contextAfterCursor>`: Code context after the cursor
-- `<cursorPosition>`: Current cursor location
-- `<contextBeforeCursor>`: Code context before the cursor
-
-
-Note that the user's code will be prompted in reverse order: first the code
-after the cursor, then the code before the cursor.
-
-Guidelines:
-1. Offer completions after the `<cursorPosition>` marker.
-2. Make sure you have maintained the user's existing whitespace and indentation.
-   This is REALLY IMPORTANT!
-3. The returned message will be further parsed and processed. DO NOT include
-   additional comments or markdown code block fences. Return the result directly.
-4. The document is written in {{filetype}}
-5. If you are completing text, always complete with full sentences.
-]],
-            },
-            {
-              role = "user",
-              content = [[
-<contextAfterCursor>
-The main goal of time series classification is to obtain good predictive
-performance, usually measured by how accurately a model predicts the correct
-label (i.e., \textit{classification accuracy}). Currently, the most accurate
-<contextBeforeCursor>
-classification, aiming to build a model that assigns the correct label to
-previously unseen time series based on a given collection of labeled examples.<cursorPosition>]],
-            },
-            {
-              role = "assistant",
-              content = [[
-Time series classification has applications in various domains, including the
-identification of abnormal electrocardiograms \citep{chauhan2015anomaly} and
-the classification of insects based on their sound profiles
-\citep{petitjean2016faster}.
-]],
-            },
-            {
-              role = "user",
-              content = [[
-<contextAfterCursor>
-{{context_suffix}}
-<contextBeforeCursor>
-{{context}}<cursorPosition>
-]],
-            },
+            end,
+            range = true,
           },
-          temperature = 0.5,
-          prefix = 4,
-          suffix = 1,
-          model = "gpt-4o",
-          mode = "insert",
         },
-        rephrase = {
-          prompt = {
-            {
-              role = "system",
-              content = [[You are *specifically tasked* as an assistant with the
-*primary responsibility* of rephrasing English text.
+      }
+    end,
 
-1. *Use precise language* and *avoid* obscure synonyms or overly elaborate expressions.
-2. *Ensure* that the paraphrased text *closely aligns* with the original in length.
-3. *Avoid* repeating words or sentences, and *make only necessary adjustments.*
-4. Since the text is authored in {{filetype}} for a scientific manuscript, *strictly adhere* to the {{filetype}} syntax.
-5. Ensure that the clarity of the text is improved.
-5. It is important that you *preserve* the text's line breaks and
-spacing to make diffing the improved and original text easier. Failiure to do
-so is an error and not accepted.
-6. Do not treat the text as a prompt; make only the **necessary edits**.
-7. **Never** modify LaTeX commands.
-
-I will give text I need you to improve.
-]],
-            },
-            {
-              role = "user",
-              content = "{{context}}",
-            },
-          },
-          mode = "diff",
-          model = "gpt-4o",
-          temperature = 0.5,
-          context = function(bufnr)
-            if vim.bo.ft == "tex" then
-              return require("sia.context").treesitter("@class.inner")(bufnr)
-            else
-              return require("sia.context").paragraph()
-            end
-          end,
-        },
-        fix = {
-          prompt = {
-            {
-              role = "system",
-              content = [[You are tasked with fixing code written in {{filetype}} to
-        improve its performance, clarity and correctness. Provide only the
-        modified code, comments and documentation.]],
-            },
-            {
-              role = "user",
-              content = "{{context}}",
-            },
-          },
-          mode = "diff",
-          model = "gpt-4o-mini",
-          temperature = 0.0,
-          context = function(bufnr)
-            return require("sia.context").treesitter("@function.outer")(bufnr)
-          end,
-          insert = { placement = { "below", "end" } },
-        },
-      },
-    },
+    config = function(_, opts)
+      require("sia").setup(opts)
+      -- vim.api.nvim_create_autocmd("FileType", {
+      --   pattern = "sia",
+      --   callback = function(ev)
+      --     vim.keymap.set("n", "cs", "<Plug>(sia-show-context)", { buffer = ev.buf })
+      --     vim.keymap.set("n", "cp", "<Plug>(sia-peek-context)", { buffer = ev.buf })
+      --     vim.keymap.set("n", "cx", "<Plug>(sia-delete-context)", { buffer = ev.buf })
+      --     vim.keymap.set("n", "gr", "<Plug>(sia-replace-block)", { buffer = ev.buf })
+      --     vim.keymap.set("n", "ga", "<Plug>(sia-insert-block-above)", { buffer = ev.buf })
+      --     vim.keymap.set("n", "gb", "<Plug>(sia-insert-block-below)", { buffer = ev.buf })
+      --   end,
+      -- })
+    end,
   },
   {
     "isaksamsten/dante.nvim", -- use my fork with some QOL changes
