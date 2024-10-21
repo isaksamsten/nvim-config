@@ -639,6 +639,14 @@ local hlgroups = {
   -- lazy.nvimo
   LazyProgressTodo = { fg = c_dragonBg5 },
 
+  RenderMarkdownH1Bg = { link = "markdownH1" },
+  RenderMarkdownH2Bg = { link = "markdownH2" },
+  RenderMarkdownH3Bg = { link = "markdownH3" },
+  RenderMarkdownH4Bg = { link = "markdownH4" },
+  RenderMarkdownH5Bg = { link = "markdownH5" },
+  RenderMarkdownH6Bg = { link = "markdownH6" },
+  RenderMarkdownCode = { bg = c_dragonBg3 },
+
   -- -- statusline
   -- StatusLineGitAdded = { bg = c_dragonBg3, fg = c_dragonGreen1 },
   -- StatusLineGitChanged = { bg = c_dragonBg3, fg = c_carpYellow },
@@ -691,6 +699,8 @@ if vim.go.bg == "light" then
   hlgroups.MiniFilesTitleFocused = { fg = c_autumnGreen, bg = c_dragonBg0, bold = true }
   hlgroups.MiniFilesTitle = { fg = c_dragonBlue0, bg = c_dragonBg0, bold = true }
   hlgroups.MiniFilesNormal = { fg = c_dragonFg0, bg = c_dragonBg0 }
+
+  hlgroups.RenderMarkdownCode = { bg = c_dragonBg0 }
 
   hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }

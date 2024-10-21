@@ -11,10 +11,7 @@ Toggle.virtual_text_state = {
   default_state = {
     spacing = 4,
     prefix = function(diagnostic)
-      if diagnostic.source == "LTeX" then
-        return ""
-      end
-      return require("config.icons"):get_diagnostic(diagnostic.severity)
+      return diagnostic.source == "LTeX" and "" or require("config.icons"):get_diagnostic(diagnostic.severity)
     end,
     format = function(diagnostic)
       if diagnostic.source == "LTeX" then
@@ -31,23 +28,16 @@ Toggle.virtual_text_state = {
 }
 
 Toggle.virtual_text = function()
-  if Toggle.virtual_text_state.active then
-    Toggle.virtual_text_state.active = false
-    vim.diagnostic.config({ better_virtual_text = false })
-  else
-    Toggle.virtual_text_state.active = true
-    vim.diagnostic.config({ better_virtual_text = Toggle.virtual_text_state.default_state })
-  end
+  Toggle.virtual_text_state.active = not Toggle.virtual_text_state.active
+  vim.diagnostic.config({
+    better_virtual_text = Toggle.virtual_text_state.active and Toggle.virtual_text_state.default_state or false,
+  })
 end
 
 Toggle.is_format_active = true
 Toggle.format = function()
-  if vim.b.is_format_active == false then
-    Toggle.is_format_active = true
-    vim.b.is_format_active = nil
-  else
-    Toggle.is_format_active = not Toggle.is_format_active
-  end
+  Toggle.is_format_active = not Toggle.is_format_active
+  vim.b.is_format_active = Toggle.is_format_active and nil or false
   if Toggle.is_format_active then
     vim.notify("Format on save")
   end
@@ -63,12 +53,8 @@ end
 
 Toggle.is_diagnostics_active = true
 function Toggle.diagnostics()
-  if Toggle.is_diagnostics_active then
-    vim.diagnostic.disable()
-  else
-    vim.diagnostic.enable()
-  end
   Toggle.is_diagnostics_active = not Toggle.is_diagnostics_active
+  vim.diagnostic.enable(Toggle.is_diagnostics_active)
 end
 
 return Toggle

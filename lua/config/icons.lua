@@ -98,6 +98,7 @@ local icons = {
     info = " ",
   },
   kinds = {
+    Copilot = "",
     Array = "",
     Boolean = "",
     Class = "",

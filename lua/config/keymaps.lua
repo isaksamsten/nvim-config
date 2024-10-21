@@ -75,11 +75,16 @@ vim.keymap.set("n", "<leader>uf", Toggle.format, { desc = "Format on save" })
 vim.keymap.set("n", "<leader>ud", Toggle.virtual_text, { desc = "Diagnostics" })
 vim.keymap.set("n", "<leader>ui", Toggle.inlay_hint, { desc = "Inlay hints" })
 
-vim.keymap.set("n", "g,", function()
-  vim.diagnostic.open_float(nil, { scope = "line" })
-end, { silent = true, desc = "Show diagnostics" })
-vim.keymap.set("n", "[,", vim.diagnostic.goto_prev, { silent = true, desc = "Previous diagnostic" })
-vim.keymap.set("n", "],", vim.diagnostic.goto_next, { silent = true, desc = "Next diagnostic" })
+-- vim.keymap.set("n", "g,", function()
+--   vim.diagnostic.open_float(nil, { scope = "line" })
+-- end, { silent = true, desc = "Show diagnostics" })
+vim.keymap.set("n", "[d", function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { silent = true, desc = "Previous diagnostic" })
+
+vim.keymap.set("n", "]d", function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { silent = true, desc = "Next diagnostic" })
 
 local M = {}
 

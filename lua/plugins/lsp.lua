@@ -192,23 +192,6 @@ return {
           }
         end,
       },
-
-      {
-        "isaksamsten/better-virtual-text.nvim",
-        enabled = false,
-        opts = {
-          highlights = {
-            BetterVirtualTextError = { link = "NonText" },
-            BetterVirtualTextWarn = { link = "NonText" },
-            BetterVirtualTextInfo = { link = "NonText" },
-            BetterVirtualTextHint = { link = "NonText" },
-            BetterVirtualTextPrefixError = { link = "DiagnosticSignError" },
-            BetterVirtualTextPrefixWarn = { link = "DiagnosticSignWarn" },
-            BetterVirtualTextPrefixInfo = { link = "DiagnosticSignInfo" },
-            BetterVirtualTextPrefixHint = { link = "DiagnosticSignHint" },
-          },
-        },
-      },
     },
 
     opts = {
@@ -270,7 +253,6 @@ return {
             },
           },
         },
-        -- esbonio = {},
         jdtls = { skip_setup = true },
         texlab = {},
         -- basedpyright = {
@@ -304,46 +286,28 @@ return {
         lua_ls = {},
         jsonls = {},
         marksman = {},
-        -- ltex = {
-        --   on_attach = function(client, bufnr)
-        --     require("ltex_extra").setup({ path = "~/.ltex/" })
-        --   end,
-        --   filetypes = { "bib", "gitcommit", "markdown", "org", "plaintex", "rst", "rnoweb", "tex", "pandoc", "mail" },
-        --   settings = {
-        --     ["ltex-ls"] = {
-        --       logLevel = "severe",
-        --     },
-        --     additionalRules = {
-        --       motherTongue = "sv",
-        --     },
-        --   },
-        -- },
         ruff = {
           on_attach = function(client, bufnr)
             client.server_capabilities.hoverProvider = false
             client.server_capabilities.diagnosticProvider = false
           end,
         },
-        rust_analyzer = {
-          -- settings = {
-          --   ["rust-analyzer"] = { completion = { autoimport = { enable = false } } },
-          -- },
-        },
+        rust_analyzer = {},
         yamlls = {},
       },
     },
 
     config = function(_, opts)
       -- Fix for bug https://github.com/neovim/neovim/issues/12970
-      vim.lsp.util.apply_text_document_edit = function(text_document_edit, index, offset_encoding)
-        local text_document = text_document_edit.textDocument
-        local buf = vim.uri_to_bufnr(text_document.uri)
-        if offset_encoding == nil then
-          vim.notify_once("apply_text_document_edit must be called with valid offset encoding", vim.log.levels.WARN)
-        end
-
-        vim.lsp.util.apply_text_edits(text_document_edit.edits, buf, offset_encoding)
-      end
+      -- vim.lsp.util.apply_text_document_edit = function(text_document_edit, index, offset_encoding)
+      --   local text_document = text_document_edit.textDocument
+      --   local buf = vim.uri_to_bufnr(text_document.uri)
+      --   if offset_encoding == nil then
+      --     vim.notify_once("apply_text_document_edit must be called with valid offset encoding", vim.log.levels.WARN)
+      --   end
+      --
+      --   vim.lsp.util.apply_text_edits(text_document_edit.edits, buf, offset_encoding)
+      -- end
       vim.diagnostic.config(opts.diagnostic)
 
       local mason = require("mason")

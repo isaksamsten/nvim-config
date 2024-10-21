@@ -259,7 +259,12 @@ return {
               item.kind = icons.kinds["Function"]
               item.menu = "Function"
             else
-              local icon, _, _ = require("mini.icons").get("lsp", item.kind)
+              local icon
+              if item.kind == "Copilot" then
+                icon = icons.kinds.Copilot
+              else
+                icon, _, _ = require("mini.icons").get("lsp", item.kind)
+              end
               item.kind = (icon or icons.kinds.Unknown)
             end
             return item
@@ -318,19 +323,13 @@ return {
             end
           end, { "i", "s" }),
         }),
-        sources = cmp.config.sources({
+        sources = {
+          { name = "nvim_lsp", group_index = 2 },
           { name = "copilot", group_index = 2 },
-          {
-            name = "nvim_lsp",
-            keyword_length = 1,
-            entry_filter = function(entry)
-              return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
-            end,
-          },
-          { name = "buffer", keyword_length = 3 },
-          { name = "path" },
-          { name = "luasnip", keyword_length = 2 },
-        }),
+          { name = "luasnip", keyword_length = 2, group_index = 2 },
+          { name = "buffer", keyword_length = 3, group_index = 2 },
+          { name = "path", group_index = 2 },
+        },
         enabled = function()
           if vim.api.nvim_get_mode().mode == "c" or vim.fn.getcmdwintype() ~= "" then
             return false
@@ -351,23 +350,6 @@ return {
       local cmp = require("cmp")
       cmp.setup(opts)
 
-      -- cmp.setup.cmdline({ "/", "?" }, {
-      --   mapping = opts.mapping,
-      --   sources = {
-      --     { name = "buffer" },
-      --   },
-      -- })
-      -- cmp.setup.cmdline(":", {
-      --   enabled = false,
-      --   -- completion = { autocomplete = false },
-      --   mapping = opts.mapping,
-      --   sources = cmp.config.sources({
-      --     { name = "cmdline" },
-      --   }, {
-      --     { name = "path" },
-      --   }),
-      -- })
-
       require("cmp_git").setup()
       cmp.setup.filetype("gitcommit", {
         mapping = opts.mapping,
@@ -375,10 +357,6 @@ return {
           { name = "git" },
         },
       })
-      -- cmp.setup.cmdline("@", { enabled = false })
-      -- cmp.setup.cmdline(">", { enabled = false })
-      -- cmp.setup.cmdline("-", { enabled = false })
-      -- cmp.setup.cmdline("=", { enabled = false })
 
       cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
         enabled = true,
