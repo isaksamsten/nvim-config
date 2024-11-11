@@ -59,6 +59,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("lint").linters.numpydoc_lint = {
+        name = "numpydoc_lint",
         cmd = "numpydoc-lint",
         stdin = true,
         stream = "stdout",
@@ -82,6 +83,7 @@ return {
         ),
       }
       require("lint").linters.cython_lint = {
+        name = "cython_lint",
         cmd = "cython-lint",
         stdin = false,
         args = {},
@@ -111,8 +113,7 @@ return {
   },
 
   {
-    "iguanacucumber/magazine.nvim",
-    -- name = "nvim-cmp",
+    "hrsh7th/nvim-cmp",
     version = false,
     event = { "InsertEnter" },
     dependencies = {
@@ -188,10 +189,8 @@ return {
       { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
       {
         "rafamadriz/friendly-snippets",
-        enabled = false,
         config = function()
           require("luasnip.loaders.from_vscode").lazy_load()
-          require("luasnip.loaders.from_vscode").load({ paths = { "~/.config/nvim/snippets/" } })
         end,
       },
     },
@@ -212,6 +211,10 @@ return {
         completion = {
           -- completeopt = "menu,menuone,noinsert",
         },
+        -- performance = {
+        --   filtering_context_budget = 100,
+        --   fetching_timeout = 10000,
+        -- },
         experimental = {
           ghost_text = {
             hl_group = "NonText",
@@ -253,6 +256,17 @@ return {
               local padding = string.rep(" ", max_width - string.len(label))
               item.abbr = label .. padding
             end
+            -- if vim.tbl_contains({ 2, 3 }, entry:get_kind()) then
+            --   local start_index, end_index = item.abbr:find("%(.*")
+            --   if start_index then
+            --     item.abbr_hl_group = {
+            --       { "@function", range = { 0, start_index + 1 } },
+            --       { "Comment", range = { start_index + 1, end_index } },
+            --     }
+            --   else
+            --     item.abbr_hl_group = "@function"
+            --   end
+            -- end
             item.abbr = " " .. item.abbr
             item.menu = item.kind
             if entry.source.name == "omni" then
@@ -271,8 +285,31 @@ return {
           end,
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-p>"] = { i = prev_item },
-          ["<C-n>"] = { i = next_item },
+          ["<C-a>"] = cmp.mapping.complete({
+            config = {
+              sources = {
+                { name = "copilot", group_index = 1 },
+              },
+            },
+          }),
+          ["<C-p>"] = {
+            i = function()
+              if cmp.visible() then
+                cmp.select_prev_item()
+              else
+                cmp.complete()
+              end
+            end,
+          },
+          ["<C-n>"] = {
+            i = function()
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                cmp.complete()
+              end
+            end,
+          },
           ["<Up>"] = { i = prev_item },
           ["<Down>"] = { i = next_item },
           ["<C-Space>"] = cmp.mapping(function(_)
@@ -325,9 +362,9 @@ return {
         }),
         sources = {
           { name = "nvim_lsp", group_index = 2 },
-          { name = "copilot", group_index = 2 },
+          -- { name = "copilot", group_index = 5 },
           { name = "luasnip", keyword_length = 2, group_index = 2 },
-          { name = "buffer", keyword_length = 3, group_index = 2 },
+          { name = "buffer", keyword_length = 3, group_index = 2, max_item_count = 8 },
           { name = "path", group_index = 2 },
         },
         enabled = function()
@@ -336,12 +373,12 @@ return {
           else
             local context = require("cmp.config.context")
             local disabled = false
-            disabled = disabled or (vim.api.nvim_buf_get_option(0, "buftype") == "prompt")
+            disabled = disabled
+              or (vim.api.nvim_get_option_value("buftype", { buf = vim.api.nvim_get_current_buf() }) == "prompt")
             disabled = disabled or (vim.fn.reg_recording() ~= "")
             disabled = disabled or (vim.fn.reg_executing() ~= "")
             disabled = disabled or (context.in_treesitter_capture("comment") or context.in_syntax_group("Comment"))
             return not disabled
-            -- return not context.in_treesitter_capture("comment") and not context.in_syntax_group("Comment")
           end
         end,
       }

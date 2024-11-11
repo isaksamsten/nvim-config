@@ -1,12 +1,7 @@
--- readline
-vim.api.nvim_create_autocmd({ "CmdlineEnter", "InsertEnter" }, {
-  group = vim.api.nvim_create_augroup("ReadlineSetup", {}),
-  once = true,
-  callback = function()
-    -- require("plugin.readline").setup()
-    return true
-  end,
-})
+if vim.g.vscode then
+  vim.fn["plugin#vscode#setup"]()
+  return
+end
 
 vim.api.nvim_create_autocmd("BufReadCmd", {
   once = true,

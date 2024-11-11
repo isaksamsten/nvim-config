@@ -9,7 +9,6 @@ function _G.quickfixtextfunc(info)
   end
   items = list.items
 
-  local max_width = vim.api.nvim_get_option("columns")
   local function get_item_fname(item)
     local fname = item.bufnr > 0 and vim.fn.bufname(item.bufnr) or ""
     local display = nil
@@ -21,11 +20,6 @@ function _G.quickfixtextfunc(info)
       fname = vim.fn.fnamemodify(fname, ":p:~:.")
       display = fname
     end
-
-    -- local len = vim.fn.strchars(fname)
-    -- if len > 20 then
-    --   fname = "…" .. vim.fn.strpart(fname, len - 20, len, true)
-    -- end
 
     return fname, display, style
   end
@@ -76,7 +70,6 @@ function _G.quickfixtextfunc(info)
         icon = ""
         table.insert(highlights, { line = counter, group = "Comment", col = 0, end_col = #icon })
       else
-        -- print(#icon)
         table.insert(highlights, { line = counter, group = icon_hl, col = 0, end_col = #icon })
       end
 
@@ -130,12 +123,12 @@ function Update_titlestring(max_size)
   end
 end
 
-vim.g.disable_iterm2_integration = true
 vim.g.disable_codelens = true
 
 vim.o.rulerformat = "%50(%=%{v:lua.Update_titlestring(22)}%#Comment# Ln: %l, Col: %c%V%)"
 vim.o.titlestring = "nvim %{v:lua.Update_titlestring(22)}"
 vim.o.quickfixtextfunc = [[{info -> v:lua.quickfixtextfunc(info)}]]
+vim.g.qf_disable_statusline = 1
 
 if vim.fn.has("nvim-0.10") == 1 then
   vim.opt.smoothscroll = true
@@ -175,7 +168,7 @@ opt.autowrite = true -- enable auto write
 opt.cmdheight = 1
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true
--- opt.cursorlineopt = "number"
+opt.cursorlineopt = "number"
 opt.conceallevel = 2 -- Hide * markup for bold and italic
 opt.confirm = true -- confirm to save changes before exiting modified buffer
 opt.expandtab = true -- Use spaces instead of tabs
@@ -207,7 +200,7 @@ opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift t
 opt.smartcase = true -- Don't ignore case with capitals
 opt.smartindent = true -- Insert indents automatically
 opt.spelllang = { "en", "sv" }
-opt.spell = false
+opt.spell = true
 opt.splitbelow = true -- Put new windows below current
 opt.splitright = true -- Put new windows right of current
 opt.tabstop = 2 -- Number of spaces tabs count for

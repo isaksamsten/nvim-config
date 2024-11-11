@@ -22,13 +22,10 @@ return {
     event = "VeryLazy",
     config = function()
       vim.cmd([[
-         let g:qf_mapping_ack_style = 1
+        let g:qf_mapping_ack_style = 1
         let g:qf_auto_open_quickfix = 0
         nmap <C-S-q> <Plug>qf_qf_toggle
         nmap <C-q> <Plug>qf_qf_switch
-
-        nmap [q <Plug>qf_qf_previous
-        nmap ]q <Plug>qf_qf_next
       ]])
     end,
   },

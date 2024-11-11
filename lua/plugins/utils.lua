@@ -1,5 +1,19 @@
 return {
   {
+    "isaksamsten/melange-nvim",
+    -- dir = "~/Projects/melange-nvim/",
+    -- name = "melange-nvim",
+    config = function()
+      vim.g.melange_enable_font_variants = {
+        bold = true,
+        italic = false,
+        underline = true,
+        undercurl = true,
+        strikethrough = true,
+      }
+    end,
+  },
+  {
     "folke/lazydev.nvim",
     ft = "lua",
     opts = {
@@ -22,7 +36,6 @@ return {
   {
     dir = "~/Projects/sia.nvim/",
     name = "Sia",
-    lazy = true,
     -- "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
@@ -339,32 +352,46 @@ I will provide the text for you to improve.]],
       -- })
     end,
   },
+  -- {
+  --   "mrjones2014/smart-splits.nvim",
+  --   version = false,
+  --   build = "./kitty/install-kittens.bash",
+  --   cond = vim.env.KITTY_PID ~= nil or vim.env.TMUX ~= nil,
+  --   event = "VeryLazy",
+  --   config = function(_, opts)
+  --     require("smart-splits").setup(opts)
+  --     -- vim.keymap.set("n", "<A-h>", require("smart-splits").resize_left)
+  --     -- vim.keymap.set("n", "<A-j>", require("smart-splits").resize_down)
+  --     -- vim.keymap.set("n", "<A-k>", require("smart-splits").resize_up)
+  --     -- vim.keymap.set("n", "<A-l>", require("smart-splits").resize_right)
+  --     -- moving between splits
+  --     vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
+  --     vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
+  --     vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
+  --     vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
+  --     vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
+  --     -- swapping buffers between windows
+  --     -- vim.keymap.set("n", "<leader><leader>h", require("smart-splits").swap_buf_left)
+  --     -- vim.keymap.set("n", "<leader><leader>j", require("smart-splits").swap_buf_down)
+  --     -- vim.keymap.set("n", "<leader><leader>k", require("smart-splits").swap_buf_up)
+  --     -- vim.keymap.set("n", "<leader><leader>l", require("smart-splits").swap_buf_right)
+  --   end,
+  -- },
   {
-    "mrjones2014/smart-splits.nvim",
-    version = false,
-    build = "./kitty/install-kittens.bash",
-    cond = vim.env.KITTY_PID ~= nil or vim.env.TMUX ~= nil,
-    event = "VeryLazy",
-    config = function(_, opts)
-      require("smart-splits").setup(opts)
-      -- vim.keymap.set("n", "<A-h>", require("smart-splits").resize_left)
-      -- vim.keymap.set("n", "<A-j>", require("smart-splits").resize_down)
-      -- vim.keymap.set("n", "<A-k>", require("smart-splits").resize_up)
-      -- vim.keymap.set("n", "<A-l>", require("smart-splits").resize_right)
-      -- moving between splits
-      vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
-      vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
-      vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
-      vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
-      vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
-      -- swapping buffers between windows
-      -- vim.keymap.set("n", "<leader><leader>h", require("smart-splits").swap_buf_left)
-      -- vim.keymap.set("n", "<leader><leader>j", require("smart-splits").swap_buf_down)
-      -- vim.keymap.set("n", "<leader><leader>k", require("smart-splits").swap_buf_up)
-      -- vim.keymap.set("n", "<leader><leader>l", require("smart-splits").swap_buf_right)
-    end,
+    "alexghergh/nvim-tmux-navigation",
+    -- enabled = false,
+    cond = vim.env.TMUX ~= nil and vim.env.KITTY_PID == nil,
+    keys = {
+      { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
+      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", desc = "Up window" },
+      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", desc = "Down window" },
+      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", desc = "Right window" },
+    },
+    lazy = false,
+    opts = {
+      disable_when_zoomed = true,
+    },
   },
-
   {
     "tpope/vim-fugitive",
     version = false,

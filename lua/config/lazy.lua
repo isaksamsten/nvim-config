@@ -14,7 +14,6 @@ if vim.g.vscode then
   spec = {
     { import = "plugins.treesitter" },
     { import = "plugins.editor" },
-    -- { import = "plugins.coding" },
   }
 end
 

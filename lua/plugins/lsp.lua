@@ -175,7 +175,7 @@ return {
           local icons = require("config.icons")
           return {
             bind = true,
-            hint_enable = true,
+            hint_enable = false,
             hint_prefix = {
               above = "↙ ", -- when the hint is on the line above the current line
               current = "← ", -- when the hint is on the same line
