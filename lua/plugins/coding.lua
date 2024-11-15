@@ -530,6 +530,7 @@ return {
   {
     "danymat/neogen",
     dependencies = "nvim-treesitter/nvim-treesitter",
+    enabled = false,
     opts = {
       enabled = true,
       snippet_engine = "luasnip",
