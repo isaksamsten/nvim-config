@@ -34,9 +34,9 @@ return {
     end,
   },
   {
-    dir = "~/Projects/sia.nvim/",
-    name = "Sia",
-    -- "isaksamsten/sia.nvim",
+    -- dir = "~/Projects/sia.nvim/",
+    -- name = "Sia",
+    "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "<cr>", mode = "n", ":Sia ", desc = ":Sia ", ft = "sia" },
@@ -57,6 +57,7 @@ return {
       { "gR", mode = "n", "<Plug>(sia-replace-all-blocks)", ft = "sia" },
       { "ga", mode = "n", "<Plug>(sia-insert-block-above)", ft = "sia" },
       { "gb", mode = "n", "<Plug>(sia-insert-block-below)", ft = "sia" },
+      { "<CR>", mode = "n", "<Plug>(sia-reply)", ft = "sia" },
     },
     dependencies = {
       {
