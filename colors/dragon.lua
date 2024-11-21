@@ -1,9 +1,8 @@
--- Name:         dragondrago
+-- Name:         dragon
 -- Description:  Colorscheme inspired by kanagawa-dragon @rebelot and mellifluous @ramojus
 -- Author:       Bekaboo <kankefengjing@gmail.com>
--- Maintainer:   Bekaboo <kankefengjing@gmail.com>
+-- Maintainer:   Isak Samsten
 -- License:      GPL-3.0
--- Last Updated: Thu 14 Dec 2023 11:44:22 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi("clear")
@@ -63,12 +62,12 @@ local c_winterRed1
 local c_winterYellow
 
 if vim.go.bg == 'dark' then
-  c_autumnGreen   = '#76946a'
-  c_autumnRed     = '#c34043'
+  c_autumnGreen   = '#809E74'
+  c_autumnRed     = '#EF6C6F'
   c_autumnYellow  = '#dca561'
   c_carpYellow    = '#c8ae81'
   c_dragonAqua    = '#95aeac'
-  c_dragonAsh     = '#626462'
+  c_dragonAsh     = '#959795'
   c_dragonBg0     = '#0d0c0c'
   -- c_dragonBg1     = '#000000'
   -- c_dragonBg2     = '#100f0f'
@@ -80,27 +79,27 @@ if vim.go.bg == 'dark' then
   c_dragonBg3     = '#282727'
   c_dragonBg4     = '#393836'
   c_dragonBg5     = '#625e5a'
-  c_dragonBlue0   = '#658594'
+  c_dragonBlue0   = '#7A9AA9'
   c_dragonBlue1   = '#8ba4b0'
   c_dragonGray0   = '#a6a69c'
   c_dragonGray1   = '#9e9b93'
-  c_dragonGray2   = '#7a8382'
+  c_dragonGray2   = '#8E9796'
   c_dragonGreen0  = '#87a987'
-  c_dragonGreen1  = '#8a9a7b'
+  c_dragonGreen1  = '#9ca98f'
   c_dragonOrange0 = '#b6927b'
   c_dragonOrange1 = '#b98d7b'
   c_dragonPink    = '#a292a3'
-  c_dragonRed     = '#c4746e'
+  c_dragonRed     = '#D0807A'
   c_dragonTeal    = '#949fb5'
-  c_dragonViolet  = '#8992a7'
-  c_dragonFg0     = '#c5c9c5'
+  c_dragonViolet  = '#8C95AA'
+  c_dragonFg0     = '#d1d4d1'
   c_dragonFg1     = '#b4b3a7'
   c_dragonFg2     = '#a09f95'
-  c_katanaGray    = '#717c7c'
+  c_katanaGray    = '#8D9898'
   c_lotusBlue     = '#9fb5c9'
   c_lotusGray     = '#716e61'
-  c_lotusRed0     = '#d7474b'
-  c_lotusRed1     = '#e84444'
+  c_lotusRed0     = '#F7676B'
+  c_lotusRed1     = '#FF5E5E'
   c_lotusRed2     = '#d9a594'
   c_roninYellow   = '#ff9e3b'
   c_springBlue    = '#7fb4ca'
@@ -118,39 +117,39 @@ if vim.go.bg == 'dark' then
   c_winterRed1    = '#643640'
   c_winterYellow  = '#322e29'
 else
-  c_autumnGreen   = '#969438'
-  c_autumnRed     = '#b73242'
-  c_autumnYellow  = '#a0713c'
+  c_autumnGreen   = '#68660A'
+  c_autumnRed     = '#B53040'
+  c_autumnYellow  = '#875823'
   c_carpYellow    = '#debe97'
-  c_dragonAqua    = '#586e62'
-  c_dragonAsh     = '#a0a0a0'
+  c_dragonAqua    = '#52685C'
+  c_dragonAsh     = '#626262'
   c_dragonBg0     = '#f9f9f9'
   c_dragonBg1     = '#ffffff'
   c_dragonBg2     = '#efefef'
   c_dragonBg3     = '#e8e8e8'
   c_dragonBg4     = '#d8d8d8'
   c_dragonBg5     = '#b0b0b0'
-  c_dragonBlue0   = '#658594'
-  c_dragonBlue1   = '#537788'
-  c_dragonGray0   = '#827f79'
-  c_dragonGray1   = '#6e6b66'
-  c_dragonGray2   = '#7a8382'
+  c_dragonBlue0   = '#476776'
+  c_dragonBlue1   = '#436778'
+  c_dragonGray0   = '#65625C'
+  c_dragonGray1   = '#65625D'
+  c_dragonGray2   = '#5B6463'
   c_dragonGreen0  = '#87a987'
-  c_dragonGreen1  = '#6a824f'
-  c_dragonOrange0 = '#a06c4e'
+  c_dragonGreen1  = '#516936'
+  c_dragonOrange0 = '#8A5638'
   c_dragonOrange1 = '#825c45'
-  c_dragonPink    = '#a292a3'
-  c_dragonRed     = '#b23b34'
+  c_dragonPink    = '#6E5E6F'
+  c_dragonRed     = '#B03932'
   c_dragonTeal    = '#445f96'
   c_dragonViolet  = '#373e50'
   c_dragonFg0     = '#1b1b1b'
   c_dragonFg1     = '#303030'
-  c_dragonFg2     = '#787878'
-  c_katanaGray    = '#717c7c'
+  c_dragonFg2     = '#636363'
+  c_katanaGray    = '#5A6565'
   c_lotusBlue     = '#9fb5c9'
   c_lotusGray     = '#716e61'
-  c_lotusRed0     = '#d7474b'
-  c_lotusRed1     = '#e84444'
+  c_lotusRed0     = '#BA2A2E'
+  c_lotusRed1     = '#C11D1D'
   c_lotusRed2     = '#d9a594'
   c_roninYellow   = '#c87b2e'
   c_springBlue    = '#7fb4ca'
@@ -338,7 +337,7 @@ local hlgroups = {
   ["@markup.environment"] = { link = "Keyword" },
   ["@markup.environment.name"] = { link = "String" },
   ["@markup.raw"] = { link = "String" },
-  ["@comment.info"] = { bg = c_waveAqua0, fg = c_waveBlue0, bold = true },
+  ["@comment.info"] = { bg = c_waveAqua1, fg = c_waveBlue0, bold = true },
   ["@markup.quote"] = { link = "@variable.parameter" },
   ["@markup.strong"] = { bold = true },
   ["@markup.heading"] = { link = "Function" },
