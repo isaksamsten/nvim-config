@@ -1,5 +1,15 @@
 return {
   {
+    "zbirenbaum/copilot.lua",
+    enabled = false,
+    opts = {
+      suggestion = {
+        enabled = false,
+      },
+      panel = { enabled = false },
+    },
+  },
+  {
     "stevearc/conform.nvim",
     keys = {
       {
@@ -122,19 +132,6 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       -- "hrsh7th/cmp-nvim-lua",
       -- "hrsh7th/cmp-cmdline",
-      {
-        "zbirenbaum/copilot-cmp",
-        config = true,
-        dependencies = {
-          {
-            "zbirenbaum/copilot.lua",
-            opts = {
-              suggestion = { enabled = false },
-              panel = { enabled = false },
-            },
-          },
-        },
-      },
       "saadparwaiz1/cmp_luasnip",
       {
         "L3MON4D3/LuaSnip",
@@ -285,13 +282,6 @@ return {
           end,
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-a>"] = cmp.mapping.complete({
-            config = {
-              sources = {
-                { name = "copilot", group_index = 1 },
-              },
-            },
-          }),
           ["<C-p>"] = {
             i = function()
               if cmp.visible() then
@@ -362,7 +352,6 @@ return {
         }),
         sources = {
           { name = "nvim_lsp", group_index = 2 },
-          -- { name = "copilot", group_index = 5 },
           { name = "luasnip", keyword_length = 2, group_index = 2 },
           { name = "buffer", keyword_length = 3, group_index = 2, max_item_count = 8 },
           { name = "path", group_index = 2 },
@@ -472,7 +461,8 @@ return {
       {
         "[n",
         function()
-          require("neotest").jump.prev({ status = "failed" })
+          require("neotest")
+          jump.prev({ status = "failed" })
         end,
         desc = "Previous failed test",
       },

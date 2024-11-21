@@ -381,7 +381,7 @@ I will provide the text for you to improve.]],
   {
     "alexghergh/nvim-tmux-navigation",
     -- enabled = false,
-    cond = vim.env.TMUX ~= nil and vim.env.KITTY_PID == nil,
+    cond = vim.env.TMUX ~= nil,
     keys = {
       { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
       { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", desc = "Up window" },

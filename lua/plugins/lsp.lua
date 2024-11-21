@@ -255,34 +255,34 @@ return {
         },
         jdtls = { skip_setup = true },
         texlab = {},
-        -- basedpyright = {
-        --   -- skip_install = true,
-        --   settings = {
-        --     verboseOutput = false,
-        --     autoImportCompletion = true,
-        --     basedpyright = {
-        --       disableOrganizeImports = true,
-        --       analysis = {
-        --         typeCheckingMode = "standard",
-        --         autoSearchPaths = true,
-        --         useLibraryCodeForTypes = true,
-        --         diagnosticMode = "openFilesOnly",
-        --         indexing = true,
-        --       },
-        --     },
-        --   },
-        -- },
-        jedi_language_server = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = false,
-                },
+        basedpyright = {
+          -- skip_install = true,
+          settings = {
+            verboseOutput = false,
+            autoImportCompletion = true,
+            basedpyright = {
+              disableOrganizeImports = true,
+              analysis = {
+                typeCheckingMode = "standard",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+                indexing = true,
               },
             },
           },
         },
+        -- jedi_language_server = {
+        --   capabilities = {
+        --     textDocument = {
+        --       completion = {
+        --         completionItem = {
+        --           snippetSupport = false,
+        --         },
+        --       },
+        --     },
+        --   },
+        -- },
         lua_ls = {},
         jsonls = {},
         marksman = {},
