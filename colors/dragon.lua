@@ -282,7 +282,7 @@ local hlgroups = {
   WildMenu = { bg = c_dragonBg4, fg = "NONE" },
   WinBar = { bg = "NONE", fg = c_dragonFg1 },
   WinBarNC = { link = "WinBar" },
-  WinSeparator = { fg = c_dragonBg4 },
+  WinSeparator = { fg = c_dragonBg4, bg = c_dragonBg1 },
   lCursor = { link = "Cursor" },
   -- }}}2
 
