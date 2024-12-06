@@ -36,6 +36,7 @@ return {
         "rust",
         "vimdoc",
         "yaml",
+        "zig",
       },
       additional_vim_regex_highlighting = false,
       highlight = {

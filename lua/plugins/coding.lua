@@ -56,6 +56,7 @@ return {
           json = { "prettier" },
           c = { "clangd_format" },
           rust = { "rustfmt" },
+          zig = { "zigfmt" },
         },
         formatters = {
           erlfmt = erlfmt,

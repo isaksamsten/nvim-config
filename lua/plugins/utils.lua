@@ -34,9 +34,9 @@ return {
     end,
   },
   {
-    -- dir = "~/Projects/sia.nvim/",
-    -- name = "Sia",
-    "isaksamsten/sia.nvim",
+    dir = "~/Projects/sia.nvim/",
+    name = "Sia",
+    -- "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "<cr>", mode = "n", ":Sia ", desc = ":Sia ", ft = "sia" },
