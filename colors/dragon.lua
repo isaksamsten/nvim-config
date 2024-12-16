@@ -224,7 +224,7 @@ local hlgroups = {
   CursorColumn = { link = "CursorLine" },
   CursorIM = { link = "Cursor" },
   CursorLine = { bg = c_dragonBg2, ctermfg = "White" },
-  CursorLineNr = { fg = c_dragonGray0, bold = true },
+  CursorLineNr = { fg = c_dragonGray0, bg = c_dragonBg2, bold = true },
   DebugPC = { bg = c_winterRed },
   DiffAdd = { bg = c_winterGreen },
   DiffChange = { bg = c_winterBlue },
@@ -265,7 +265,7 @@ local hlgroups = {
   SpellRare = { undercurl = true },
   StatusLine = { bg = c_dragonBg3, fg = c_dragonFg1 },
   StatusLineNC = { bg = c_dragonBg3, fg = c_dragonBg5 },
-  StatusColumnSeparator = { fg = c_dragonBg3, nocombine = true, bg = c_dragonBg1 },
+  StatusColumnSeparator = { fg = c_dragonBg3 },
   Substitute = { bg = c_autumnRed, fg = c_dragonFg0 },
   TabLine = { link = "StatusLineNC" },
   TabLineFill = { link = "Normal" },
@@ -677,7 +677,8 @@ local hlgroups = {
 
 -- Highlight group overrides {{{1
 if vim.go.bg == "light" then
-  hlgroups.CursorLine = { bg = c_dragonBg0, ctermfg = "White" }
+  hlgroups.CursorLine = { bg = c_dragonBg0 }
+  hlgroups.CursorLineNr = { bg = c_dragonBg0, bold = true }
   hlgroups.QuickFixLine = { bg = "NONE", bold = true }
   hlgroups.FloatBorder = { bg = c_dragonBg0, fg = c_dragonBg0 }
   hlgroups.NormalFloat = { bg = c_dragonBg0 }

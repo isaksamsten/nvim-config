@@ -1,5 +1,7 @@
 vim.cmd([[
   command! -nargs=+ -complete=file Grep noautocmd silent grep! <args> | copen
+  command -nargs=0 -bar Errors :lua vim.diagnostic.setqflist { title = "Errors", severity = vim.diagnostic.severity.ERROR }
+  command -nargs=0 -bar Warnings :lua vim.diagnostic.setqflist { title = "Warnings", severity = vim.diagnostic.severity.WARN }
   let g:loaded_python3_provider = 0
   let g:loaded_ruby_provider = 0
   let g:loaded_perl_provider = 0

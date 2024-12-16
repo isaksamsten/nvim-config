@@ -11,14 +11,14 @@ local function get_toggles(opts)
       table.insert(messages, { "  ", "Normal" })
     end
 
-    local conceal_value = vim.api.nvim_win_get_option(0, "conceallevel")
+    local conceal_value = vim.api.nvim_get_option_value("conceallevel", { win = 0 })
     if conceal_value > 0 then
       table.insert(messages, { "  ", "Normal" })
     else
       table.insert(messages, { "  ", "Normal" })
     end
 
-    local wrap = vim.api.nvim_win_get_option(0, "wrap")
+    local wrap = vim.api.nvim_get_option_value("wrap", { win = 0 })
     if wrap then
       table.insert(messages, { "  ", "Normal" })
     end
@@ -116,9 +116,9 @@ local function get_diagnostics(opts)
     end
 
     local output = {}
-    for _, sign in ipairs(signs) do
-      local count = counts[sign]
-      sign = vim.fn.sign_getdefined(sign)
+    for _, sign_name in ipairs(signs) do
+      local count = counts[sign_name]
+      local sign = vim.fn.sign_getdefined(sign_name)
       if sign and #sign > 0 then
         sign = sign[1]
         if count > 0 then
@@ -157,7 +157,7 @@ local function get_python_venv(opts)
 end
 
 local function get_full_width()
-  return vim.api.nvim_get_option("columns")
+  return vim.api.nvim_get_option_value("columns", { scope = "global" })
 end
 
 local function get_current_filename(opts)
@@ -368,18 +368,18 @@ local function generate_components()
   return render_components(components)
 end
 
-local function rulerline()
-  local messages = generate_components()
-  local output = ""
-  for _, message in ipairs(messages) do
-    local highlight = "Normal"
-    if message[2] then
-      highlight = message[2]
-    end
-    output = output .. "%#" .. highlight .. "#" .. message[1]
-  end
-  return output
-end
+-- local function rulerline()
+--   local messages = generate_components()
+--   local output = ""
+--   for _, message in ipairs(messages) do
+--     local highlight = "Normal"
+--     if message[2] then
+--       highlight = message[2]
+--     end
+--     output = output .. "%#" .. highlight .. "#" .. message[1]
+--   end
+--   return output
+-- end
 
 local can_run = true
 vim.keymap.set("n", "<C-g>", function()
