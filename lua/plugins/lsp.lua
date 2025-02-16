@@ -210,6 +210,19 @@ return {
           },
         },
         virtual_text = false,
+        virtual_lines = {
+          current_line = false,
+          format = function(diagnostic)
+            if vim.wo.wrap then
+              return nil
+            end
+
+            if diagnostic.severity == vim.diagnostic.severity.ERROR then
+              return diagnostic.message
+            end
+            return nil
+          end,
+        },
         update_in_insert = false,
         underline = true,
         float = {
@@ -234,7 +247,6 @@ return {
             return diag.message
           end,
         },
-        better_virtual_text = false,
         severity_sort = true,
       },
 

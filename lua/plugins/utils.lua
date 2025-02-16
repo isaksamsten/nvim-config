@@ -148,32 +148,59 @@ return {
     end,
   },
   {
-    dir = "~/Projects/sia.nvim/",
-    name = "Sia",
-    -- "isaksamsten/sia.nvim",
+    "isaksamsten/conflicting.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    keys = {
+      {
+        "ct",
+        mode = "n",
+        function()
+          require("conflicting").accept_incoming()
+        end,
+        desc = "Accept change",
+      },
+      {
+        "co",
+        mode = "n",
+        function()
+          require("conflicting").accept_current()
+        end,
+        desc = "Accept change",
+      },
+      {
+        "cd",
+        mode = "n",
+        function()
+          require("conflicting").diff()
+        end,
+        desc = "Diff change",
+      },
+    },
+    opts = {},
+  },
+  {
+    -- dir = "~/Projects/sia.nvim/",
+    -- name = "Sia",
+    "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
-      { "<cr>", mode = "n", ":Sia ", desc = ":Sia ", ft = "sia" },
       { "gzt", mode = "n", "<Plug>(sia-toggle)", desc = "Toggle last Sia buffer" },
       { "gza", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
       { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
       { "gze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain code" },
       { "gzg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
       { "gzr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
-      { "]x", mode = "n", "<Plug>(sia-next-marker)", desc = "Next marker" },
-      { "[x", mode = "n", "<Plug>(sia-previous-marker)", desc = "Previous marker" },
-      { "ct", mode = "n", "<Plug>(sia-accept)", desc = "Accept change" },
-      { "co", mode = "n", "<Plug>(sia-reject)", desc = "Accept change" },
-      { "cs", mode = "n", "<Plug>(sia-show-context)", ft = "sia" },
-      { "cp", mode = "n", "<Plug>(sia-peek-context)", ft = "sia" },
-      { "cx", mode = "n", "<Plug>(sia-delete-context)", ft = "sia" },
-      { "gr", mode = "n", "<Plug>(sia-replace-block)", ft = "sia" },
-      { "gR", mode = "n", "<Plug>(sia-replace-all-blocks)", ft = "sia" },
-      { "ga", mode = "n", "<Plug>(sia-insert-block-above)", ft = "sia" },
-      { "gb", mode = "n", "<Plug>(sia-insert-block-below)", ft = "sia" },
+      { "s", mode = "n", "<Plug>(sia-show-context)", ft = "sia" },
+      { "p", mode = "n", "<Plug>(sia-peek-context)", ft = "sia" },
+      { "x", mode = "n", "<Plug>(sia-delete-context)", ft = "sia" },
+      { "r", mode = "n", "<Plug>(sia-replace-block)", ft = "sia" },
+      { "R", mode = "n", "<Plug>(sia-replace-all-blocks)", ft = "sia" },
+      { "a", mode = "n", "<Plug>(sia-insert-block-above)", ft = "sia" },
+      { "b", mode = "n", "<Plug>(sia-insert-block-below)", ft = "sia" },
       { "<CR>", mode = "n", "<Plug>(sia-reply)", ft = "sia" },
     },
     dependencies = {
+
       {
         "rickhowe/diffchar.vim",
         keys = {
@@ -458,6 +485,12 @@ I will provide the text for you to improve.]],
 
     config = function(_, opts)
       require("sia").setup(opts)
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "SiaEditPost",
+        callback = function(args)
+          require("conflicting").track(args.data.buf)
+        end,
+      })
       -- vim.api.nvim_create_autocmd("FileType", {
       --   pattern = "sia",
       --   callback = function(ev)

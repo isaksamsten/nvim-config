@@ -56,7 +56,9 @@ local c_waveBlue0
 local c_waveBlue1
 local c_waveRed
 local c_winterBlue
+local c_winterBlue1
 local c_winterGreen
+local c_winterGreen1
 local c_winterRed
 local c_winterRed1
 local c_winterYellow
@@ -112,7 +114,9 @@ if vim.go.bg == 'dark' then
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
   c_winterBlue    = '#252535'
+  c_winterBlue1    = '#36364e'
   c_winterGreen   = '#2e322d'
+  c_winterGreen1  = '#424841'
   c_winterRed     = '#43242b'
   c_winterRed1    = '#643640'
   c_winterYellow  = '#322e29'
@@ -162,7 +166,9 @@ else
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
   c_winterBlue    = '#f2f2fa'
+  c_winterBlue1    = '#ceceec'
   c_winterGreen   = '#eaede8'
+  c_winterGreen1   = '#d2d8ce'
   c_winterRed     = '#f2e0e3'
   c_winterRed1    = '#e3bcc3'
   c_winterYellow  = '#f0ede9'
@@ -650,6 +656,10 @@ local hlgroups = {
   RenderMarkdownH5Bg = { link = "markdownH5" },
   RenderMarkdownH6Bg = { link = "markdownH6" },
   RenderMarkdownCode = { bg = c_dragonBg3 },
+
+  ConflictingOursHeader = { bg = c_winterGreen1, fg = c_dragonFg2 },
+  ConflictingTheirsHeader = { bg = c_winterBlue1, fg = c_dragonFg2 },
+  ConflictingDelimiter = { fg = c_dragonFg2 },
 
   -- -- statusline
   -- StatusLineGitAdded = { bg = c_dragonBg3, fg = c_dragonGreen1 },

@@ -113,7 +113,7 @@ end
 
 function Update_titlestring(max_size)
   local fname = vim.fn.expand("%:t")
-  if fname then
+  if fname and fname ~= "" then
     if max_size and #fname > max_size - 2 then
       fname = fname:sub(0, max_size - 2) .. "⋯"
     end
@@ -123,9 +123,17 @@ function Update_titlestring(max_size)
   end
 end
 
+function __tabnr_current()
+  local tabs = vim.api.nvim_list_tabpages()
+  if #tabs > 1 then
+    return "󰓩 " .. vim.fn.tabpagenr()
+  end
+  return ""
+end
+
 vim.g.disable_codelens = true
 
-vim.o.rulerformat = "%50(%=%{v:lua.Update_titlestring(22)}%#Comment# Ln: %l, Col: %c%V%)"
+vim.o.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonText#%{v:lua.__tabnr_current()}%)"
 vim.o.titlestring = "nvim %{v:lua.Update_titlestring(22)}"
 vim.o.quickfixtextfunc = [[{info -> v:lua.quickfixtextfunc(info)}]]
 vim.g.qf_disable_statusline = 1
@@ -135,7 +143,7 @@ if vim.fn.has("nvim-0.10") == 1 then
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "v:lua.require'helpers'.foldexpr()"
   vim.opt.foldtext = ""
-  -- vim.opt.fillchars = "fold: "
+  vim.opt.fillchars = "fold: "
 else
   vim.opt.foldmethod = "indent"
 end
@@ -194,7 +202,6 @@ opt.scrolloff = 4 -- Lines of context
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
 opt.shiftround = true -- Round indent
 opt.shiftwidth = 2 -- Size of an indent
--- opt.showmode = false -- dont show mode since we have a statusline
 opt.sidescrolloff = 4 -- Columns of context
 opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
 opt.smartcase = true -- Don't ignore case with capitals
@@ -217,7 +224,16 @@ opt.linebreak = true
 opt.splitkeep = "screen"
 opt.shortmess:append({ C = true })
 
-opt.diffopt = { "internal", "filler", "closeoff", "algorithm:patience", "followwrap", "linematch:120" }
+opt.diffopt = {
+  "internal",
+  "filler",
+  "closeoff",
+  "algorithm:patience",
+  "indent-heuristic",
+  "context:5",
+  "followwrap",
+  "linematch:120",
+}
 -- end
 
 -- fix markdown indentation settings

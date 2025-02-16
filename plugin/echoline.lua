@@ -387,7 +387,7 @@ vim.keymap.set("n", "<C-g>", function()
     can_run = false
     local rulerformat = vim.o.rulerformat
     -- vim.o.rulerformat = "%#Comment#%l,%c%V%=%P"
-    vim.o.rulerformat = "%=%#Comment# Ln: %l, Col: %c%V"
+    vim.o.rulerformat = ""
     local messages = generate_components()
     vim.api.nvim_echo(messages, false, {})
     vim.defer_fn(function()

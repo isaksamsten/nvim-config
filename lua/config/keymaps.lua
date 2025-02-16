@@ -86,6 +86,14 @@ vim.keymap.set("n", "]d", function()
   vim.diagnostic.jump({ count = 1, float = true })
 end, { silent = true, desc = "Next diagnostic" })
 
+vim.keymap.set("n", "[x", function()
+  vim.diagnostic.jump({ count = -1, float = false, severity = vim.diagnostic.severity.ERROR })
+end, { silent = true, desc = "Previous error" })
+
+vim.keymap.set("n", "]x", function()
+  vim.diagnostic.jump({ count = 1, float = false, severity = vim.diagnostic.severity.ERROR })
+end, { silent = true, desc = "Next error" })
+
 local M = {}
 
 function M.lsp_on_attach(client, bufnr)
