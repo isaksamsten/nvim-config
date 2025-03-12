@@ -2,11 +2,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client == nil then
+      return
+    end
 
     vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
     require("config.keymaps").lsp_on_attach(client, bufnr)
 
-    if client.supports_method("textDocument/documentHighlight") then
+    if client:supports_method("textDocument/documentHighlight") then
       vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
       vim.api.nvim_create_autocmd("CursorHold", {
@@ -22,35 +25,35 @@ vim.api.nvim_create_autocmd("LspAttach", {
         desc = "Clear All the References",
       })
     end
-    if client.supports_method("textDocument/inlayHint") then
-      if vim.b.inlay_hint_disable == nil then
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-      end
+    -- if client.supports_method("textDocument/inlayHint") then
+    --   if vim.b.inlay_hint_disable == nil then
+    --     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    --   end
+    --
+    --   vim.api.nvim_create_augroup("lsp_inlay_hints", { clear = true })
+    --   vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_inlay_hints" })
+    --
+    --   vim.api.nvim_create_autocmd("InsertEnter", {
+    --     callback = function(inner_args)
+    --       if require("helpers.toggle").is_inlay_hint_active and vim.b.inlay_hint_disable ~= true then
+    --         vim.lsp.inlay_hint.enable(false, { bufnr = inner_args.buf })
+    --       end
+    --     end,
+    --     group = "lsp_inlay_hints",
+    --     buffer = bufnr,
+    --   })
+    --   vim.api.nvim_create_autocmd("InsertLeave", {
+    --     callback = function(inner_args)
+    --       if require("helpers.toggle").is_inlay_hint_active and vim.b.inlay_hint_disable ~= true then
+    --         vim.lsp.inlay_hint.enable(true, { bufnr = inner_args.buf })
+    --       end
+    --     end,
+    --     group = "lsp_inlay_hints",
+    --     buffer = bufnr,
+    --   })
+    -- end
 
-      vim.api.nvim_create_augroup("lsp_inlay_hints", { clear = true })
-      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_inlay_hints" })
-
-      vim.api.nvim_create_autocmd("InsertEnter", {
-        callback = function(inner_args)
-          if require("helpers.toggle").is_inlay_hint_active and vim.b.inlay_hint_disable ~= true then
-            vim.lsp.inlay_hint.enable(false, { bufnr = inner_args.buf })
-          end
-        end,
-        group = "lsp_inlay_hints",
-        buffer = bufnr,
-      })
-      vim.api.nvim_create_autocmd("InsertLeave", {
-        callback = function(inner_args)
-          if require("helpers.toggle").is_inlay_hint_active and vim.b.inlay_hint_disable ~= true then
-            vim.lsp.inlay_hint.enable(true, { bufnr = inner_args.buf })
-          end
-        end,
-        group = "lsp_inlay_hints",
-        buffer = bufnr,
-      })
-    end
-
-    if client.supports_method("textDocument/codeLens") and vim.lsp.codelens and not vim.g.disable_codelens then
+    if client:supports_method("textDocument/codeLens") and vim.lsp.codelens and not vim.g.disable_codelens then
       vim.lsp.codelens.refresh()
       vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
         buffer = bufnr,
@@ -165,7 +168,7 @@ return {
     version = false,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      -- "hrsh7th/nvim-cmp",
+      "saghen/blink.cmp",
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       {
@@ -210,19 +213,19 @@ return {
           },
         },
         virtual_text = false,
-        virtual_lines = {
-          current_line = false,
-          format = function(diagnostic)
-            if vim.wo.wrap then
-              return nil
-            end
-
-            if diagnostic.severity == vim.diagnostic.severity.ERROR then
-              return diagnostic.message
-            end
-            return nil
-          end,
-        },
+        -- virtual_lines = {
+        --   current_line = false,
+        --   format = function(diagnostic)
+        --     if vim.wo.wrap then
+        --       return nil
+        --     end
+        --
+        --     if diagnostic.severity == vim.diagnostic.severity.ERROR then
+        --       return diagnostic.message
+        --     end
+        --     return nil
+        --   end,
+        -- },
         update_in_insert = false,
         underline = true,
         float = {
@@ -267,35 +270,35 @@ return {
         },
         jdtls = { skip_setup = true },
         texlab = {},
-        -- basedpyright = {
-        --   -- skip_install = true,
-        --   settings = {
-        --     verboseOutput = false,
-        --     autoImportCompletion = true,
-        --     basedpyright = {
-        --       disableOrganizeImports = true,
-        --       analysis = {
-        --         typeCheckingMode = "standard",
-        --         autoSearchPaths = true,
-        --         useLibraryCodeForTypes = true,
-        --         diagnosticMode = "openFilesOnly",
-        --         indexing = true,
-        --       },
-        --     },
-        --   },
-        -- },
-        zls = {},
-        jedi_language_server = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = false,
-                },
+        basedpyright = {
+          -- skip_install = true,
+          settings = {
+            verboseOutput = false,
+            autoImportCompletion = true,
+            basedpyright = {
+              disableOrganizeImports = true,
+              analysis = {
+                typeCheckingMode = "standard",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+                indexing = true,
               },
             },
           },
         },
+        zls = {},
+        -- jedi_language_server = {
+        --   capabilities = {
+        --     textDocument = {
+        --       completion = {
+        --         completionItem = {
+        --           snippetSupport = false,
+        --         },
+        --       },
+        --     },
+        --   },
+        -- },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -327,7 +330,8 @@ return {
       local mason_lspconfig = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities() --require("cmp_nvim_lsp").default_capabilities()
+      -- local capabilities = vim.lsp.protocol.make_client_capabilities() --require("cmp_nvim_lsp").default_capabilities()
+      -- local capabilities =
       local ensure_installed = {}
       local setup_servers = {}
       for server, config in pairs(opts.servers) do
@@ -347,7 +351,7 @@ return {
         local options = {
           on_attach = config.on_attach,
           filetypes = config.filetypes,
-          capabilities = vim.tbl_extend("force", capabilities, config.capabilities or {}),
+          capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities or {}),
           settings = config.settings or {},
         }
         if config.filetypes ~= nil then

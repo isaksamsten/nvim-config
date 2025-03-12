@@ -124,274 +124,35 @@ return {
   },
 
   {
-    "hrsh7th/nvim-cmp",
-    version = false,
-    event = { "InsertEnter" },
-    dependencies = {
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lsp",
-      -- "hrsh7th/cmp-nvim-lua",
-      -- "hrsh7th/cmp-cmdline",
-      "saadparwaiz1/cmp_luasnip",
-      {
-        "L3MON4D3/LuaSnip",
-        build = "make install_jsregexp",
-        opts = function()
-          return {
-            enable_autosnippets = true,
-            store_selection_keys = "<Tab>",
-            history = false,
-          }
-        end,
-        config = function(_, opts)
-          require("luasnip").setup(opts)
+    "saghen/blink.cmp",
+    event = "InsertEnter",
+    dependencies = "rafamadriz/friendly-snippets",
+    version = "*",
+    -- build = 'cargo build --release',
 
-          -- Unlink the snippet and restore completion
-          -- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1011938524
-          vim.api.nvim_create_autocmd("ModeChanged", {
-            pattern = "*",
-            callback = function()
-              if
-                ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
-                and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
-                and not require("luasnip").session.jump_active
-              then
-                require("luasnip").unlink_current()
-                require("cmp.config").set_global({
-                  completion = { autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged } },
-                })
-              end
-            end,
-          })
-
-          -- Do not automatically trigger completion if we are in a snippet
-          vim.api.nvim_create_autocmd("User", {
-            pattern = "LuaSnipInsertNodeEnter",
-            callback = function()
-              require("cmp.config").set_global({ completion = { autocomplete = false } })
-            end,
-          })
-
-          -- But restore it when we leave.
-          vim.api.nvim_create_autocmd("User", {
-            pattern = "LuaSnipInsertNodeLeave",
-            callback = function()
-              require("cmp.config").set_global({
-                completion = { autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged } },
-              })
-            end,
-          })
-        end,
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      cmdline = {
+        enabled = false,
       },
-      { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
-      {
-        "rafamadriz/friendly-snippets",
-        config = function()
-          require("luasnip.loaders.from_vscode").lazy_load()
-        end,
+      keymap = { preset = "super-tab" },
+      completion = {
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
+        trigger = { show_in_snippet = false },
+        ghost_text = { enabled = true },
       },
+
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = "normal",
+      },
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
+      signature = { enabled = true },
     },
-    opts = function()
-      local icons = require("config.icons")
-      local helpers = require("helpers")
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-      local prev_item = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-      local next_item = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
-      return {
-        preselect = cmp.PreselectMode.None,
-        completion = {
-          -- completeopt = "menu,menuone,noinsert",
-        },
-        -- performance = {
-        --   filtering_context_budget = 100,
-        --   fetching_timeout = 10000,
-        -- },
-        experimental = {
-          ghost_text = {
-            hl_group = "NonText",
-          },
-        },
-        snippet = {
-          expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-          end,
-        },
-        window = {
-          -- completion = cmp.config.window.bordered(),
-          completion = {
-            winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,CursorLine:PmenuSel,Search:None",
-            border = icons.borders.outer.all,
-            col_offset = 2,
-            side_padding = 1,
-            scrollbar = false,
-          },
-
-          documentation = {
-            winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,CursorLine:PmenuSel,Search:None",
-            border = icons.borders.outer.all,
-            side_padding = 0,
-            scrollbar = false,
-            max_width = 80,
-            max_height = 25,
-          },
-        },
-        formatting = {
-          fields = { "kind", "abbr", "menu" },
-          format = function(entry, item)
-            local label = item.abbr
-            local max_width = vim.g.cmp_completion_max_width or 30
-            local truncated_label = vim.fn.strcharpart(label, 0, max_width - 1) -- 1 character for the elipsis
-            if truncated_label ~= label then
-              item.abbr = truncated_label .. "…"
-            elseif string.len(label) < max_width then
-              local padding = string.rep(" ", max_width - string.len(label))
-              item.abbr = label .. padding
-            end
-            -- if vim.tbl_contains({ 2, 3 }, entry:get_kind()) then
-            --   local start_index, end_index = item.abbr:find("%(.*")
-            --   if start_index then
-            --     item.abbr_hl_group = {
-            --       { "@function", range = { 0, start_index + 1 } },
-            --       { "Comment", range = { start_index + 1, end_index } },
-            --     }
-            --   else
-            --     item.abbr_hl_group = "@function"
-            --   end
-            -- end
-            item.abbr = " " .. item.abbr
-            item.menu = item.kind
-            if entry.source.name == "omni" then
-              item.kind = icons.kinds["Function"]
-              item.menu = "Function"
-            else
-              local icon
-              if item.kind == "Copilot" then
-                icon = icons.kinds.Copilot
-              else
-                icon, _, _ = require("mini.icons").get("lsp", item.kind)
-              end
-              item.kind = (icon or icons.kinds.Unknown)
-            end
-            return item
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-p>"] = {
-            i = function()
-              if cmp.visible() then
-                cmp.select_prev_item()
-              else
-                cmp.complete()
-              end
-            end,
-          },
-          ["<C-n>"] = {
-            i = function()
-              if cmp.visible() then
-                cmp.select_next_item()
-              else
-                cmp.complete()
-              end
-            end,
-          },
-          ["<Up>"] = { i = prev_item },
-          ["<Down>"] = { i = next_item },
-          ["<C-Space>"] = cmp.mapping(function(_)
-            if cmp.visible() then
-              cmp.abort()
-            else
-              cmp.complete()
-            end
-          end, { "i", "c" }),
-          ["<CR>"] = function(fallback)
-            helpers.create_undo()
-            if cmp.confirm({ select = false }) then
-              return
-            end
-            fallback()
-          end,
-          ["<C-u>"] = { i = cmp.mapping.scroll_docs(-4) },
-          ["<C-d>"] = { i = cmp.mapping.scroll_docs(4) },
-          ["<Tab>"] = {
-            i = function(fallback)
-              -- We dont autocomplete if we are in an active Snippet unless the completion
-              -- item is selected explicitly.
-              if cmp.visible() then
-                helpers.create_undo()
-                cmp.confirm({ select = true })
-              elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-              elseif has_words_before() then
-                cmp.complete()
-              else
-                fallback()
-              end
-            end,
-            s = function(fallback)
-              if luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-              else
-                fallback()
-              end
-            end,
-          },
-
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-        }),
-        sources = {
-          { name = "nvim_lsp", group_index = 2 },
-          { name = "luasnip", keyword_length = 2, group_index = 2 },
-          { name = "buffer", keyword_length = 3, group_index = 2, max_item_count = 8 },
-          { name = "path", group_index = 2 },
-        },
-        enabled = function()
-          if vim.api.nvim_get_mode().mode == "c" or vim.fn.getcmdwintype() ~= "" then
-            return false
-          else
-            local context = require("cmp.config.context")
-            local disabled = false
-            disabled = disabled
-              or (vim.api.nvim_get_option_value("buftype", { buf = vim.api.nvim_get_current_buf() }) == "prompt")
-            disabled = disabled or (vim.fn.reg_recording() ~= "")
-            disabled = disabled or (vim.fn.reg_executing() ~= "")
-            disabled = disabled or (context.in_treesitter_capture("comment") or context.in_syntax_group("Comment"))
-            return not disabled
-          end
-        end,
-      }
-    end,
-    config = function(_, opts)
-      local cmp = require("cmp")
-      cmp.setup(opts)
-
-      require("cmp_git").setup()
-      cmp.setup.filetype("gitcommit", {
-        mapping = opts.mapping,
-        sources = {
-          { name = "git" },
-        },
-      })
-
-      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-        enabled = true,
-        sources = {
-          { name = "dap" },
-        },
-      })
-    end,
+    opts_extend = { "sources.default" },
   },
 
   {
@@ -462,8 +223,7 @@ return {
       {
         "[n",
         function()
-          require("neotest")
-          jump.prev({ status = "failed" })
+          require("neotest").jump.prev({ status = "failed" })
         end,
         desc = "Previous failed test",
       },

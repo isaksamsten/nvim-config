@@ -11,6 +11,7 @@ return { -- TODO
   },
   {
     "idanarye/nvim-impairative",
+    enabled = false,
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local impairative = require("impairative")
@@ -270,7 +271,7 @@ return { -- TODO
         })
     end,
   },
-  -- { "tpope/vim-unimpaired", event = { "BufReadPre", "BufNewFile" } },
+  { "tpope/vim-unimpaired", event = { "BufReadPre", "BufNewFile" } },
   {
     "echasnovski/mini.surround",
     version = false,
