@@ -71,11 +71,6 @@ if vim.go.bg == 'dark' then
   c_dragonAqua    = '#95aeac'
   c_dragonAsh     = '#959795'
   c_dragonBg0     = '#0d0c0c'
-  -- c_dragonBg1     = '#000000'
-  -- c_dragonBg2     = '#100f0f'
-  -- c_dragonBg3     = '#141313'
-  -- c_dragonBg4     = '#1c1c1b'
-  -- c_dragonBg5     = '#31322d'
   c_dragonBg1     = '#181616'
   c_dragonBg2     = '#201d1d'
   c_dragonBg3     = '#282727'
@@ -457,7 +452,7 @@ local hlgroups = {
   htmlLink = { fg = c_lotusBlue, underline = true },
   htmlSpecialChar = { link = "SpecialChar" },
   htmlSpecialTagName = { fg = c_dragonViolet },
-  htmlString = { fg = c_dragonAsh },
+  htmlString = { link = "String" },
   htmlTagName = { link = "Tag" },
   htmlTitle = { link = "Title" },
 
@@ -489,6 +484,7 @@ local hlgroups = {
   -- }}}
 
   -- Plugins {{{2
+  -- TODO: change to blink
   -- nvim-cmp
   CmpCompletion = { link = "Pmenu" },
   CmpCompletionBorder = { link = "FloatBorder" },
@@ -526,6 +522,7 @@ local hlgroups = {
   CmpItemKindValue = { link = "String" },
   CmpItemKindVariable = { fg = c_lotusRed2 },
   CmpItemMenu = { fg = c_dragonAsh },
+  CmpGhostText = { link = "NonText" },
 
   -- gitsigns
   GitSignsAdd = { fg = c_autumnGreen },
@@ -660,6 +657,11 @@ local hlgroups = {
   ConflictingOursHeader = { bg = c_winterGreen1, fg = c_dragonFg2 },
   ConflictingTheirsHeader = { bg = c_winterBlue1, fg = c_dragonFg2 },
   ConflictingDelimiter = { fg = c_dragonFg2 },
+
+  SiaResponseSelected = { bg = c_winterBlue },
+  -- SiaInlineResponse = { bg = c_winterGreen },
+  -- SiaInlineReplace = { bg = c_winterRed },
+  -- SiaInlineMessage = { fg = c_dragonRed },
 
   -- -- statusline
   -- StatusLineGitAdded = { bg = c_dragonBg3, fg = c_dragonGreen1 },
