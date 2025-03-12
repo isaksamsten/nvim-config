@@ -138,17 +138,26 @@ return {
   },
   { "Bilal2453/luvit-meta", lazy = true },
   {
-    "hrsh7th/nvim-cmp",
-    opts = function(_, opts)
-      opts.sources = opts.sources or {}
-      table.insert(opts.sources, {
-        name = "lazydev",
-        group_index = 0,
-      })
-    end,
+    "saghen/blink.cmp",
+    opts = {
+      sources = {
+        -- add lazydev to your completion providers
+        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            -- make lazydev completions top priority (see `:h blink.cmp`)
+            score_offset = 100,
+          },
+        },
+      },
+    },
   },
   {
-    "isaksamsten/conflicting.nvim",
+    -- "isaksamsten/conflicting.nvim",
+    dir = "~/Projects/conflicting.nvim/",
+    name = "conflicting",
     event = { "BufReadPre", "BufNewFile" },
     keys = {
       {
@@ -175,29 +184,117 @@ return {
         end,
         desc = "Diff change",
       },
+      {
+        "[c",
+        mode = "n",
+        function()
+          require("conflicting").previous()
+        end,
+        desc = "Previous conflict",
+      },
+      {
+        "]c",
+        mode = "n",
+        function()
+          require("conflicting").next()
+        end,
+        desc = "Next conflict",
+      },
     },
     opts = {},
   },
   {
-    -- dir = "~/Projects/sia.nvim/",
-    -- name = "Sia",
-    "isaksamsten/sia.nvim",
+    dir = "~/Projects/sia.nvim/",
+    name = "Sia",
+    lazy = false,
+    -- "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
-      { "gzt", mode = "n", "<Plug>(sia-toggle)", desc = "Toggle last Sia buffer" },
-      { "gza", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
-      { "gzz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
-      { "gze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain code" },
-      { "gzg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
-      { "gzr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
-      { "s", mode = "n", "<Plug>(sia-show-context)", ft = "sia" },
-      { "p", mode = "n", "<Plug>(sia-peek-context)", ft = "sia" },
-      { "x", mode = "n", "<Plug>(sia-delete-context)", ft = "sia" },
-      { "r", mode = "n", "<Plug>(sia-replace-block)", ft = "sia" },
-      { "R", mode = "n", "<Plug>(sia-replace-all-blocks)", ft = "sia" },
-      { "a", mode = "n", "<Plug>(sia-insert-block-above)", ft = "sia" },
-      { "b", mode = "n", "<Plug>(sia-insert-block-below)", ft = "sia" },
-      { "<CR>", mode = "n", "<Plug>(sia-reply)", ft = "sia" },
+      { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
+      { "Zz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
+      { "Ze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain code" },
+      { "Zg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
+      { "Zr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
+      {
+        "<Leader>a",
+        mode = "n",
+        function()
+          require("sia").toggle()
+        end,
+        desc = "Toggle last Sia buffer",
+      },
+      {
+        "p",
+        mode = "n",
+        function()
+          require("sia").preview_context()
+        end,
+        ft = "sia",
+      },
+      {
+        "X",
+        mode = "n",
+        function()
+          require("sia").remove_context()
+        end,
+        ft = "sia",
+      },
+      {
+        "i",
+        mode = "n",
+        function()
+          require("sia").replace()
+        end,
+        ft = "sia",
+      },
+      {
+        "I",
+        mode = "n",
+        function()
+          require("sia").replace_all()
+        end,
+        ft = "sia",
+      },
+      {
+        "r",
+        mode = "n",
+        function()
+          require("sia").replace({ apply_marker = true })
+        end,
+        ft = "sia",
+      },
+      {
+        "R",
+        mode = "n",
+        function()
+          require("sia").replace_all({ apply_marker = true })
+        end,
+        ft = "sia",
+      },
+      {
+        "a",
+        mode = "n",
+        function()
+          require("sia").insert({ above = true })
+        end,
+        ft = "sia",
+      },
+      {
+        "b",
+        mode = "n",
+        function()
+          require("sia").insert()
+        end,
+        ft = "sia",
+      },
+      {
+        "<CR>",
+        mode = "n",
+        function()
+          require("sia").open_reply()
+        end,
+        ft = "sia",
+      },
     },
     dependencies = {
 
@@ -225,9 +322,23 @@ return {
         end,
       },
     },
-    cmd = { "SiaFile", "Sia" },
+    cmd = { "SiaAdd", "SiaRemove", "Sia" },
     opts = function()
       return {
+        --- @type table<string, sia.config.Provider>
+        providers = {
+          samsten = {
+            base_url = "https://llm.samsten.se/v1/chat/completions",
+            api_key = function()
+              return os.getenv("SAMSTEN_API_KEY")
+            end,
+          },
+        },
+        models = {
+          qwen = { "ollama", "qwen2.5-coder:14b", function_calling = false },
+          ["claude-3-5-sonnet"] = { "samsten", "claude-3.5-sonnet-latest" },
+          ["claude-3-7-sonnet"] = { "samsten", "claude-3-7-sonnet-latest" },
+        },
         --- @type table<string, sia.config.Action>
         actions = {
           references = {
@@ -488,7 +599,17 @@ I will provide the text for you to improve.]],
       vim.api.nvim_create_autocmd("User", {
         pattern = "SiaEditPost",
         callback = function(args)
-          require("conflicting").track(args.data.buf)
+          if args.data.marker then
+            require("conflicting").track(args.data.buf)
+          end
+        end,
+      })
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "SiaComplete",
+        callback = function(ev)
+          if ev.data.buf then
+            require("conflicting").track(ev.data.buf)
+          end
         end,
       })
       -- vim.api.nvim_create_autocmd("FileType", {
