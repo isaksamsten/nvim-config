@@ -138,6 +138,9 @@ return {
       },
       keymap = { preset = "super-tab" },
       completion = {
+        accept = {
+          auto_brackets = { enabled = false },
+        },
         documentation = { auto_show = true, auto_show_delay_ms = 500 },
         trigger = { show_in_snippet = false },
         ghost_text = { enabled = true },
