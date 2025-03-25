@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       return
     end
 
-    vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+    vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })
     require("config.keymaps").lsp_on_attach(client, bufnr)
 
     if client:supports_method("textDocument/documentHighlight") then
@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         group = "lsp_document_highlight",
         desc = "Document Highlight",
       })
-      vim.api.nvim_create_autocmd("CursorMoved", {
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
         callback = vim.lsp.buf.clear_references,
         buffer = bufnr,
         group = "lsp_document_highlight",
