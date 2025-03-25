@@ -104,7 +104,7 @@ vim.api.nvim_create_autocmd("User", {
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "tex" },
-  command = "setlocal wrap breakindent conceallevel=0",
+  command = "setlocal wrap breakindent conceallevel=3",
 })
 
 vim.api.nvim_create_autocmd("OptionSet", {

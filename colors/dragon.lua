@@ -658,7 +658,9 @@ local hlgroups = {
   ConflictingTheirsHeader = { bg = c_winterBlue1, fg = c_dragonFg2 },
   ConflictingDelimiter = { fg = c_dragonFg2 },
 
-  SiaResponseSelected = { bg = c_winterBlue },
+  SiaSplitResponse = { bg = c_winterBlue },
+  SiaUser = { bg = c_winterGreen, fg = c_dragonGreen1, bold = true },
+  SiaAssistant = { bg = c_winterRed, fg = c_dragonRed, bold = true },
   -- SiaInlineResponse = { bg = c_winterGreen },
   -- SiaInlineReplace = { bg = c_winterRed },
   -- SiaInlineMessage = { fg = c_dragonRed },

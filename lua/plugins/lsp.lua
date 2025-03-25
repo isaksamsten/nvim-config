@@ -364,9 +364,6 @@ return {
         lspconfig[server].setup(options)
       end
 
-      local hover = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
-      vim.lsp.handlers["textDocument/hover"] = hover
-
       local manager = require("lspconfig.manager")
       -- silence warnings when an LSP binary is unavailable.
       local _start_new_client = manager._start_new_client

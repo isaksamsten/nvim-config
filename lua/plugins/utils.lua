@@ -155,9 +155,9 @@ return {
     },
   },
   {
-    -- "isaksamsten/conflicting.nvim",
-    dir = "~/Projects/conflicting.nvim/",
-    name = "conflicting",
+    "isaksamsten/conflicting.nvim",
+    -- dir = "~/Projects/conflicting.nvim/",
+    -- name = "conflicting",
     event = { "BufReadPre", "BufNewFile" },
     keys = {
       {
@@ -204,10 +204,9 @@ return {
     opts = {},
   },
   {
-    dir = "~/Projects/sia.nvim/",
-    name = "Sia",
-    lazy = false,
-    -- "isaksamsten/sia.nvim",
+    -- dir = "~/Projects/sia.nvim/",
+    -- name = "Sia",
+    "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
@@ -224,10 +223,18 @@ return {
         desc = "Toggle last Sia buffer",
       },
       {
+        "P",
+        mode = "n",
+        function()
+          require("sia").show_messages({ peek = false, edit = true })
+        end,
+        ft = "sia",
+      },
+      {
         "p",
         mode = "n",
         function()
-          require("sia").preview_context()
+          require("sia").show_messages({ peek = true })
         end,
         ft = "sia",
       },
@@ -235,7 +242,7 @@ return {
         "X",
         mode = "n",
         function()
-          require("sia").remove_context()
+          require("sia").remove_message()
         end,
         ft = "sia",
       },
@@ -342,7 +349,7 @@ return {
         --- @type table<string, sia.config.Action>
         actions = {
           references = {
-            instructions = {
+            system = {
               {
                 role = "system",
                 content = [[You are a research assistant specialized in querying scientific literature databases. Your task is to assist the user by searching for genuine, high-quality academic papers, summarizing their abstracts, and ranking them based on relevance to the user’s query. You must never fabricate or invent references. Instead, you rely solely on the results provided by the search_research_paper function to generate your outputs.
@@ -373,6 +380,8 @@ Important Rules:
 *	Ensure transparency and accuracy in the summaries and rankings.
 *	Tailor your search queries and paper selection to meet the user’s specific needs and focus areas.]],
               },
+            },
+            instructions = {
               require("sia.instructions").verbatim(),
             },
             tools = {
@@ -478,11 +487,11 @@ Important Rules:
                 end,
               },
             },
-            mode = "split",
+            mode = "chat",
             temperature = 0.5,
           },
           write = {
-            instructions = {
+            system = {
               {
                 role = "system",
                 content = [[You are a language model designed to assist researchers in refining scientific texts. You have access to a function called search_research_paper which allows you to retrieve relevant academic papers to improve the accuracy, depth, and clarity of scientific content. Your task is to:
@@ -503,16 +512,18 @@ Important Rules:
 Make sure your suggestions help elevate the scientific rigor and presentation of the work.
 ]],
               },
+            },
+            instructions = {
               "current_context",
             },
             tools = {
               require("sia.tools").search_research_paper,
             },
-            mode = "split",
+            mode = "chat",
             temperature = 0.2,
           },
           critique = {
-            instructions = {
+            system = {
               {
                 role = "system",
                 content = [[You are a detailed and open-minded reviewer. Your
@@ -526,12 +537,15 @@ format.
 
 ]],
               },
+            },
+            instructions = {
               "current_context",
             },
-            mode = "split",
+            mode = "chat",
           },
           grammar = {
-            instructions = {
+            system = {
+
               {
                 role = "system",
                 content = [[You are **specifically assigned** as an assistant
@@ -551,9 +565,11 @@ format.
 I will give text I need you to improve.
 ]],
               },
+            },
+            instructions = {
               require("sia.instructions").verbatim(),
             },
-            temperature = 0.1,
+            temperature = 0.0,
             model = "chatgpt-4o-latest",
             mode = "diff",
             capture = function(bufnr)
@@ -565,7 +581,7 @@ I will give text I need you to improve.
             end,
           },
           rephrase = {
-            instructions = {
+            system = {
               {
                 role = "system",
                 content = [[You are *specifically assigned* as an assistant with the *primary duty* of rephrasing English text.
@@ -580,11 +596,13 @@ I will give text I need you to improve.
 
 I will provide the text for you to improve.]],
               },
+            },
+            instructions = {
               require("sia.instructions").verbatim(),
             },
             mode = "diff",
             model = "chatgpt-4o-latest",
-            temperature = 0.5,
+            temperature = 0.3,
             capture = function(bufnr)
               return require("sia.context").paragraph()
             end,
