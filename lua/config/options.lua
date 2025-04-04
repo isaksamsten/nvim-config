@@ -123,6 +123,12 @@ function Update_titlestring(max_size)
   end
 end
 
+function Fd(file_pattern, _)
+  local cmd = 'fd  --color=never --full-path --type file --hidden --exclude=".git" "' .. file_pattern .. '"'
+  local result = vim.fn.systemlist(cmd)
+  return result
+end
+
 function __tabnr_current()
   local tabs = vim.api.nvim_list_tabpages()
   if #tabs > 1 then
@@ -132,6 +138,7 @@ function __tabnr_current()
 end
 
 vim.g.disable_codelens = true
+vim.o.findfunc = "v:lua.Fd"
 
 vim.o.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonText#%{v:lua.__tabnr_current()}%)"
 vim.o.titlestring = "nvim %{v:lua.Update_titlestring(22)}"
