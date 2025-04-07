@@ -97,74 +97,38 @@ end, { silent = true, desc = "Next error" })
 local M = {}
 
 function M.lsp_on_attach(client, bufnr)
-  local telescope_ok, builtin = pcall(require, "telescope.builtin")
-  telescope_ok = false
   local map = function(m, lhs, rhs, desc)
     vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
   end
 
-  if client.supports_method("textDocument/hover") then
+  if client:supports_method("textDocument/hover") then
     map({ "n", "v" }, "K", vim.lsp.buf.hover, "Show information")
   end
 
-  if client.supports_method("textDocument/definition") then
-    local definitionProvider = vim.lsp.buf.definition
-    if telescope_ok then
-      definitionProvider = function()
-        builtin.lsp_definitions(require("helpers").telescope_theme("cursor", { prompt_title = "Definition" }))
-      end
-    end
-    map("n", "gd", definitionProvider, "Go to definition")
+  if client:supports_method("textDocument/definition") then
+    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+  else
+    print(client.name .. " does not support definition")
   end
 
-  if client.supports_method("textDocument/declaration") then
+  if client:supports_method("textDocument/declaration") then
     map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
   end
 
-  if client.supports_method("textDocument/implementation") then
-    local implementationProvider = vim.lsp.buf.implementation
-    if telescope_ok then
-      implementationProvider = function()
-        builtin.lsp_implementations(require("helpers").telescope_theme("cursor", { prompt_title = "Implementation" }))
-      end
-    end
-    map("n", "gi", implementationProvider, "Go to implementation")
+  if client:supports_method("textDocument/implementation") then
+    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
   end
 
-  if client.supports_method("textDocument/typeDefinition") then
+  if client:supports_method("textDocument/typeDefinition") then
     local typeDefinitionProvider = vim.lsp.buf.type_definition
-    if telescope_ok then
-      typeDefinitionProvider = function()
-        builtin.lsp_type_definitions(require("helpers").telescope_theme("cursor", { prompt_title = "Type definition" }))
-      end
-    end
     map("n", "go", typeDefinitionProvider, "Go to type definition")
   end
 
-  -- if client.supports_method("textDocument/references") then
-  --   local referencesProvider = vim.lsp.buf.references
-  --   if telescope_ok then
-  --     referencesProvider = function()
-  --       builtin.lsp_references(
-  --         require("helpers").telescope_theme(
-  --           "cursor",
-  --           { prompt_title = "References", include_declaration = false, show_line = false, jump_type = "split" }
-  --         )
-  --       )
-  --     end
-  --   end
-  --   map("n", "gr", referencesProvider, "Show references")
-  -- end
-
-  if client.supports_method("textDocument/rename") then
+  if client:supports_method("textDocument/rename") then
     map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
   end
 
-  -- if client.supports_method("textDocument/codeAction") then
-  --   map({ "n", "v" }, "g.", vim.lsp.buf.code_action, "Code action")
-  -- end
-
-  if client.supports_method("textDocument/codeLens") and not vim.g.disable_codelens then
+  if client:supports_method("textDocument/codeLens") and not vim.g.disable_codelens then
     map({ "n", "v" }, "grl", vim.lsp.codelens.run, "Code lens")
   end
 end

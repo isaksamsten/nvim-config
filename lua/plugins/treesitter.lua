@@ -26,7 +26,6 @@ return {
         "html",
         "java",
         "json",
-        "latex",
         "lua",
         "markdown",
         "markdown_inline",

@@ -70,6 +70,7 @@ return {
     opts = {
       root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" },
     },
+    version=false,
     keys = {
       {
         "crv",
