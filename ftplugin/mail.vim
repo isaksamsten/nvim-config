@@ -1,1 +1,1 @@
-setlocal formatoptions+=w
+setlocal formatoptions=awq

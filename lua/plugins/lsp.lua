@@ -271,35 +271,35 @@ return {
         },
         jdtls = { skip_setup = true },
         texlab = {},
-        basedpyright = {
-          -- skip_install = true,
-          settings = {
-            verboseOutput = false,
-            autoImportCompletion = true,
-            basedpyright = {
-              disableOrganizeImports = true,
-              analysis = {
-                typeCheckingMode = "standard",
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "openFilesOnly",
-                indexing = true,
-              },
-            },
-          },
-        },
-        zls = {},
-        -- jedi_language_server = {
-        --   capabilities = {
-        --     textDocument = {
-        --       completion = {
-        --         completionItem = {
-        --           snippetSupport = false,
-        --         },
+        -- basedpyright = {
+        --   -- skip_install = true,
+        --   settings = {
+        --     verboseOutput = false,
+        --     autoImportCompletion = true,
+        --     basedpyright = {
+        --       disableOrganizeImports = true,
+        --       analysis = {
+        --         typeCheckingMode = "standard",
+        --         autoSearchPaths = true,
+        --         useLibraryCodeForTypes = true,
+        --         diagnosticMode = "openFilesOnly",
+        --         indexing = true,
         --       },
         --     },
         --   },
         -- },
+        zls = {},
+        jedi_language_server = {
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          },
+        },
         lua_ls = {},
         jsonls = {},
         marksman = {},
@@ -315,16 +315,6 @@ return {
     },
 
     config = function(_, opts)
-      -- Fix for bug https://github.com/neovim/neovim/issues/12970
-      -- vim.lsp.util.apply_text_document_edit = function(text_document_edit, index, offset_encoding)
-      --   local text_document = text_document_edit.textDocument
-      --   local buf = vim.uri_to_bufnr(text_document.uri)
-      --   if offset_encoding == nil then
-      --     vim.notify_once("apply_text_document_edit must be called with valid offset encoding", vim.log.levels.WARN)
-      --   end
-      --
-      --   vim.lsp.util.apply_text_edits(text_document_edit.edits, buf, offset_encoding)
-      -- end
       vim.diagnostic.config(opts.diagnostic)
 
       local mason = require("mason")
@@ -345,6 +335,7 @@ return {
       end
       mason.setup()
       mason_lspconfig.setup({
+        automatic_installation=false,
         ensure_installed = ensure_installed,
       })
       for _, server in pairs(setup_servers) do
