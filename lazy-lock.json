@@ -53,5 +53,6 @@
   "vim-qf": { "branch": "master", "commit": "578f589e14a40cbabf70c035d04387d9356962d7" },
   "vim-unimpaired": { "branch": "master", "commit": "efdc6475f7ea789346716dabf9900ac04ee8604a" },
   "vimtex": { "branch": "master", "commit": "57a03797c16a8a1e6555b6822592f78dc38834a5" },
-  "which-key.nvim": { "branch": "main", "commit": "fcbf4eea17cb299c02557d576f0d568878e354a4" }
+  "which-key.nvim": { "branch": "main", "commit": "fcbf4eea17cb299c02557d576f0d568878e354a4" },
+  "wiki.vim": { "branch": "master", "commit": "80bb6dd1684a6cf13025733e4d810e36ad0ae9f3" }
 }

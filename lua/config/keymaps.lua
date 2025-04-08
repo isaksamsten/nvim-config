@@ -124,9 +124,9 @@ function M.lsp_on_attach(client, bufnr)
     map("n", "go", typeDefinitionProvider, "Go to type definition")
   end
 
-  if client:supports_method("textDocument/rename") then
-    map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
-  end
+  -- if client:supports_method("textDocument/rename") then
+  --   map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
+  -- end
 
   if client:supports_method("textDocument/codeLens") and not vim.g.disable_codelens then
     map({ "n", "v" }, "grl", vim.lsp.codelens.run, "Code lens")

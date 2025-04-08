@@ -410,6 +410,7 @@ return {
     },
     config = function(_, opts)
       require("mini.pick").setup(opts)
+      vim.ui.select = require("mini.pick").ui_select
     end,
   },
 

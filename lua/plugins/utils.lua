@@ -1,5 +1,12 @@
 return {
   {
+    "lervag/wiki.vim",
+    lazy = false,
+    init = function()
+      vim.g.wiki_root = "~/notes/"
+    end,
+  },
+  {
     "jake-stewart/multicursor.nvim",
     branch = "1.0",
     event = { "BufReadPre", "BufNewFile" },
