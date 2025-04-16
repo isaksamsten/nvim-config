@@ -578,7 +578,7 @@ I will give text I need you to improve.
               require("sia.instructions").verbatim(),
             },
             temperature = 0.0,
-            model = "openai/gpt-4.1",
+            model = "gpt-4.1",
             mode = "diff",
             capture = function(bufnr)
               if vim.bo.ft == "tex" then
@@ -609,7 +609,7 @@ I will provide the text for you to improve.]],
               require("sia.instructions").verbatim(),
             },
             mode = "diff",
-            model = "openai/gpt-4.1",
+            model = "gpt-4.1",
             temperature = 0.3,
             capture = function(bufnr)
               return require("sia.context").paragraph()
