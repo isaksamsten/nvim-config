@@ -101,33 +101,11 @@ function M.lsp_on_attach(client, bufnr)
     vim.keymap.set(m, lhs, rhs, { remap = false, silent = true, buffer = bufnr, desc = desc })
   end
 
-  if client:supports_method("textDocument/hover") then
-    map({ "n", "v" }, "K", vim.lsp.buf.hover, "Show information")
-  end
-
-  if client:supports_method("textDocument/definition") then
-    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
-  else
-    print(client.name .. " does not support definition")
-  end
-
-  if client:supports_method("textDocument/declaration") then
-    map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-  end
-
-  if client:supports_method("textDocument/implementation") then
-    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
-  end
-
-  if client:supports_method("textDocument/typeDefinition") then
-    local typeDefinitionProvider = vim.lsp.buf.type_definition
-    map("n", "go", typeDefinitionProvider, "Go to type definition")
-  end
-
-  -- if client:supports_method("textDocument/rename") then
-  --   map("n", "<CR>", vim.lsp.buf.rename, "Rename symbol")
-  -- end
-
+  map({ "n", "v" }, "K", vim.lsp.buf.hover, "Show information")
+  map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+  map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
+  map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+  map("n", "go", vim.lsp.buf.type_definition, "Go to type definition")
   if client:supports_method("textDocument/codeLens") and not vim.g.disable_codelens then
     map({ "n", "v" }, "grl", vim.lsp.codelens.run, "Code lens")
   end

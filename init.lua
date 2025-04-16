@@ -37,3 +37,44 @@ require("config.keymaps")
 require("config.autocmds")
 require("config.signs")
 vim.cmd.colorscheme("dragon")
+
+local tools = {
+  "bash-language-server",
+  "bash-language-server",
+  "clangd",
+  "erlang-ls",
+  "jdtls",
+  "jedi-language-server",
+  "json-lsp",
+  "marksman",
+  "ruff",
+  "rust-analyzer",
+  "texlab",
+  "yaml-language-server",
+  "zls",
+}
+
+vim.api.nvim_create_user_command("MasonInstallAll", function()
+  local registry = require("mason-registry")
+  for _, pkg_name in ipairs(tools) do
+    local pkg = registry.get_package(pkg_name)
+    if not pkg:is_installed() then
+      vim.cmd("MasonInstall " .. pkg_name)
+    end
+  end
+end, {})
+
+vim.lsp.enable({
+  "bashls",
+  "clangd",
+  "jdtls",
+  "texlab",
+  "zls",
+  "jedi_language_server",
+  "lua_ls",
+  "jsonls",
+  "marksman",
+  "ruff",
+  "rust_analyzer",
+  "yamlls",
+})

@@ -104,7 +104,7 @@ vim.api.nvim_create_autocmd("User", {
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "tex" },
-  command = "setlocal wrap breakindent conceallevel=3",
+  command = "setlocal wrap breakindent",
 })
 
 vim.api.nvim_create_autocmd("OptionSet", {
@@ -121,9 +121,42 @@ vim.api.nvim_create_autocmd("OptionSet", {
   end,
 })
 
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "qf",
---   callback = function()
---     print("qt")
---   end,
--- })
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client == nil then
+      return
+    end
+
+    vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })
+    require("config.keymaps").lsp_on_attach(client, bufnr)
+
+    if client:supports_method("textDocument/documentHighlight") then
+      vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
+      vim.api.nvim_create_autocmd("CursorHold", {
+        callback = vim.lsp.buf.document_highlight,
+        buffer = bufnr,
+        group = "lsp_document_highlight",
+        desc = "Document Highlight",
+      })
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+        callback = vim.lsp.buf.clear_references,
+        buffer = bufnr,
+        group = "lsp_document_highlight",
+        desc = "Clear All the References",
+      })
+    end
+
+    if client:supports_method("textDocument/codeLens") and vim.lsp.codelens and not vim.g.disable_codelens then
+      vim.lsp.codelens.refresh()
+      vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+        buffer = bufnr,
+        callback = vim.lsp.codelens.refresh,
+      })
+    end
+  end,
+})
+
+

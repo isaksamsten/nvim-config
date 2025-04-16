@@ -184,7 +184,7 @@ opt.cmdheight = 1
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true
 -- opt.cursorlineopt = "number"
-opt.conceallevel = 0 -- Hide * markup for bold and italic
+opt.conceallevel = 1 -- Hide * markup for bold and italic
 opt.confirm = true -- confirm to save changes before exiting modified buffer
 opt.expandtab = true -- Use spaces instead of tabs
 opt.formatoptions = "jcroqlnt" -- tcqj
@@ -242,6 +242,43 @@ opt.diffopt = {
   "linematch:120",
 }
 -- end
+
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = require("config.icons").diagnostics.error,
+      [vim.diagnostic.severity.WARN] = require("config.icons").diagnostics.warn,
+      [vim.diagnostic.severity.HINT] = require("config.icons").diagnostics.hint,
+      [vim.diagnostic.severity.INFO] = require("config.icons").diagnostics.info,
+    },
+  },
+  virtual_text = false,
+  update_in_insert = false,
+  underline = true,
+  float = {
+    border = require("config.icons").borders.outer.all,
+    severity_sort = true,
+    header = {},
+    suffix = function(diag)
+      local message
+      if diag.code then
+        message = ("%s (%s)"):format(diag.source, diag.code)
+      else
+        message = diag.source
+      end
+      return " " .. message, "DiagnosticFloatingSuffix"
+    end,
+    prefix = function(diag)
+      local severity = vim.diagnostic.severity[diag.severity]
+      severity = string.sub(severity, 0, 1) .. string.sub(severity, 2, -1):lower()
+      return require("config.icons"):get_diagnostic(diag.severity), "DiagnosticSign" .. severity
+    end,
+    format = function(diag)
+      return diag.message
+    end,
+  },
+  severity_sort = true,
+})
 
 -- fix markdown indentation settings
 vim.g.markdown_recommended_style = 0

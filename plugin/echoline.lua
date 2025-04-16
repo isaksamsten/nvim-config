@@ -368,19 +368,6 @@ local function generate_components()
   return render_components(components)
 end
 
--- local function rulerline()
---   local messages = generate_components()
---   local output = ""
---   for _, message in ipairs(messages) do
---     local highlight = "Normal"
---     if message[2] then
---       highlight = message[2]
---     end
---     output = output .. "%#" .. highlight .. "#" .. message[1]
---   end
---   return output
--- end
-
 local can_run = true
 vim.keymap.set("n", "<C-g>", function()
   if can_run then
