@@ -102,6 +102,7 @@ return {
     "ray-x/lsp_signature.nvim",
     event = "LspAttach",
     version = false,
+    enabled = false,
     opts = function()
       local icons = require("config.icons")
       return {

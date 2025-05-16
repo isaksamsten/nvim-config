@@ -1,22 +1,3 @@
--- vim.keymap.set("n", "<Left>", "<C-w>h", { desc = "Go to left window" })
--- vim.keymap.set("n", "<Right>", "<C-w>l", { desc = "Go to right window" })
--- vim.keymap.set("n", "<Down>", "<C-w>j", { desc = "Go to lower window" })
--- vim.keymap.set("n", "<Up>", "<C-w>k", { desc = "Go to upper window" })
-
--- vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
--- vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
--- vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
--- vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
-
-local function ToggleBackground()
-  if vim.o.background == "dark" then
-    vim.o.background = "light"
-  else
-    vim.o.background = "dark"
-  end
-end
-
-vim.keymap.set("n", "<leader>ub", ToggleBackground, { noremap = true, silent = true, desc = "Background color" })
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
 vim.keymap.set("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
@@ -32,12 +13,6 @@ vim.keymap.set("v", ">", ">gv")
 -- Navigate according to displayed lines, not physical lines
 vim.keymap.set({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 vim.keymap.set({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
--- vim.keymap.set({ "n", "x" }, "$", [[v:count == 0 ? 'g$' : '$']], { expr = true })
--- vim.keymap.set({ "n", "x" }, "0", [[v:count == 0 ? 'g0' : '0']], { expr = true })
-
--- Save using ctrl-s
-vim.keymap.set("n", "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
-vim.keymap.set({ "i", "x" }, "<C-S>", "<Esc><Cmd>silent! update | redraw<CR>", { desc = "Save and go to Normal mode" })
 
 -- Reselect latest changed, put, or yanked text
 vim.keymap.set(
@@ -64,10 +39,12 @@ vim.keymap.set({ "n", "v" }, "<leader>4", "<Esc><Cmd>tabnext 4<CR>", { desc = "N
 vim.keymap.set({ "n", "v" }, "<leader>Tc", "<Esc><Cmd>tabnew<CR>", { desc = "New tab" })
 vim.keymap.set({ "n", "v" }, "<leader>Tx", "<Esc><Cmd>tabclose<CR>", { desc = "Close tab" })
 
--- vim.keymap.set({ "n" }, "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix" })
--- vim.keymap.set({ "n" }, "]q", "<cmd>cnext<cr>", { desc = "Next quickfix" })
--- vim.keymap.set({ "n" }, "]Q", "<cmd>clast<cr>", { desc = "Last quickfix" })
--- vim.keymap.set({ "n" }, "[Q", "<cmd>cfirst<cr>", { desc = "First quickfix" })
+vim.keymap.set({ "i", "s" }, "<ESC>", function()
+  if vim.snippet then
+    vim.snippet.stop()
+  end
+  return "<ESC>"
+end, { expr = true })
 
 -- Toggle
 local Toggle = require("helpers.toggle")

@@ -140,6 +140,30 @@ return {
         accept = {
           auto_brackets = { enabled = false },
         },
+        menu = {
+          draw = {
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
+                  return kind_icon
+                end,
+                -- (optional) use highlights from mini.icons
+                highlight = function(ctx)
+                  local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                  return hl
+                end,
+              },
+              kind = {
+                -- (optional) use highlights from mini.icons
+                highlight = function(ctx)
+                  local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                  return hl
+                end,
+              },
+            },
+          },
+        },
         documentation = { auto_show = true, auto_show_delay_ms = 500 },
         trigger = { show_in_snippet = false },
         ghost_text = { enabled = true },
@@ -150,7 +174,21 @@ return {
         nerd_font_variant = "normal",
       },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = function(ctx)
+          local success, node = pcall(vim.treesitter.get_node)
+          if success and node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
+            return { "buffer" }
+          else
+            return { "lsp", "path", "snippets", "buffer" }
+          end
+        end,
+        providers = {
+          snippets = {
+            should_show_items = function(ctx)
+              return ctx.trigger.initial_kind ~= "trigger_character"
+            end,
+          },
+        },
       },
       signature = { enabled = true },
     },
