@@ -400,7 +400,7 @@ return {
         move_start = "<C-g>",
       },
       window = {
-        prompt_cursor = "▏",
+        prompt_caret = "▏",
         prompt_prefix = "  ",
         config = { border = "none" },
       },
