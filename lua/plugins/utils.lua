@@ -211,9 +211,9 @@ return {
     opts = {},
   },
   {
-    dir = "~/projects/sia.nvim/",
-    name = "Sia",
-    -- "isaksamsten/sia.nvim",
+    -- dir = "~/projects/sia.nvim/",
+    -- name = "Sia",
+    "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },

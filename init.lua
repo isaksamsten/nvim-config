@@ -70,7 +70,7 @@ vim.lsp.enable({
   "jdtls",
   "texlab",
   "zls",
-  "jedi_language_server",
+  "basedpyright",
   "lua_ls",
   "jsonls",
   "marksman",
