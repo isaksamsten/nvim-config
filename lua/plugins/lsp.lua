@@ -54,7 +54,7 @@ return {
         if vim.loop.fs_stat(workspace_dir) == nil then
           os.execute("mkdir " .. workspace_dir)
         end
-        local install_path = require("mason-registry").get_package("jdtls"):get_install_path()
+        local install_path = vim.fn.expand("$MASON/packages/jdtls/")
         local os
         if vim.fn.has("macunix") then
           os = "mac"
@@ -134,5 +134,5 @@ return {
     end,
   },
 
-  { "williamboman/mason.nvim", lazy = false },
+  { "mason-org/mason.nvim", lazy = false },
 }
