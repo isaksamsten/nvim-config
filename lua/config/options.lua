@@ -140,7 +140,6 @@ end
 vim.g.disable_codelens = true
 vim.o.findfunc = "v:lua.Fd"
 
-vim.o.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonText#%{v:lua.__tabnr_current()}%)"
 vim.o.titlestring = "nvim %{v:lua.Update_titlestring(22)}"
 vim.o.quickfixtextfunc = [[{info -> v:lua.quickfixtextfunc(info)}]]
 vim.g.qf_disable_statusline = 1
@@ -154,6 +153,8 @@ if vim.fn.has("nvim-0.10") == 1 then
 else
   vim.opt.foldmethod = "indent"
 end
+
+local extui_exists, _ = pcall(require, "vim._extui")
 
 vim.o.foldenable = false
 vim.o.foldlevel = 99
@@ -169,18 +170,17 @@ vim.g.max_width_diagnostic_virtual_text = 50
 local opt = vim.opt
 vim.opt.fillchars = { eob = " ", fold = " ", foldopen = "", foldclose = "", foldsep = " ", diff = "╱" }
 opt.title = true
--- opt.titlestring = "nvim %<%t%="
--- opt.titlestring = "{ %!v:lua._titlestring() }"
--- opt.selection = "exclusive"
-opt.autowrite = true -- enable auto write
+opt.autowrite = true
 
--- if not vim.env.SSH_TTY then
---   -- only set clipboard if not in ssh, to make sure the OSC 52
---   -- integration works automatically. Requires Neovim >= 0.10.0
---   -- opt.clipboard = "unnamedplus" -- Sync with system clipboard
--- end
-
-opt.cmdheight = 1
+if extui_exists then
+  opt.cmdheight = 0
+  opt.laststatus = 3
+else
+  opt.cmdheight = 1
+  opt.laststatus = 0
+  opt.statusline = "%#WinSeparator#%{%v:lua.string.rep('—', v:lua.vim.fn.winwidth(0))%}"
+  opt.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonText#%{v:lua.__tabnr_current()}%)"
+end
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true
 -- opt.cursorlineopt = "number"
@@ -195,8 +195,6 @@ opt.hidden = true -- Enable modified buffers in background
 opt.ignorecase = true -- Ignore case
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.joinspaces = false -- No double spaces with join after a dot
-opt.laststatus = 0
-opt.statusline = "%#WinSeparator#%{%v:lua.string.rep('—', v:lua.vim.fn.winwidth(0))%}"
 opt.foldenable = false
 -- opt.list = true -- Show some invisible characters (tabs...
 opt.mouse = "a" -- enable mouse mode

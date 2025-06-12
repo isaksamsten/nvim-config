@@ -264,7 +264,7 @@ local hlgroups = {
   SpellCap = { undercurl = true },
   SpellLocal = { undercurl = true },
   SpellRare = { undercurl = true },
-  StatusLine = { bg = c_dragonBg3, fg = c_dragonFg1 },
+  StatusLine = { bg = c_dragonBg3, fg = c_dragonAsh },
   StatusLineNC = { bg = c_dragonBg3, fg = c_dragonBg5 },
   StatusColumnSeparator = { fg = c_dragonBg3 },
   Substitute = { bg = c_autumnRed, fg = c_dragonFg0 },
@@ -729,7 +729,7 @@ if vim.go.bg == "light" then
   hlgroups.PmenuSel = { fg = "NONE", bg = "#f4f4f4", bold = true }
   hlgroups.PmenuThumb = { bg = c_dragonBg4 }
   hlgroups.Search = { bg = c_dragonBg3 }
-  hlgroups.StatusLine = { bg = c_dragonBg0 }
+  hlgroups.StatusLine = { bg = c_dragonBg0, fg = c_dragonAsh }
   hlgroups.Visual = { bg = c_dragonBg3 }
   hlgroups["@variable.parameter"] = { link = "Identifier" }
 end

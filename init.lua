@@ -30,12 +30,29 @@ if vim.env.TMUX ~= nil then
   vim.loop.fs_write(2, "\27Ptmux;\27\27]11;?\7\27\\", -1, nil)
 end
 
+vim.deprecate = function() end
+
 -- Disable python3 provider
 require("config.options")
 require("config.lazy")
 require("config.keymaps")
 require("config.autocmds")
 require("config.signs")
+
+local ok, extui = pcall(require, "vim._extui")
+if ok then
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "msgbox",
+    callback = function(args)
+      local ns = vim.api.nvim_create_namespace("morebox_highlights")
+      vim.api.nvim_set_hl(ns, "NormalFloat", { bg = "NONE" })
+      vim.api.nvim_win_set_hl_ns(0, ns)
+      vim.api.nvim_win_set_config(0, { border = "none" })
+    end,
+  })
+  extui.enable({})
+end
+
 vim.cmd.colorscheme("dragon")
 
 local tools = {
