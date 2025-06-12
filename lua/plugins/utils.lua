@@ -349,9 +349,9 @@ return {
           },
         },
         models = {
-          qwen = { "ollama", "qwen2.5-coder:14b", function_calling = false },
-          ["claude-3-5-sonnet"] = { "samsten", "claude-3.5-sonnet-latest" },
-          ["claude-3-7-sonnet"] = { "samsten", "claude-3-7-sonnet-latest" },
+          -- qwen = { "ollama", "qwen2.5-coder:14b", function_calling = false },
+          -- ["claude-3-5-sonnet"] = { "samsten", "claude-3.5-sonnet-latest" },
+          -- ["claude-3-7-sonnet"] = { "samsten", "claude-3-7-sonnet-latest" },
         },
         --- @type table<string, sia.config.Action>
         actions = {

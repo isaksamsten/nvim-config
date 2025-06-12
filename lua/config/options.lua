@@ -223,6 +223,7 @@ opt.timeoutlen = 300
 opt.undofile = true
 opt.undolevels = 10000
 opt.updatetime = 200 -- save swap file and trigger CursorHold
+opt.wildoptions = "pum,fuzzy"
 opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- minimum window width
 opt.wrap = false -- Disable line wrap
