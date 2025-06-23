@@ -2,37 +2,6 @@ local M = {}
 
 M.root_patterns = { ".git" }
 
-M.CREATE_UNDO = vim.api.nvim_replace_termcodes("<c-G>u", true, true, true)
-function M.create_undo()
-  if vim.api.nvim_get_mode().mode == "i" then
-    vim.api.nvim_feedkeys(M.CREATE_UNDO, "n", false)
-  end
-end
-
-function M.add_clue(binds)
-  local has_miniclue, miniclue = pcall(require, "mini.clue")
-  if not has_miniclue then
-    return
-  end
-  for _, bind in ipairs(binds) do
-    local modes = bind[1]
-    if type(modes) == "table" then
-      for _, mode in ipairs(modes) do
-        miniclue.set_mapping_desc(mode, bind[2], bind[3])
-      end
-    else
-      miniclue.set_mapping_desc(modes, bind[2], bind[3])
-    end
-  end
-end
-
-function M.extend_hl(name, def)
-  local current_def = vim.api.nvim_get_hl_by_name(name, true)
-  local new_def = vim.tbl_extend("force", {}, current_def, def)
-
-  vim.api.nvim_set_hl(0, name, new_def)
-end
-
 -- returns the root directory based on:
 -- * lsp workspace folders
 -- * lsp root_dir

@@ -42,9 +42,9 @@ require("config.signs")
 local ok, extui = pcall(require, "vim._extui")
 if ok then
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = "msgbox",
+    pattern = { "msg", "pager" },
     callback = function(args)
-      local ns = vim.api.nvim_create_namespace("morebox_highlights")
+      local ns = vim.api.nvim_create_namespace("msg_highlights")
       vim.api.nvim_set_hl(ns, "NormalFloat", { bg = "NONE" })
       vim.api.nvim_win_set_hl_ns(0, ns)
       vim.api.nvim_win_set_config(0, { border = "none" })

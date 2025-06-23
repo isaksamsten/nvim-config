@@ -54,13 +54,16 @@ return {
           java = { "java_google_format" },
           markdown = { "prettier" },
           json = { "prettier" },
-          c = { "clangd_format" },
+          c = { "clang_format" },
           rust = { "rustfmt" },
           zig = { "zigfmt" },
         },
         formatters = {
           erlfmt = erlfmt,
           java_google_format = java_google_format,
+          clang_format = {
+            prepend_args = { "--style=file", "--fallback-style=LLVM" },
+          },
         },
       }
     end,
