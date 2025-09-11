@@ -165,6 +165,7 @@ return {
     "isaksamsten/conflicting.nvim",
     -- dir = "~/Projects/conflicting.nvim/",
     -- name = "conflicting",
+    enabled = false,
     event = { "BufReadPre", "BufNewFile" },
     keys = {
       {
@@ -222,12 +223,60 @@ return {
       { "Zg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
       { "Zr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
       {
-        "<Leader>a",
+        "<Leader>at",
         mode = "n",
         function()
           require("sia").toggle()
         end,
         desc = "Toggle last Sia buffer",
+      },
+      {
+        "<Leader>aa",
+        mode = "n",
+        function()
+          require("sia").accept_edits()
+        end,
+        desc = "Accept changes",
+      },
+      {
+        "<Leader>ar",
+        mode = "n",
+        function()
+          require("sia").reject_edits()
+        end,
+        desc = "Reject changes",
+      },
+      {
+        "<Leader>ad",
+        mode = "n",
+        function()
+          require("sia").show_edits_diff()
+        end,
+        desc = "Diff changes",
+      },
+      {
+        "<Leader>aq",
+        mode = "n",
+        function()
+          require("sia").show_edits_qf()
+        end,
+        desc = "Show changes",
+      },
+      {
+        "[c",
+        mode = "n",
+        function()
+          require("sia").prev_edit()
+        end,
+        desc = "Previous edit",
+      },
+      {
+        "]c",
+        mode = "n",
+        function()
+          require("sia").next_edit()
+        end,
+        desc = "Next edit",
       },
       {
         "P",
@@ -250,54 +299,6 @@ return {
         mode = "n",
         function()
           require("sia").remove_message()
-        end,
-        ft = "sia",
-      },
-      {
-        "i",
-        mode = "n",
-        function()
-          require("sia").replace()
-        end,
-        ft = "sia",
-      },
-      {
-        "I",
-        mode = "n",
-        function()
-          require("sia").replace_all()
-        end,
-        ft = "sia",
-      },
-      {
-        "r",
-        mode = "n",
-        function()
-          require("sia").replace({ apply_marker = true })
-        end,
-        ft = "sia",
-      },
-      {
-        "R",
-        mode = "n",
-        function()
-          require("sia").replace_all({ apply_marker = true })
-        end,
-        ft = "sia",
-      },
-      {
-        "a",
-        mode = "n",
-        function()
-          require("sia").insert({ above = true })
-        end,
-        ft = "sia",
-      },
-      {
-        "b",
-        mode = "n",
-        function()
-          require("sia").insert()
         end,
         ft = "sia",
       },
@@ -577,7 +578,7 @@ I will give text I need you to improve.
               require("sia.instructions").verbatim(),
             },
             temperature = 0.0,
-            model = "chatgpt-4o-latest",
+            model = "openai/gpt-4.1",
             mode = "diff",
             capture = function(bufnr)
               if vim.bo.ft == "tex" then
@@ -608,7 +609,7 @@ I will provide the text for you to improve.]],
               require("sia.instructions").verbatim(),
             },
             mode = "diff",
-            model = "chatgpt-4o-latest",
+            model = "openai/gpt-4.1",
             temperature = 0.3,
             capture = function(bufnr)
               return require("sia.context").paragraph()
@@ -621,29 +622,13 @@ I will provide the text for you to improve.]],
 
     config = function(_, opts)
       require("sia").setup(opts)
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "SiaEditPost",
-        callback = function(args)
-          if args.data.marker then
-            require("conflicting").track(args.data.buf)
-          end
-        end,
-      })
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "SiaComplete",
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "sia",
         callback = function(ev)
-          if ev.data.buf then
-            require("conflicting").track(ev.data.buf)
-          end
+          vim.cmd("setlocal nonumber")
+          -- vim.wo.number = false
         end,
       })
-      -- vim.api.nvim_create_autocmd("FileType", {
-      --   pattern = "sia",
-      --   callback = function(ev)
-      --     vim.cmd("setlocal nonumber")
-      --     -- vim.wo.number = false
-      --   end,
-      -- })
     end,
   },
   -- {

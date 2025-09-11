@@ -286,6 +286,7 @@ return {
       plugins = {},
       preset = "helix",
       icons = {
+        -- mappings = false,
         separator = require("config.icons").indent.marker, -- symbol used between a key and it's label
       },
       win = {
@@ -305,6 +306,7 @@ return {
           { "<leader>S", group = "Search alternate" },
           { "<leader>T", group = "Tabs" },
           { "<leader>g", group = "Git" },
+          { "<leader>a", group = "AI" },
           {
             "<leader>b",
             group = "Buffer",
@@ -410,7 +412,7 @@ return {
     },
     config = function(_, opts)
       require("mini.pick").setup(opts)
-      vim.ui.select = require("mini.pick").ui_select
+      -- vim.ui.select = require("mini.pick").ui_select
     end,
   },
 

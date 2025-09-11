@@ -154,7 +154,7 @@ else
   vim.opt.foldmethod = "indent"
 end
 
-local extui_exists, _ = pcall(require, "vim._extui")
+-- local extui_exists, _ = pcall(require, "vim._extui")
 
 vim.o.foldenable = false
 vim.o.foldlevel = 99
@@ -172,19 +172,19 @@ vim.opt.fillchars = { eob = " ", fold = " ", foldopen = "", foldclose = ""
 opt.title = true
 opt.autowrite = true
 
-if extui_exists then
-  opt.cmdheight = 0
-  opt.laststatus = 3
-else
-  opt.cmdheight = 1
-  opt.laststatus = 0
-  opt.statusline = "%#WinSeparator#%{%v:lua.string.rep('—', v:lua.vim.fn.winwidth(0))%}"
-  opt.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonText#%{v:lua.__tabnr_current()}%)"
-end
+-- if extui_exists then
+--   opt.cmdheight = 0
+--   opt.laststatus = 3
+-- else
+opt.cmdheight = 1
+opt.laststatus = 0
+opt.statusline = "%#WinSeparator#%{%v:lua.string.rep('—', v:lua.vim.fn.winwidth(0))%}"
+opt.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonText#%{v:lua.__tabnr_current()}%)"
+-- end
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true
 -- opt.cursorlineopt = "number"
-opt.conceallevel = 1 -- Hide * markup for bold and italic
+opt.conceallevel = 3 -- Hide * markup for bold and italic
 opt.confirm = true -- confirm to save changes before exiting modified buffer
 opt.expandtab = true -- Use spaces instead of tabs
 opt.formatoptions = "jcroqlnt" -- tcqj
