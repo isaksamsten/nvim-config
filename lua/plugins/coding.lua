@@ -70,6 +70,7 @@ return {
   },
   {
     "mfussenegger/nvim-lint",
+    enabled = false,
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("lint").linters.numpydoc_lint = {
