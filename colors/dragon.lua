@@ -55,6 +55,7 @@ local c_waveAqua1
 local c_waveBlue0
 local c_waveBlue1
 local c_waveRed
+local c_winterBlue0
 local c_winterBlue
 local c_winterBlue1
 local c_winterGreen
@@ -108,12 +109,13 @@ if vim.go.bg == 'dark' then
   c_waveBlue0     = '#223249'
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
+  c_winterBlue0   = '#222230'
   c_winterBlue    = '#252535'
-  c_winterBlue1    = '#36364e'
+  c_winterBlue1   = '#42425f'
   c_winterGreen   = '#2e322d'
   c_winterGreen1  = '#424841'
   c_winterRed     = '#43242b'
-  c_winterRed1    = '#643640'
+  c_winterRed1    = '#b47381'
   c_winterYellow  = '#322e29'
 else
   c_autumnGreen   = '#68660A'
@@ -160,12 +162,13 @@ else
   c_waveBlue0     = '#223249'
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
+  c_winterBlue0   ='#b2b2e1'
   c_winterBlue    = '#f2f2fa'
-  c_winterBlue1    = '#ceceec'
+  c_winterBlue1    = '#d9d9f0'
   c_winterGreen   = '#eaede8'
   c_winterGreen1   = '#d2d8ce'
   c_winterRed     = '#f2e0e3'
-  c_winterRed1    = '#e3bcc3'
+  c_winterRed1    = '#bb5d6c'
   c_winterYellow  = '#f0ede9'
 end
 -- stylua: ignore end
@@ -659,9 +662,10 @@ local hlgroups = {
   ConflictingTheirsHeader = { bg = c_winterBlue1, fg = c_dragonFg2 },
   ConflictingDelimiter = { fg = c_dragonFg2 },
 
-  SiaSplitResponse = { bg = c_winterBlue },
   SiaUser = { bg = c_winterGreen, fg = c_dragonGreen1, bold = true },
   SiaAssistant = { bg = c_winterRed, fg = c_dragonRed, bold = true },
+  SiaDiffInlineChange = { bg = c_winterBlue1, bold = true },
+  SiaDiffInlineAdd = { bg = c_winterGreen1 },
   -- SiaInlineResponse = { bg = c_winterGreen },
   -- SiaInlineReplace = { bg = c_winterRed },
   -- SiaInlineMessage = { fg = c_dragonRed },

@@ -184,7 +184,7 @@ opt.rulerformat = "%50(%=%l,%c %#NonText#%{v:lua.Update_titlestring(22)} %#NonTe
 opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true
 -- opt.cursorlineopt = "number"
-opt.conceallevel = 3 -- Hide * markup for bold and italic
+-- opt.conceallevel = 3 -- Hide * markup for bold and italic
 opt.confirm = true -- confirm to save changes before exiting modified buffer
 opt.expandtab = true -- Use spaces instead of tabs
 opt.formatoptions = "jcroqlnt" -- tcqj

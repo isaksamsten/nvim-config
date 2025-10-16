@@ -31,7 +31,7 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
-    event = { "BufNewFile", "BufReadPre" },
+    event = { "VeryLazy" },
     opts = function()
       local builtin = require("statuscol.builtin")
       return {
@@ -53,6 +53,14 @@ return {
           -- { text = { " " } },
           { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
           { text = { " " } },
+          {
+            sign = {
+              namespace = { "sia_diff+" },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = true,
+            },
+          },
           {
             sign = {
               namespace = { "gitsigns+" },

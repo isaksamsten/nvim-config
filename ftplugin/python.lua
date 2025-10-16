@@ -2,17 +2,35 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.b.inlay_hint_disable = true
 
--- TODO: Select venv etc
-vim.api.nvim_create_user_command("Python", function()
-  local python = require("helpers.python").python()
-  if python then
-    vim.notify(python.name .. " (" .. python.version .. ")")
-  else
-    vim.notify("No python environment")
-  end
-end, {})
-
-local Python = require("helpers.python")
+-- -- TODO: Select venv etc
+-- local Python = require("helpers.python")
+--
+-- vim.api.nvim_create_user_command("Python", function()
+--   Python.python(function(python)
+--     if python then
+--       vim.notify(python.name .. " (" .. python.version .. ")")
+--     else
+--       vim.notify("No python environment")
+--     end
+--   end)
+-- end, {})
+--
+-- vim.api.nvim_create_user_command("PythonSelect", function()
+--   Python.select_conda({
+--     callback = function(env)
+--       if env then
+--         if Python.activate(env) then
+--           vim.notify("Activated: " .. env.name)
+--           vim.cmd("LspRestart")
+--         else
+--           vim.notify("Failed to activate environment: " .. env.name)
+--         end
+--       else
+--         vim.notify("No environment selected")
+--       end
+--     end,
+--   })
+-- end, {})
 
 -- require("which-key").add({
 --   { "<leader>a", group = "Python", icon = { cat = "filetype", name = "python" } },

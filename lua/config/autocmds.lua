@@ -8,18 +8,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Activate the current virtual environment. Typically loaded
--- from the pyrightconfig.json file before entering the buffer,
--- which means it is activated before pyright.
-vim.api.nvim_create_autocmd("BufReadPre", {
-  pattern = "*.py",
-  callback = function()
-    local Python = require("helpers.python")
-    if not Python.is_activated then
-      Python.activate()
-    end
-  end,
-})
+-- -- Activate the current virtual environment. Typically loaded
+-- -- from the pyrightconfig.json file before entering the buffer,
+-- -- which means it is activated before pyright.
+-- vim.api.nvim_create_autocmd("BufReadPre", {
+--   pattern = "*.py",
+--   callback = function()
+--     local Python = require("helpers.python")
+--     if not Python.is_activated then
+--       Python.activate()
+--     end
+--   end,
+-- })
 
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
@@ -158,5 +158,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
   end,
 })
-
-

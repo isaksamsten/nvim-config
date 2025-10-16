@@ -1,6 +1,7 @@
 return {
   {
     "lervag/wiki.vim",
+    enabled = false,
     lazy = false,
     init = function()
       vim.g.wiki_root = "~/notes/"
@@ -162,59 +163,9 @@ return {
     },
   },
   {
-    "isaksamsten/conflicting.nvim",
-    -- dir = "~/Projects/conflicting.nvim/",
-    -- name = "conflicting",
-    enabled = false,
-    event = { "BufReadPre", "BufNewFile" },
-    keys = {
-      {
-        "ct",
-        mode = "n",
-        function()
-          require("conflicting").accept_incoming()
-        end,
-        desc = "Accept change",
-      },
-      {
-        "co",
-        mode = "n",
-        function()
-          require("conflicting").accept_current()
-        end,
-        desc = "Accept change",
-      },
-      {
-        "cd",
-        mode = "n",
-        function()
-          require("conflicting").diff()
-        end,
-        desc = "Diff change",
-      },
-      {
-        "[c",
-        mode = "n",
-        function()
-          require("conflicting").previous()
-        end,
-        desc = "Previous conflict",
-      },
-      {
-        "]c",
-        mode = "n",
-        function()
-          require("conflicting").next()
-        end,
-        desc = "Next conflict",
-      },
-    },
-    opts = {},
-  },
-  {
-    -- dir = "~/projects/sia.nvim/",
-    -- name = "Sia",
-    "isaksamsten/sia.nvim",
+    dir = "~/Projects/sia.nvim/",
+    name = "Sia",
+    -- "isaksamsten/sia.nvim",
     keys = {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
@@ -266,6 +217,10 @@ return {
         "[c",
         mode = "n",
         function()
+          if vim.wo.diff then
+            vim.api.nvim_feedkeys("[c", "n", true)
+            return
+          end
           require("sia").prev_edit()
         end,
         desc = "Previous edit",
@@ -274,9 +229,37 @@ return {
         "]c",
         mode = "n",
         function()
+          if vim.wo.diff then
+            vim.api.nvim_feedkeys("]c", "n", true)
+            return
+          end
           require("sia").next_edit()
         end,
         desc = "Next edit",
+      },
+      {
+        "dp",
+        mode = "n",
+        function()
+          if vim.wo.diff then
+            vim.api.nvim_feedkeys("dp", "n", true)
+            return
+          end
+          require("sia").accept_edit()
+        end,
+        desc = "Accept edit",
+      },
+      {
+        "do",
+        mode = "n",
+        function()
+          if vim.wo.diff then
+            vim.api.nvim_feedkeys("do", "n", true)
+            return
+          end
+          require("sia").reject_edit()
+        end,
+        desc = "Reject edit",
       },
       {
         "P",
@@ -311,48 +294,42 @@ return {
         ft = "sia",
       },
     },
-    dependencies = {
-
-      {
-        "rickhowe/diffchar.vim",
-        keys = {
-          { "[z", "<Plug>JumpDiffCharPrevStart", desc = "Previous diff", silent = true },
-          { "]z", "<Plug>JumpDiffCharNextStart", desc = "Next diff", silent = true },
-          {
-            "do",
-            "<Plug>GetDiffCharPair",
-            desc = "Obtain diff and Next diff",
-            silent = true,
-          },
-          {
-            "dp",
-            "<Plug>PutDiffCharPair",
-            desc = "Put diff and Next diff",
-            silent = true,
-          },
-        },
-        config = function()
-          vim.g.DiffColors = 0
-          vim.g.DiffUnit = "word"
-        end,
-      },
-    },
+    -- dependencies = {
+    --
+    --   {
+    --     "rickhowe/diffchar.vim",
+    --     keys = {
+    --       { "[z", "<Plug>JumpDiffCharPrevStart", desc = "Previous diff", silent = true },
+    --       { "]z", "<Plug>JumpDiffCharNextStart", desc = "Next diff", silent = true },
+    --       {
+    --         "do",
+    --         "<Plug>GetDiffCharPair",
+    --         desc = "Obtain diff and Next diff",
+    --         silent = true,
+    --       },
+    --       {
+    --         "dp",
+    --         "<Plug>PutDiffCharPair",
+    --         desc = "Put diff and Next diff",
+    --         silent = true,
+    --       },
+    --     },
+    --     config = function()
+    --       vim.g.DiffColors = 0
+    --       vim.g.DiffUnit = "word"
+    --     end,
+    --   },
+    -- },
     cmd = { "SiaAdd", "SiaRemove", "Sia" },
+    --- @return sia.config.Config
     opts = function()
       return {
-        --- @type table<string, sia.config.Provider>
-        providers = {
-          samsten = {
-            base_url = "https://llm.samsten.se/v1/chat/completions",
-            api_key = function()
-              return os.getenv("SAMSTEN_API_KEY")
-            end,
+        defaults = {
+          ui = {
+            diff = {
+              show_signs = true,
+            },
           },
-        },
-        models = {
-          -- qwen = { "ollama", "qwen2.5-coder:14b", function_calling = false },
-          -- ["claude-3-5-sonnet"] = { "samsten", "claude-3.5-sonnet-latest" },
-          -- ["claude-3-7-sonnet"] = { "samsten", "claude-3-7-sonnet-latest" },
         },
         --- @type table<string, sia.config.Action>
         actions = {
@@ -390,110 +367,11 @@ Important Rules:
               },
             },
             instructions = {
-              require("sia.instructions").verbatim(),
+              "current_context",
             },
             tools = {
-              {
-                name = "search_research_paper",
-                description = "Search for research articles using free text queries",
-                required = { "query" },
-                parameters = {
-                  query = {
-                    type = "string",
-                    description = "Free text query use space to separate words.",
-                  },
-                  yearPublished = {
-                    type = "string",
-                    description = "Expressed as a range [start_year]-, -[end_year], [exact_year], [start_year]-[end_year]",
-                  },
-                },
-                execute = function(args, _, callback)
-                  if args.query then
-                    local query = args.query
-                    if args.yearPublished and args.yearPublished ~= "" then
-                      local function parse_year(years)
-                        years = string.gsub(years, " ", "")
-                        local only_from = string.match(years, "^(%d+)-$")
-                        if only_from then
-                          return "yearPublished >= " .. only_from
-                        end
-                        local only_to = string.match(years, "^-(%d+)$")
-                        if only_to then
-                          return "yearPublished <= " .. only_to
-                        end
-                        local exact = string.match(years, "^(%d+)$")
-                        if exact then
-                          return "yearPublished == " .. exact
-                        end
-                        local from, to = string.match(years, "^(%d+)-(%d+)$")
-                        if from and to then
-                          return "yearPublished >= " .. from .. " AND yearPublished <= " .. to
-                        end
-
-                        return nil
-                      end
-                      local year_query = parse_year(args.yearPublished)
-                      if year_query then
-                        query = query .. " AND " .. year_query
-                      end
-                    end
-
-                    local encoded_query = require("sia.utils").urlencode(query)
-                    local url = string.format("https://api.core.ac.uk/v3/search/works/?q=%s&limit=5", encoded_query)
-                    local command = {
-                      "curl",
-                    }
-                    local api_key = vim.fn.shellescape(vim.env["CORE_API_KEY"])
-                    if api_key then
-                      table.insert(command, "-H")
-                      table.insert(command, "Authentication: Bearer " .. api_key)
-                    end
-                    table.insert(command, url)
-
-                    vim.system(command, { text = true }, function(res, _)
-                      if res.code == 0 then
-                        local status, json = pcall(vim.json.decode, res.stdout, { luanil = { object = true } })
-                        if status and json.totalHits > 0 then
-                          local messages = { "## " .. query, "" }
-                          for _, item in ipairs(json.results) do
-                            local doi = item.doi
-                            local arxiv = item.arxivId
-                            local title = string.gsub(item.title, "\n", " "):gsub("%s+", " ")
-                            table.insert(messages, "### " .. title)
-                            local authors = {}
-                            if item.authors then
-                              for _, author in ipairs(item.authors) do
-                                local name = string.gsub(author.name, "\n", " ")
-                                table.insert(authors, name)
-                              end
-                            end
-                            table.insert(messages, " - **authors:** " .. table.concat(authors or {}, ", "))
-                            table.insert(messages, " - **year:** " .. (item.yearPublished or "unknown"))
-                            if doi then
-                              table.insert(messages, " - **doi:** " .. doi)
-                            end
-                            if arxiv then
-                              table.insert(messages, " - **arxiv:** " .. arxiv)
-                            end
-                            if item.abstract then
-                              table.insert(messages, "#### Abstract")
-                              local abstract = string.gsub(item.abstract, "\n", " ")
-                              abstract = string.gsub(abstract, "%s+", " ")
-                              table.insert(messages, abstract)
-                            end
-                            table.insert(messages, "")
-                          end
-                          callback(messages)
-                        else
-                          callback({ "No research papers found. Please expand your search." })
-                        end
-                      else
-                        callback({ "Failed to search for research papers." })
-                      end
-                    end)
-                  end
-                end,
-              },
+              require("sia.tools.extra.search_papers"),
+              require("sia.tools.extra.paper"),
             },
             mode = "chat",
             temperature = 0.5,

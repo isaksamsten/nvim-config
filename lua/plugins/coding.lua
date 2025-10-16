@@ -130,7 +130,7 @@ return {
   {
     "saghen/blink.cmp",
     dependencies = "rafamadriz/friendly-snippets",
-    version = "*",
+    version = "1.*",
     -- build = 'cargo build --release',
 
     ---@module 'blink.cmp'
