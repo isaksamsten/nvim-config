@@ -121,7 +121,7 @@ else
   c_autumnGreen   = '#68660A'
   c_autumnRed     = '#B53040'
   c_autumnYellow  = '#875823'
-  c_carpYellow    = '#debe97'
+  c_carpYellow    = '#d1a36d'
   c_dragonAqua    = '#52685C'
   c_dragonAsh     = '#626262'
   c_dragonBg0     = '#f9f9f9'
@@ -169,7 +169,7 @@ else
   c_winterGreen1   = '#d2d8ce'
   c_winterRed     = '#f2e0e3'
   c_winterRed1    = '#bb5d6c'
-  c_winterYellow  = '#f0ede9'
+  c_winterYellow  = '#f7f6f4'
 end
 -- stylua: ignore end
 -- }}}
@@ -293,7 +293,7 @@ local hlgroups = {
   -- Syntax {{{2
   Boolean = { fg = c_dragonOrange0, bold = true },
   Character = { link = "String" },
-  Comment = { fg = c_dragonAsh },
+  Comment = { bg = c_winterYellow, fg = c_carpYellow },
   Constant = { fg = c_dragonOrange0 },
   Delimiter = { fg = c_dragonGray1 },
   Error = { fg = c_lotusRed1 },
@@ -359,6 +359,8 @@ local hlgroups = {
   ["@markup.heading.6.marker.markdown"] = { link = "Delimiter" },
   ["@comment.todo.checked"] = { fg = c_dragonAsh },
   ["@comment.todo.unchecked"] = { fg = c_dragonRed },
+  ["@comment.documentation"] = { fg = c_dragonAsh, bg = c_dragonBg1 },
+  ["@string.documentation"] = { fg = c_dragonAsh, bg = c_dragonBg1 },
   ["@markup.link.label.markdown_inline"] = { link = "htmlLink" },
   ["@markup.link.url.markdown_inline"] = { link = "htmlString" },
   ["@comment.warning"] = { bg = c_roninYellow, fg = c_waveBlue0, bold = true },
@@ -402,6 +404,7 @@ local hlgroups = {
   -- }}}
 
   -- Diagnostic {{{2
+  DiagnosticUnnecessary = { fg = c_dragonAsh },
   DiagnosticError = { fg = c_dragonRed },
   DiagnosticHint = { fg = c_dragonAqua },
   DiagnosticInfo = { fg = c_dragonBlue1 },
@@ -568,6 +571,9 @@ local hlgroups = {
   -- IndentBlanklineSpaceChar = { link = "IndentBlanklineChar" },
   -- IndentBlanklineSpaceCharBlankline = { link = "IndentBlanklineChar" },
 
+  MiniStarterHeader = { bg = c_dragonBg1, fg = c_dragonFg0, italic = true },
+  MiniStarterSection = { bg = c_dragonBg1, fg = c_dragonFg0, bold = true },
+  MiniStarterItemPrefix = { link = "Keyword" },
   MiniIndentscopeSymbol = { link = "IndentBlanklineChar" },
 
   MiniFilesBorder = { link = "FloatBorder" },
@@ -607,7 +613,7 @@ local hlgroups = {
   DebugLogPointLine = { fg = c_dragonBlue0 },
 
   DapUIBreakpointsCurrentLine = { bold = true, fg = c_dragonFg0 },
-  DapUIBreakpointsDisabledLine = { link = "Comment" },
+  DapUIBreakpointsDisabledLine = { link = "DiagnosticUnnecessary" },
   DapUIBreakpointsInfo = { fg = c_dragonBlue0 },
   DapUIBreakpointsPath = { link = "Directory" },
   DapUIDecoration = { fg = c_sumiInk6 },
@@ -663,6 +669,7 @@ local hlgroups = {
   ConflictingDelimiter = { fg = c_dragonFg2 },
 
   SiaUser = { bg = c_winterGreen, fg = c_dragonGreen1, bold = true },
+  SiaApproval = { bg = c_winterYellow, fg = c_roninYellow, bold = true },
   SiaAssistant = { bg = c_winterRed, fg = c_dragonRed, bold = true },
   SiaDiffInlineChange = { bg = c_winterBlue1, bold = true },
   SiaDiffInlineAdd = { bg = c_winterGreen1 },
@@ -727,7 +734,7 @@ if vim.go.bg == "light" then
   hlgroups.RenderMarkdownCode = { bg = c_dragonBg0 }
 
   hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
-  hlgroups.Keyword = { fg = c_dragonRed }
+  hlgroups.Keyword = { fg = c_dragonViolet }
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.PmenuSbar = { bg = c_dragonBg2 }
