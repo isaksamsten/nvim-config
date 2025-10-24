@@ -69,6 +69,7 @@ local tools = {
   "texlab",
   "yaml-language-server",
   "zls",
+  "tinymist",
 }
 
 vim.api.nvim_create_user_command("MasonInstallAll", function()
@@ -80,6 +81,14 @@ vim.api.nvim_create_user_command("MasonInstallAll", function()
     end
   end
 end, {})
+
+vim.lsp.config("tinymist", {
+  settings = {
+    formatterMode = "typstyle",
+    exportPdf = "onType",
+    semanticTokens = "disable",
+  },
+})
 
 vim.lsp.enable({
   "bashls",
@@ -94,4 +103,5 @@ vim.lsp.enable({
   "ruff",
   "rust_analyzer",
   "yamlls",
+  "tinymist",
 })

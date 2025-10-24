@@ -57,6 +57,7 @@ return {
           c = { "clang_format" },
           rust = { "rustfmt" },
           zig = { "zigfmt" },
+          typ = { "typstyle" },
         },
         formatters = {
           erlfmt = erlfmt,

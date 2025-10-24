@@ -20,6 +20,7 @@ return {
     end,
     opts = {
       ensure_installed = {
+        "typst",
         "bash",
         "bibtex",
         "erlang",
