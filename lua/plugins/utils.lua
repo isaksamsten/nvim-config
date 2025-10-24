@@ -170,9 +170,29 @@ return {
       { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
       { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
       { "Zz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
-      { "Ze", mode = { "n", "x" }, "<Plug>(sia-execute-explain)", desc = "Explain code" },
       { "Zg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
       { "Zr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
+      {
+        "ga",
+        function()
+          require("sia").accept()
+        end,
+        desc = "Approve tool",
+      },
+      {
+        "gX",
+        function()
+          require("sia").decline()
+        end,
+        desc = "Reject tool",
+      },
+      {
+        "gx",
+        function()
+          require("sia").confirm()
+        end,
+        desc = "Preview tool",
+      },
       {
         "<Leader>at",
         mode = "n",
@@ -182,23 +202,7 @@ return {
         desc = "Toggle last Sia buffer",
       },
       {
-        "<Leader>aa",
-        mode = "n",
-        function()
-          require("sia").accept_edits()
-        end,
-        desc = "Accept changes",
-      },
-      {
-        "<Leader>ar",
-        mode = "n",
-        function()
-          require("sia").reject_edits()
-        end,
-        desc = "Reject changes",
-      },
-      {
-        "<Leader>ad",
+        "dD",
         mode = "n",
         function()
           require("sia").show_edits_diff()
@@ -294,32 +298,32 @@ return {
         ft = "sia",
       },
     },
-    -- dependencies = {
-    --
-    --   {
-    --     "rickhowe/diffchar.vim",
-    --     keys = {
-    --       { "[z", "<Plug>JumpDiffCharPrevStart", desc = "Previous diff", silent = true },
-    --       { "]z", "<Plug>JumpDiffCharNextStart", desc = "Next diff", silent = true },
-    --       {
-    --         "do",
-    --         "<Plug>GetDiffCharPair",
-    --         desc = "Obtain diff and Next diff",
-    --         silent = true,
-    --       },
-    --       {
-    --         "dp",
-    --         "<Plug>PutDiffCharPair",
-    --         desc = "Put diff and Next diff",
-    --         silent = true,
-    --       },
-    --     },
-    --     config = function()
-    --       vim.g.DiffColors = 0
-    --       vim.g.DiffUnit = "word"
-    --     end,
-    --   },
-    -- },
+    dependencies = {
+
+      {
+        "rickhowe/diffchar.vim",
+        keys = {
+          { "[z", "<Plug>JumpDiffCharPrevStart", desc = "Previous diff", silent = true },
+          { "]z", "<Plug>JumpDiffCharNextStart", desc = "Next diff", silent = true },
+          {
+            "dO",
+            "<Plug>GetDiffCharPair",
+            desc = "Obtain diff and Next diff",
+            silent = true,
+          },
+          {
+            "dP",
+            "<Plug>PutDiffCharPair",
+            desc = "Put diff and Next diff",
+            silent = true,
+          },
+        },
+        config = function()
+          vim.g.DiffColors = 0
+          vim.g.DiffUnit = "word"
+        end,
+      },
+    },
     cmd = { "SiaAdd", "SiaRemove", "Sia" },
     --- @return sia.config.Config
     opts = function()
@@ -328,6 +332,9 @@ return {
           ui = {
             diff = {
               show_signs = true,
+            },
+            approval = {
+              async = true,
             },
           },
         },
@@ -431,7 +438,6 @@ format.
           },
           grammar = {
             system = {
-
               {
                 role = "system",
                 content = [[You are **specifically assigned** as an assistant
@@ -456,7 +462,7 @@ I will give text I need you to improve.
               require("sia.instructions").verbatim(),
             },
             temperature = 0.0,
-            model = "gpt-4.1",
+            model = "openai/gpt-4.1",
             mode = "diff",
             capture = function(bufnr)
               if vim.bo.ft == "tex" then
