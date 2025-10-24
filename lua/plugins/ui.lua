@@ -335,7 +335,34 @@ return {
   },
 
   {
+    "nvim-mini/mini.nvim",
+    version = false,
+    event = "VimEnter",
+    opts = function()
+      local starter = require("mini.starter")
+      return {
+        evaluate_single = true,
+        items = {
+          starter.sections.recent_files(9, true),
+        },
+        content_hooks = {
+          -- starter.gen_hook.adding_bullet(),
+          starter.gen_hook.indexing("all"),
+          starter.gen_hook.aligning("center", "top"),
+          starter.gen_hook.padding(0, 10),
+        },
+        query_updaters = "123456789",
+        silent = true,
+        footer = "",
+      }
+    end,
+    config = function(_, opts)
+      require("mini.starter").setup(opts)
+    end,
+  },
+  {
     "goolord/alpha-nvim",
+    enabled = false,
     event = "VimEnter",
     config = function(_, opts)
       local alpha = require("alpha")
