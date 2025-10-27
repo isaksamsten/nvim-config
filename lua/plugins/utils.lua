@@ -1,10 +1,9 @@
 return {
   {
     "lervag/wiki.vim",
-    enabled = false,
     lazy = false,
     init = function()
-      vim.g.wiki_root = "~/notes/"
+      vim.g.wiki_root = "~/Notes/"
     end,
   },
   {
@@ -175,21 +174,28 @@ return {
       {
         "ga",
         function()
-          require("sia").accept()
+          require("sia.approval").preview({ first = true })
+        end,
+        desc = "Approve tool",
+      },
+      {
+        "gA",
+        function()
+          require("sia.approval").accept({ first = true })
         end,
         desc = "Approve tool",
       },
       {
         "gX",
         function()
-          require("sia").decline()
+          require("sia.approval").reject({ first = true })
         end,
         desc = "Reject tool",
       },
       {
         "gx",
         function()
-          require("sia").confirm()
+          require("sia.approval").prompt({ first = true })
         end,
         desc = "Preview tool",
       },
@@ -334,7 +340,7 @@ return {
               show_signs = true,
             },
             approval = {
-              async = true,
+              async = { enable = true },
             },
           },
         },
