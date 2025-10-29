@@ -669,7 +669,9 @@ local hlgroups = {
   ConflictingDelimiter = { fg = c_dragonFg2 },
 
   SiaUser = { bg = c_winterGreen, fg = c_dragonGreen1, bold = true },
-  SiaApproval = { bg = c_winterYellow, fg = c_roninYellow, bold = true },
+  SiaApproveInfo = { bg = c_winterYellow, fg = c_roninYellow, bold = true },
+  SiaApproveSafe = { bg = c_winterBlue, fg = c_dragonBlue0, bold = true },
+  SiaApproveWarn = { bg = c_winterRed, fg = c_dragonRed, bold = true },
   SiaAssistant = { bg = c_winterRed, fg = c_dragonRed, bold = true },
   SiaDiffInlineChange = { bg = c_winterBlue1, bold = true },
   SiaDiffInlineAdd = { bg = c_winterGreen1 },

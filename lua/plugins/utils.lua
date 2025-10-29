@@ -188,7 +188,7 @@ return {
       {
         "gX",
         function()
-          require("sia.approval").reject({ first = true })
+          require("sia.approval").decline({ first = true })
         end,
         desc = "Reject tool",
       },
@@ -387,16 +387,23 @@ Important Rules:
               require("sia.tools.extra.paper"),
             },
             mode = "chat",
-            temperature = 0.5,
+            temperature = 0.2,
           },
           write = {
             system = {
               {
                 role = "system",
-                content = [[You are a language model designed to assist researchers in refining scientific texts. You have access to a function called search_research_paper which allows you to retrieve relevant academic papers to improve the accuracy, depth, and clarity of scientific content. Your task is to:
+                content = [[You are a language model designed to assist
+researchers in refining scientific texts. You have access to a
+function called search_papers which allows you to retrieve
+relevant academic papers to improve the accuracy, depth, and
+clarity of scientific content. Your task is to:
 
-1. Analyze the user’s scientific text for potential improvements in argumentation, references, or clarity.
-2. When necessary, call the `search_research_paper` function to retrieve academic papers that provide supporting evidence, clarify concepts, or suggest alternative interpretations.
+1. Analyze the user’s scientific text for potential improvements in
+   argumentation, references, or clarity.
+2. When necessary, call the `search_research_paper` function to retrieve
+   academic papers that provide supporting evidence, clarify concepts, or
+   suggest alternative interpretations.
 3. Use the information from the retrieved papers to:
   -	Suggest improvements to the text.
   -	Recommend additional citations or references to increase the credibility of the work.
@@ -416,7 +423,8 @@ Make sure your suggestions help elevate the scientific rigor and presentation of
               "current_context",
             },
             tools = {
-              require("sia.tools").search_research_paper,
+              require("sia.tools.extra.search_papers"),
+              require("sia.tools.extra.paper"),
             },
             mode = "chat",
             temperature = 0.2,
@@ -429,16 +437,26 @@ Make sure your suggestions help elevate the scientific rigor and presentation of
 goal is to provide a critique of a text written in {{filetype}}
 format.
 
-1. Analyze both the strengths and weaknesses of the text, considering its structure, clarity, coherence, argumentation, and style.
-2. When presenting your critique, use bold formatting for key strengths and areas of improvement, and where appropriate, utilize enumerations or lists to break down specific suggestions for actionable improvement.
-3. Be constructive and specific in your feedback, offering practical ways to refine the work.
-4. Finally, provide a rewritten text incorporating your critique and suggestions for improments.
-
+1. Analyze both the strengths and weaknesses of the text, considering its
+   structure, clarity, coherence, argumentation, and style.
+2. When presenting your critique, use bold formatting for key strengths and
+   areas of improvement, and where appropriate, utilize enumerations or lists
+   to break down specific suggestions for actionable improvement.
+3. Be constructive and specific in your feedback, offering practical ways to
+   refine the work.
 ]],
               },
             },
             instructions = {
               "current_context",
+            },
+            tools = {
+              "edit",
+              "insert",
+              "read",
+              "write",
+              "glob",
+              "grep",
             },
             mode = "chat",
           },
@@ -468,7 +486,7 @@ I will give text I need you to improve.
               require("sia.instructions").verbatim(),
             },
             temperature = 0.0,
-            model = "openai/gpt-4.1",
+            model = "copilot/gpt-5-mini",
             mode = "diff",
             capture = function(bufnr)
               if vim.bo.ft == "tex" then
@@ -499,7 +517,7 @@ I will provide the text for you to improve.]],
               require("sia.instructions").verbatim(),
             },
             mode = "diff",
-            model = "gpt-4.1",
+            model = "copilot/gpt-5-mini",
             temperature = 0.3,
             capture = function(bufnr)
               return require("sia.context").paragraph()
