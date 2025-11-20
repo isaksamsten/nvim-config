@@ -162,148 +162,117 @@ return {
     },
   },
   {
-    dir = "~/Projects/sia.nvim/",
-    name = "Sia",
-    -- "isaksamsten/sia.nvim",
-    keys = {
-      { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
-      { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
-      { "Zz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
-      { "Zg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
-      { "Zr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
-      {
-        "ga",
-        function()
-          require("sia.approval").preview({ first = true })
-        end,
-        desc = "Approve tool",
-      },
-      {
-        "gA",
-        function()
-          require("sia.approval").accept({ first = true })
-        end,
-        desc = "Approve tool",
-      },
-      {
-        "gX",
-        function()
-          require("sia.approval").decline({ first = true })
-        end,
-        desc = "Reject tool",
-      },
-      {
-        "gx",
-        function()
-          require("sia.approval").prompt({ first = true })
-        end,
-        desc = "Preview tool",
-      },
-      {
-        "<Leader>at",
-        mode = "n",
-        function()
-          require("sia").toggle()
-        end,
-        desc = "Toggle last Sia buffer",
-      },
-      {
-        "dD",
-        mode = "n",
-        function()
-          require("sia").show_edits_diff()
-        end,
-        desc = "Diff changes",
-      },
-      {
-        "<Leader>aq",
-        mode = "n",
-        function()
-          require("sia").show_edits_qf()
-        end,
-        desc = "Show changes",
-      },
-      {
-        "[c",
-        mode = "n",
-        function()
-          if vim.wo.diff then
-            vim.api.nvim_feedkeys("[c", "n", true)
-            return
-          end
-          require("sia").prev_edit()
-        end,
-        desc = "Previous edit",
-      },
-      {
-        "]c",
-        mode = "n",
-        function()
-          if vim.wo.diff then
-            vim.api.nvim_feedkeys("]c", "n", true)
-            return
-          end
-          require("sia").next_edit()
-        end,
-        desc = "Next edit",
-      },
-      {
-        "dp",
-        mode = "n",
-        function()
-          if vim.wo.diff then
-            vim.api.nvim_feedkeys("dp", "n", true)
-            return
-          end
-          require("sia").accept_edit()
-        end,
-        desc = "Accept edit",
-      },
-      {
-        "do",
-        mode = "n",
-        function()
-          if vim.wo.diff then
-            vim.api.nvim_feedkeys("do", "n", true)
-            return
-          end
-          require("sia").reject_edit()
-        end,
-        desc = "Reject edit",
-      },
-      {
-        "P",
-        mode = "n",
-        function()
-          require("sia").show_messages({ peek = false, edit = true })
-        end,
-        ft = "sia",
-      },
-      {
-        "p",
-        mode = "n",
-        function()
-          require("sia").show_messages({ peek = true })
-        end,
-        ft = "sia",
-      },
-      {
-        "X",
-        mode = "n",
-        function()
-          require("sia").remove_message()
-        end,
-        ft = "sia",
-      },
-      {
-        "<CR>",
-        mode = "n",
-        function()
-          require("sia").open_reply()
-        end,
-        ft = "sia",
-      },
-    },
+    -- dir = "~/projects/sia.nvim/",
+    -- name = "sia",
+    "isaksamsten/sia.nvim",
+    keys = function()
+      return {
+        { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
+        { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
+        { "Zz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
+        { "Zg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
+        { "Zr", mode = { "n", "x" }, "<Plug>(sia-execute-rephrase)", desc = "Rephrase text" },
+        {
+          "ga",
+          function()
+            require("sia.approval").preview({ first = true })
+          end,
+          desc = "Approve tool",
+        },
+        {
+          "gA",
+          function()
+            require("sia.approval").accept({ first = true })
+          end,
+          desc = "Approve tool",
+        },
+        {
+          "gX",
+          function()
+            require("sia.approval").decline({ first = true })
+          end,
+          desc = "Reject tool",
+        },
+        {
+          "gx",
+          function()
+            require("sia.approval").prompt({ first = true })
+          end,
+          desc = "Preview tool",
+        },
+        { "<Leader>at", mode = "n", require("sia").toggle, desc = "Toggle last Sia buffer" },
+        { "dD", mode = "n", require("sia").show_edits_diff, desc = "Diff changes" },
+        { "<Leader>aq", mode = "n", require("sia").show_edits_qf(), desc = "Show changes" },
+        {
+          "[c",
+          mode = "n",
+          function()
+            if vim.wo.diff then
+              vim.api.nvim_feedkeys("[c", "n", true)
+              return
+            end
+            require("sia").prev_edit()
+          end,
+          desc = "Previous edit",
+        },
+        {
+          "]c",
+          mode = "n",
+          function()
+            if vim.wo.diff then
+              vim.api.nvim_feedkeys("]c", "n", true)
+              return
+            end
+            require("sia").next_edit()
+          end,
+          desc = "Next edit",
+        },
+        {
+          "dp",
+          mode = "n",
+          function()
+            if vim.wo.diff then
+              vim.api.nvim_feedkeys("dp", "n", true)
+              return
+            end
+            require("sia").accept_edit()
+          end,
+          desc = "Accept edit",
+        },
+        {
+          "do",
+          mode = "n",
+          function()
+            if vim.wo.diff then
+              vim.api.nvim_feedkeys("do", "n", true)
+              return
+            end
+            require("sia").reject_edit()
+          end,
+          desc = "Reject edit",
+        },
+        {
+          "P",
+          mode = "n",
+          function()
+            require("sia").show_messages({ peek = false, edit = true })
+          end,
+          ft = "sia",
+        },
+        {
+          "p",
+          mode = "n",
+          function()
+            require("sia").show_messages({ peek = true })
+          end,
+          ft = "sia",
+        },
+        { "X", mode = "n", require("sia").remove_message, ft = "sia" },
+        { "<CR>", mode = "n", require("sia").open_reply, ft = "sia" },
+        { "t", mode = "n", require("sia").todos, ft = "sia" },
+        { "c", mode = "n", require("sia").show_contexts, ft = "sia" },
+      }
+    end,
     dependencies = {
 
       {
@@ -335,6 +304,7 @@ return {
     opts = function()
       return {
         defaults = {
+          model = "copilot/gpt-5-mini",
           ui = {
             diff = {
               show_signs = true,
@@ -534,50 +504,9 @@ I will provide the text for you to improve.]],
         pattern = "sia",
         callback = function(ev)
           vim.cmd("setlocal nonumber")
-          -- vim.wo.number = false
         end,
       })
     end,
-  },
-  -- {
-  --   "mrjones2014/smart-splits.nvim",
-  --   version = false,
-  --   build = "./kitty/install-kittens.bash",
-  --   cond = vim.env.KITTY_PID ~= nil or vim.env.TMUX ~= nil,
-  --   event = "VeryLazy",
-  --   config = function(_, opts)
-  --     require("smart-splits").setup(opts)
-  --     -- vim.keymap.set("n", "<A-h>", require("smart-splits").resize_left)
-  --     -- vim.keymap.set("n", "<A-j>", require("smart-splits").resize_down)
-  --     -- vim.keymap.set("n", "<A-k>", require("smart-splits").resize_up)
-  --     -- vim.keymap.set("n", "<A-l>", require("smart-splits").resize_right)
-  --     -- moving between splits
-  --     vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
-  --     vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
-  --     vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
-  --     vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
-  --     vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
-  --     -- swapping buffers between windows
-  --     -- vim.keymap.set("n", "<leader><leader>h", require("smart-splits").swap_buf_left)
-  --     -- vim.keymap.set("n", "<leader><leader>j", require("smart-splits").swap_buf_down)
-  --     -- vim.keymap.set("n", "<leader><leader>k", require("smart-splits").swap_buf_up)
-  --     -- vim.keymap.set("n", "<leader><leader>l", require("smart-splits").swap_buf_right)
-  --   end,
-  -- },
-  {
-    "alexghergh/nvim-tmux-navigation",
-    -- enabled = false,
-    cond = vim.env.TMUX ~= nil,
-    keys = {
-      { "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", desc = "Left window" },
-      { "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", desc = "Up window" },
-      { "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", desc = "Down window" },
-      { "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", desc = "Right window" },
-    },
-    lazy = false,
-    opts = {
-      disable_when_zoomed = true,
-    },
   },
   {
     "tpope/vim-fugitive",

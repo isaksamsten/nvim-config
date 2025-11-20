@@ -32,7 +32,13 @@ function _G.quickfixtextfunc(info)
     local fname, display, style = get_item_fname(item)
     item._file = { filename = fname, display = display, style = style }
     local lnum = "" .. item.lnum
+    if item.end_lnum then
+      lnum = lnum .. "-" .. item.end_lnum
+    end
     local col = "" .. item.col
+    if item.end_col ~= 0 then
+      col = col .. "-" .. item.end_col
+    end
 
     if #display > fname_limit then
       fname_limit = #display
@@ -85,7 +91,13 @@ function _G.quickfixtextfunc(info)
       counter = counter + 1
 
       local lnum = "" .. item.lnum
+      if item.end_lnum then
+        lnum = lnum .. "-" .. item.end_lnum
+      end
       local col = "" .. item.col
+      if item.end_col ~= 0 then
+        col = col .. "-" .. item.end_col
+      end
 
       return ("%s %s | %s col %s%s | %s"):format(
         icon,

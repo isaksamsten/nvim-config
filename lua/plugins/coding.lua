@@ -322,27 +322,4 @@ return {
       require("neotest").setup(opts)
     end,
   },
-
-  {
-    "danymat/neogen",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    enabled = false,
-    opts = {
-      enabled = true,
-      snippet_engine = "luasnip",
-      languages = {
-        python = { template = { annotation_convention = "numpydoc" } },
-      },
-    },
-    keys = {
-      {
-        "<C-;>",
-        function()
-          require("neogen").generate()
-        end,
-        mode = { "n", "i" },
-        desc = "Generate documentation",
-      },
-    },
-  },
 }

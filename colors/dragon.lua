@@ -568,6 +568,7 @@ local hlgroups = {
 
   IblIndent = { fg = c_dragonBg3 },
   IblScope = { fg = c_dragonBg5 },
+  BlinkIndent = { fg = c_dragonBg3 },
   -- IndentBlanklineSpaceChar = { link = "IndentBlanklineChar" },
   -- IndentBlanklineSpaceCharBlankline = { link = "IndentBlanklineChar" },
 

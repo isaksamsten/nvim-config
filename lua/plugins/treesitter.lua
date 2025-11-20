@@ -2,7 +2,7 @@ return {
   { "lambdalisue/vim-cython-syntax", lazy = false },
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", version = false },
+    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
     build = ":TSUpdate",
     event = "BufReadPost",
     lazy = vim.fn.argc(-1) == 0,

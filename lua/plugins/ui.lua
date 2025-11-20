@@ -361,17 +361,6 @@ return {
     end,
   },
   {
-    "goolord/alpha-nvim",
-    enabled = false,
-    event = "VimEnter",
-    config = function(_, opts)
-      local alpha = require("alpha")
-      local default = require("alpha.themes.startify")
-      -- default.nvim_web_devicons.enabled = false
-      alpha.setup(default.config)
-    end,
-  },
-  {
     "echasnovski/mini.pick",
     version = "*",
     dependencies = { "echasnovski/mini.extra" },
@@ -446,11 +435,24 @@ return {
       },
     },
     config = function(_, opts)
+      --- mini.pick seems to override this unconditionally now. I don't want that...
+      local ui_select = vim.ui.select
       require("mini.pick").setup(opts)
-      -- vim.ui.select = require("mini.pick").ui_select
+      vim.ui.select = ui_select
     end,
   },
 
+  {
+    "saghen/blink.indent",
+    lazy = false,
+    enabled = false,
+    version = false,
+    --- @module 'blink.indent'
+    --- @type blink.indent.Config
+    opts = {
+      scope = { enabled = false },
+    },
+  },
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPre", "BufNewFile" },

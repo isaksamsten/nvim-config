@@ -99,32 +99,6 @@ return {
     end,
   },
   {
-    "ray-x/lsp_signature.nvim",
-    event = "LspAttach",
-    version = false,
-    enabled = false,
-    opts = function()
-      local icons = require("config.icons")
-      return {
-        bind = true,
-        hint_enable = false,
-        hint_prefix = {
-          above = "↙ ", -- when the hint is on the line above the current line
-          current = "← ", -- when the hint is on the same line
-          below = "↖ ", -- when the hint is on the line below the current line
-        },
-        hint_scheme = "NonText",
-        floating_window = true,
-        doc_lines = 2,
-        transparency = 20,
-        cursorhold_update = false,
-        handler_opts = {
-          border = icons.borders.outer.all,
-        },
-      }
-    end,
-  },
-  {
     "neovim/nvim-lspconfig",
     version = false,
     lazy = true,
