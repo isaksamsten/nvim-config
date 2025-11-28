@@ -202,7 +202,7 @@ return {
         },
         { "<Leader>at", mode = "n", require("sia").toggle, desc = "Toggle last Sia buffer" },
         { "dD", mode = "n", require("sia").show_edits_diff, desc = "Diff changes" },
-        { "<Leader>aq", mode = "n", require("sia").show_edits_qf(), desc = "Show changes" },
+        { "<Leader>aq", mode = "n", require("sia").show_edits_qf, desc = "Show changes" },
         {
           "[c",
           mode = "n",
@@ -271,6 +271,7 @@ return {
         { "<CR>", mode = "n", require("sia").open_reply, ft = "sia" },
         { "t", mode = "n", require("sia").todos, ft = "sia" },
         { "c", mode = "n", require("sia").show_contexts, ft = "sia" },
+        { "a", mode = "n", require("sia").tasks, ft = "sia" },
       }
     end,
     dependencies = {

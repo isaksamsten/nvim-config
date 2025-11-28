@@ -39,6 +39,7 @@
   "nvim-treesitter": { "branch": "master", "commit": "42fc28ba918343ebfd5565147a42a26580579482" },
   "nvim-treesitter-textobjects": { "branch": "main", "commit": "06c00bca434ef74add99bec62614ca20bbdff4bb" },
   "plenary.nvim": { "branch": "master", "commit": "50012918b2fc8357b87cff2a7f7f0446e47da174" },
+  "sia.nvim": { "branch": "main", "commit": "25019c70b84dc3b208ad0fbf5ab45bfff2f7281c" },
   "statuscol.nvim": { "branch": "main", "commit": "c46172d0911aa5d49ba5f39f4351d1bb7aa289cc" },
   "vim-cool": { "branch": "master", "commit": "9ea940c0d537e55de0de4c0298c04b976960fb12" },
   "vim-cython-syntax": { "branch": "master", "commit": "17a873c8cc026da4460c1ee1aa12709358db8360" },
