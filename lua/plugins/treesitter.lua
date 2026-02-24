@@ -37,6 +37,7 @@ return {
         "vimdoc",
         "yaml",
         "zig",
+        "typescript",
       },
       additional_vim_regex_highlighting = false,
       highlight = {

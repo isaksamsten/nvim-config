@@ -168,6 +168,13 @@ return {
     keys = function()
       return {
         { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
+        {
+          "<LocalLeader>a",
+          function()
+            require("sia").prompt_window()
+          end,
+          desc = "Start conversation",
+        },
         { "Za", mode = { "n", "x" }, "<Plug>(sia-add-context)", desc = "Add context" },
         { "Zz", mode = { "n", "x" }, "<Plug>(sia-execute)", desc = "Invoke default prompt" },
         { "Zg", mode = { "n", "x" }, "<Plug>(sia-execute-grammar)", desc = "Check grammar" },
@@ -304,11 +311,13 @@ return {
     --- @return sia.config.Config
     opts = function()
       return {
-        defaults = {
+        settings = {
+          icons = "nerd",
           model = "copilot/gpt-5-mini",
           ui = {
             diff = {
               show_signs = true,
+              char_diff = true,
             },
             approval = {
               async = { enable = true },
@@ -353,10 +362,12 @@ Important Rules:
             instructions = {
               "current_context",
             },
-            tools = {
-              require("sia.tools.extra.search_papers"),
-              require("sia.tools.extra.paper"),
-            },
+            tools = function()
+              return {
+                require("sia.tools.extra.search_papers"),
+                require("sia.tools.extra.paper"),
+              }
+            end,
             mode = "chat",
             temperature = 0.2,
           },
@@ -393,10 +404,12 @@ Make sure your suggestions help elevate the scientific rigor and presentation of
             instructions = {
               "current_context",
             },
-            tools = {
-              require("sia.tools.extra.search_papers"),
-              require("sia.tools.extra.paper"),
-            },
+            tools = function()
+              return {
+                require("sia.tools.extra.search_papers"),
+                require("sia.tools.extra.paper"),
+              }
+            end,
             mode = "chat",
             temperature = 0.2,
           },
@@ -421,14 +434,17 @@ format.
             instructions = {
               "current_context",
             },
-            tools = {
-              "edit",
-              "insert",
-              "read",
-              "write",
-              "glob",
-              "grep",
-            },
+            tools = function()
+              local tools = require("sia.tools")
+              return {
+                tools.edit,
+                tools.insert,
+                tools.read,
+                tools.write,
+                tools.glob,
+                tools.grep,
+              }
+            end,
             mode = "chat",
           },
           grammar = {

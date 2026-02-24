@@ -58,6 +58,8 @@ return {
           rust = { "rustfmt" },
           zig = { "zigfmt" },
           typ = { "typstyle" },
+          typescript = { "prettier" },
+          typescriptreact = { "prettier" },
         },
         formatters = {
           erlfmt = erlfmt,

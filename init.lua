@@ -58,6 +58,8 @@ vim.cmd.colorscheme("dragon")
 local tools = {
   "bash-language-server",
   "bash-language-server",
+  "vtsls",
+  "ty",
   "clangd",
   "erlang-ls",
   "jdtls",
@@ -91,12 +93,14 @@ vim.lsp.config("tinymist", {
 })
 
 vim.lsp.enable({
+  "vtsls",
   "bashls",
+  "erlangls",
   "clangd",
   "jdtls",
   "texlab",
   "zls",
-  "basedpyright",
+  "ty",
   "lua_ls",
   "jsonls",
   "marksman",

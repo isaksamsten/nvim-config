@@ -346,7 +346,6 @@ return {
           starter.sections.recent_files(9, true),
         },
         content_hooks = {
-          -- starter.gen_hook.adding_bullet(),
           starter.gen_hook.indexing("all"),
           starter.gen_hook.aligning("center", "top"),
           starter.gen_hook.padding(0, 10),
