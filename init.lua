@@ -30,7 +30,7 @@ if vim.env.TMUX ~= nil then
   vim.loop.fs_write(2, "\27Ptmux;\27\27]11;?\7\27\\", -1, nil)
 end
 
-vim.deprecate = function() end
+-- vim.deprecate = function() end
 
 -- Disable python3 provider
 require("config.options")

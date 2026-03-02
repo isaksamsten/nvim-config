@@ -144,7 +144,7 @@ return {
                     name = "Launch file",
 
                     program = "${file}",
-                    pythonPath = require("helpers.python").executable,
+                    -- pythonPath = require("helpers.python").executable,
                   },
                 },
                 rust = {

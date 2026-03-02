@@ -290,7 +290,7 @@ return {
             dap = { justMyCode = false },
             args = { "--log-level", "DEBUG" },
             runner = "pytest",
-            python = require("helpers.python").executable,
+            -- python = require("helpers.python").executable,
           }),
           require("neotest-rust"),
         },

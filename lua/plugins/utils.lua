@@ -166,12 +166,13 @@ return {
     -- name = "sia",
     "isaksamsten/sia.nvim",
     keys = function()
+      local sia = require("sia")
       return {
         { "<LocalLeader><cr>", mode = { "v", "n" }, ":Sia<cr>", desc = ":Sia" },
         {
           "<LocalLeader>a",
           function()
-            require("sia").prompt_window()
+            sia.chat.compose()
           end,
           desc = "Start conversation",
         },
@@ -182,34 +183,34 @@ return {
         {
           "ga",
           function()
-            require("sia.approval").preview({ first = true })
+            sia.confirm.preview({ first = true })
           end,
-          desc = "Approve tool",
+          desc = "Preview tool",
         },
         {
           "gA",
           function()
-            require("sia.approval").accept({ first = true })
+            sia.confirm.accept({ first = true })
           end,
           desc = "Approve tool",
         },
         {
           "gX",
           function()
-            require("sia.approval").decline({ first = true })
+            sia.confirm.decline({ first = true })
           end,
           desc = "Reject tool",
         },
         {
           "gx",
           function()
-            require("sia.approval").prompt({ first = true })
+            sia.confirm.prompt({ first = true })
           end,
-          desc = "Preview tool",
+          desc = "Prompt tool",
         },
-        { "<Leader>at", mode = "n", require("sia").toggle, desc = "Toggle last Sia buffer" },
-        { "dD", mode = "n", require("sia").show_edits_diff, desc = "Diff changes" },
-        { "<Leader>aq", mode = "n", require("sia").show_edits_qf, desc = "Show changes" },
+        { "<Leader>at", mode = "n", sia.chat.toggle, desc = "Toggle last Sia buffer" },
+        { "dD", mode = "n", sia.edit.show, desc = "Diff changes" },
+        { "<Leader>aq", mode = "n", sia.edit.open_qf, desc = "Show changes" },
         {
           "[c",
           mode = "n",
@@ -218,7 +219,7 @@ return {
               vim.api.nvim_feedkeys("[c", "n", true)
               return
             end
-            require("sia").prev_edit()
+            sia.edit.prev()
           end,
           desc = "Previous edit",
         },
@@ -230,7 +231,7 @@ return {
               vim.api.nvim_feedkeys("]c", "n", true)
               return
             end
-            require("sia").next_edit()
+            sia.edit.next()
           end,
           desc = "Next edit",
         },
@@ -242,7 +243,7 @@ return {
               vim.api.nvim_feedkeys("dp", "n", true)
               return
             end
-            require("sia").accept_edit()
+            sia.edit.accept()
           end,
           desc = "Accept edit",
         },
@@ -254,7 +255,7 @@ return {
               vim.api.nvim_feedkeys("do", "n", true)
               return
             end
-            require("sia").reject_edit()
+            sia.edit.reject()
           end,
           desc = "Reject edit",
         },
@@ -262,7 +263,7 @@ return {
           "P",
           mode = "n",
           function()
-            require("sia").show_messages({ peek = false, edit = true })
+            sia.ui.messages({ peek = false, edit = true })
           end,
           ft = "sia",
         },
@@ -270,15 +271,14 @@ return {
           "p",
           mode = "n",
           function()
-            require("sia").show_messages({ peek = true })
+            sia.ui.messages({ peek = true })
           end,
           ft = "sia",
         },
-        { "X", mode = "n", require("sia").remove_message, ft = "sia" },
-        { "<CR>", mode = "n", require("sia").open_reply, ft = "sia" },
-        { "t", mode = "n", require("sia").todos, ft = "sia" },
-        { "c", mode = "n", require("sia").show_contexts, ft = "sia" },
-        { "a", mode = "n", require("sia").tasks, ft = "sia" },
+        { "<CR>", mode = "n", sia.chat.reply, ft = "sia" },
+        { "t", mode = "n", sia.ui.todos, ft = "sia" },
+        { "c", mode = "n", sia.ui.contexts, ft = "sia" },
+        { "a", mode = "n", sia.ui.status, ft = "sia" },
       }
     end,
     dependencies = {
@@ -319,7 +319,7 @@ return {
               show_signs = true,
               char_diff = true,
             },
-            approval = {
+            confirm = {
               async = { enable = true },
             },
           },

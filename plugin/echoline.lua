@@ -133,29 +133,6 @@ local function get_diagnostics(opts)
   end
 end
 
-local function get_python_venv(opts)
-  opts = opts or {}
-  return function()
-    if vim.bo.filetype ~= "python" then
-      return nil
-    end
-
-    local python = require("helpers.python")
-    local venv = python.python()
-    if venv ~= nil then
-      local icon = opts.icon or " "
-      return {
-        { icon, opts.icon_hl or "Normal" },
-        { opts.label or "Python ", opts.label_hl },
-        { venv.version, opts.version_hl },
-        { " (" .. venv.name .. ")", opts.venv_hl },
-      }
-    else
-      return nil
-    end
-  end
-end
-
 local function get_full_width()
   return vim.api.nvim_get_option_value("columns", { scope = "global" })
 end
@@ -323,15 +300,6 @@ local function generate_components()
     { "separator" },
     { "toggles", callback = get_toggles(), priority = 1 },
     { "separator" },
-    {
-      "python_venv",
-      callback = get_python_venv({
-        label_hl = "Comment",
-        version_hl = "Comment",
-        venv_hl = "Comment",
-      }),
-      priority = 1,
-    },
   }
 
   local components = create_components(left)
