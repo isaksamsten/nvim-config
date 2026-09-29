@@ -326,6 +326,7 @@ return {
               async = { enable = true },
             },
           },
+          tool_verifier = { enable = true, model = "codex/gpt-5.6-luna" },
         },
         actions = {
           orchestrate = {
