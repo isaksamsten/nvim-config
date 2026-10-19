@@ -1,6 +1,7 @@
 return {
   {
     "lervag/wiki.vim",
+    enable = false,
     lazy = false,
     init = function()
       vim.g.wiki_root = "~/Notes/"
@@ -316,7 +317,25 @@ return {
       return {
         settings = {
           icons = "nerd",
-          model = "copilot/gpt-5-mini",
+          model = {
+            default = {
+              default = {
+                name = "codex/gpt-6.1-sol",
+                options = {
+                  reasoning = { effort = "medium", summary = "auto" },
+                  text = { verbosity = "medium" },
+                },
+              },
+              mini = "codex/gpt-6-luna",
+              pro = {
+                name = "codex/gpt-6.1-sol",
+                options = {
+                  reasoning = { effort = "high" },
+                },
+              },
+            },
+            commit = "codex/gpt-6-luna",
+          },
           ui = {
             diff = {
               show_signs = true,
@@ -326,7 +345,7 @@ return {
               async = { enable = true },
             },
           },
-          tool_verifier = { enable = true, model = "codex/gpt-5.6-luna" },
+          tool_verifier = { enable = true },
         },
         actions = {
           orchestrate = {

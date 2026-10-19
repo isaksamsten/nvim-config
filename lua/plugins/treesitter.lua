@@ -4,19 +4,19 @@ return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
     build = ":TSUpdate",
-    event = "BufReadPost",
-    lazy = vim.fn.argc(-1) == 0,
-    version = false,
+--    event = "BufReadPost",
+    lazy = false,
+    branch="main",
     keys = {
       { "<c-space>", desc = "Increment Selection" },
       { "<bs>", desc = "Decrement Selection", mode = "x" },
     },
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
-      require("nvim-treesitter.query_predicates")
     end,
     config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+      require("nvim-treesitter").setup(opts)
+      require('nvim-treesitter').install(opts.ensure_installed):wait(300000) -- wait max. 5 minutes
     end,
     opts = {
       ensure_installed = {
@@ -42,9 +42,9 @@ return {
       additional_vim_regex_highlighting = false,
       highlight = {
         enable = true,
-        disable = function(ft, buf)
-          return ft == "latex" or vim.b[buf].bigfile == true or vim.fn.win_gettype() == "command"
-        end,
+        -- disable = function(ft, buf)
+        --   return ft == "latex" or vim.b[buf].bigfile == true or vim.fn.win_gettype() == "command"
+        -- end,
       },
       indent = {
         enable = true,

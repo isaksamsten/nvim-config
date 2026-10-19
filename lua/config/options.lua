@@ -277,7 +277,7 @@ vim.diagnostic.config({
       else
         message = diag.source
       end
-      return " " .. message, "DiagnosticFloatingSuffix"
+      return message and (" " .. message) or "", "DiagnosticFloatingSuffix"
     end,
     prefix = function(diag)
       local severity = vim.diagnostic.severity[diag.severity]

@@ -108,4 +108,5 @@ vim.lsp.enable({
   "rust_analyzer",
   "yamlls",
   "tinymist",
+  "vala_ls",
 })
